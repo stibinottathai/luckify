@@ -133,27 +133,27 @@ export default function Home() {
       )}
 
       {/* 3. Hero Introduction */}
-      <section className="relative w-full max-w-4xl mb-12 select-none z-10 flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-br from-[#2D1B69] to-[#1E1145] dark:from-[#1B0F40] dark:to-[#0D0725] border-4 border-primary-gold rounded-3xl p-6 sm:p-8 shadow-xl text-white overflow-hidden">
+      <section className="relative w-full max-w-4xl mb-6 select-none z-10 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-br from-[#2D1B69] to-[#1E1145] dark:from-[#1B0F40] dark:to-[#0D0725] border-4 border-primary-gold rounded-3xl p-4 sm:py-5 sm:px-6 shadow-xl text-white overflow-hidden">
         
         {/* Hue-rotating mesh gradient background */}
         <div className="absolute inset-0 bg-radial from-violet-500/10 via-transparent to-transparent pointer-events-none animate-hue-sweep opacity-50" />
 
-        <div className="flex-1 text-center md:text-left space-y-4 z-10">
-          <h1 className="text-4xl sm:text-5xl font-black font-fredoka leading-none tracking-tight text-primary-gold drop-shadow-md">
+        <div className="flex-1 text-center md:text-left space-y-2.5 z-10">
+          <h1 className="text-2xl sm:text-3xl font-black font-fredoka leading-none tracking-tight text-primary-gold drop-shadow-md">
             Lucky Vibes ✨
           </h1>
-          <p className="text-sm sm:text-base font-bold text-cream-soft/80 max-w-xl">
+          <p className="text-xs sm:text-sm font-semibold text-cream-soft/80 max-w-xl">
             Step into the garden of fortunes! Shake the SVG tree, roll 3D dice, spin the wheel, scratch cards, and claim your mystical daily fortunes!
           </p>
 
           {/* Miniature Player Stats Dashboard */}
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-cream-soft/70">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">
+            <div className="flex items-center gap-1 py-1 px-2.5 rounded-lg bg-white/5 border border-white/10 text-[10px] sm:text-xs font-bold text-cream-soft/70">
               <Activity className="w-3.5 h-3.5 text-accent-teal" />
               Total Plays:{" "}
               <span className="text-primary-gold font-mono font-black">{totalPlays}</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-cream-soft/70">
+            <div className="flex items-center gap-1 py-1 px-2.5 rounded-lg bg-white/5 border border-white/10 text-[10px] sm:text-xs font-bold text-cream-soft/70">
               <Award className="w-3.5 h-3.5 text-alert-coral" />
               Win Streak:{" "}
               <span className="text-primary-gold font-mono font-black">{winStreak}</span>

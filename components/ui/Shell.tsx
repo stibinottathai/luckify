@@ -7,6 +7,7 @@ import { Sun, Moon, History, Sparkles } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 import HistoryDrawer from "@/components/ui/HistoryDrawer";
 import ShareModal from "@/components/ui/ShareModal";
+import LegalModal from "@/components/ui/LegalModal";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -18,6 +19,13 @@ export default function Shell({ children }: ShellProps) {
   const [dark, setDark] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [legalOpen, setLegalOpen] = useState(false);
+  const [legalTab, setLegalTab] = useState<"terms" | "privacy" | "cookies">("terms");
+
+  const openLegal = (tab: "terms" | "privacy" | "cookies") => {
+    setLegalTab(tab);
+    setLegalOpen(true);
+  };
 
   // Hydration safety guard
   useEffect(() => {
@@ -117,11 +125,32 @@ export default function Shell({ children }: ShellProps) {
 
       {/* Footer */}
       <footer className="w-full bg-deep-violet/5 dark:bg-black/20 border-t border-deep-violet/10 dark:border-white/10 py-6 mt-12 select-none">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs font-bold text-deep-violet/50 dark:text-cream-soft/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs font-bold text-deep-violet/50 dark:text-cream-soft/50 text-center md:text-left">
             © {new Date().getFullYear()} Lucky Vibes. Live beautifully, roll wisely. 🍀
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <button
+              onClick={() => openLegal("terms")}
+              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-cream-soft/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
+            >
+              Terms
+            </button>
+            <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
+            <button
+              onClick={() => openLegal("privacy")}
+              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-cream-soft/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
+            >
+              Privacy Policy
+            </button>
+            <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
+            <button
+              onClick={() => openLegal("cookies")}
+              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-cream-soft/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
+            >
+              Cookie Settings
+            </button>
+            <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
             <button
               onClick={() => setShareOpen(true)}
               className="text-xs font-extrabold text-primary-gold hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-0"
@@ -136,6 +165,7 @@ export default function Shell({ children }: ShellProps) {
       {/* Global Modals / Drawers */}
       <HistoryDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <ShareModal isOpen={shareOpen} onClose={() => setShareOpen(false)} score={luckyScore} />
+      <LegalModal isOpen={legalOpen} onClose={() => setLegalOpen(false)} initialTab={legalTab} />
     </div>
   );
 }

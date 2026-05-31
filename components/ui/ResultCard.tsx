@@ -17,6 +17,7 @@ interface ResultCardProps {
   isWin: boolean;
   onRestart?: () => void;
   onShare?: () => void;
+  justNumber?: boolean;
 }
 
 export default function ResultCard({
@@ -30,6 +31,7 @@ export default function ResultCard({
   isWin,
   onRestart,
   onShare,
+  justNumber,
 }: ResultCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -78,9 +80,15 @@ export default function ResultCard({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 220 }}
-            className={`relative w-full max-w-md bg-white dark:bg-card border-2 ${
-              isWin ? "border-primary-gold" : "border-alert-coral"
-            } rounded-3xl p-6 shadow-2xl pointer-events-auto text-center flex flex-col items-center select-none`}
+            className={`relative w-full ${
+              justNumber ? "max-w-sm" : "max-w-md"
+            } bg-white dark:bg-card border-4 ${
+              justNumber
+                ? "border-primary-gold shadow-[0_0_40px_rgba(245,183,0,0.35)] bg-gradient-to-b from-white to-primary-gold/5 dark:from-card dark:to-primary-gold/5"
+                : isWin
+                ? "border-primary-gold"
+                : "border-alert-coral"
+            } rounded-3xl p-6 shadow-2xl pointer-events-auto text-center flex flex-col items-center select-none overflow-visible`}
           >
             {/* Gesture handle for swiping down */}
             <div className="w-12 h-1.5 bg-deep-violet/10 dark:bg-cream-soft/10 rounded-full mb-3 cursor-grab active:cursor-grabbing" />
@@ -88,39 +96,89 @@ export default function ResultCard({
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-cream-soft/5 text-deep-violet/40 dark:text-cream-soft/40 hover:text-deep-violet dark:hover:text-cream-soft transition-colors cursor-pointer"
+              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-cream-soft/5 text-deep-violet/40 dark:text-cream-soft/40 hover:text-deep-violet dark:hover:text-cream-soft transition-colors cursor-pointer z-20"
             >
               <X className="w-5 h-5" />
             </button>
 
-            {/* Game Badge */}
-            <span className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40 mb-2">
-              {gameName}
-            </span>
+            {justNumber ? (
+              <div className="relative w-full flex flex-col items-center justify-center py-6 overflow-visible">
+                {/* Rotating Sunburst Ray Background */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-visible z-0">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                    className="w-72 h-72 opacity-25 dark:opacity-40 bg-[radial-gradient(circle,rgba(245,183,0,0.45)_0%,transparent_75%)] rounded-full filter blur-xl"
+                  />
+                  <motion.svg
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute w-64 h-64 text-primary-gold/15 dark:text-primary-gold/25"
+                    viewBox="0 0 100 100"
+                  >
+                    <path d="M50 50 L50 0 A50 50 0 0 1 65 5 Z" fill="currentColor" />
+                    <path d="M50 50 L80 15 A50 50 0 0 1 95 35 Z" fill="currentColor" />
+                    <path d="M50 50 L95 65 A50 50 0 0 1 80 85 Z" fill="currentColor" />
+                    <path d="M50 50 L50 100 A50 50 0 0 1 35 95 Z" fill="currentColor" />
+                    <path d="M50 50 L20 85 A50 50 0 0 1 5 65 Z" fill="currentColor" />
+                    <path d="M50 50 L5 35 A50 50 0 0 1 20 15 Z" fill="currentColor" />
+                  </motion.svg>
+                </div>
 
-            {/* Animated Emoji */}
-            <motion.div
-              initial={{ scale: 0, rotate: 0 }}
-              animate={{ scale: 1, rotate: [0, -10, 10, -5, 5, 0] }}
-              transition={{
-                delay: 0.15,
-                scale: { type: "spring", stiffness: 260, damping: 12 },
-                rotate: { type: "keyframes", duration: 0.6, ease: "easeInOut" },
-              }}
-              className="text-7xl mb-4"
-            >
-              {emoji}
-            </motion.div>
+                <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.25em] text-deep-violet/40 dark:text-cream-soft/40 mb-1">
+                  YOU ROLLED
+                </span>
+                
+                <motion.div
+                  initial={{ scale: 0, rotate: -30 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 12 }}
+                  className="relative z-10 font-fredoka font-black select-none text-[11rem] leading-none text-primary-gold filter drop-shadow-[0_12px_15px_rgba(0,0,0,0.18)] dark:drop-shadow-[0_12px_24px_rgba(245,183,0,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                >
+                  {title}
+                </motion.div>
+                
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.3, 0.8, 0.3] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                  className="relative z-10 text-[9px] font-extrabold uppercase tracking-wider text-[#E0A700] mt-2"
+                >
+                  ★ Swipe down or Tap share ★
+                </motion.span>
+              </div>
+            ) : (
+              <>
+                {/* Game Badge */}
+                <span className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40 mb-2">
+                  {gameName}
+                </span>
 
-            {/* Title */}
-            <h3 className="text-2xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft mb-2 leading-tight">
-              {title}
-            </h3>
+                {/* Animated Emoji */}
+                <motion.div
+                  initial={{ scale: 0, rotate: 0 }}
+                  animate={{ scale: 1, rotate: [0, -10, 10, -5, 5, 0] }}
+                  transition={{
+                    delay: 0.15,
+                    scale: { type: "spring", stiffness: 260, damping: 12 },
+                    rotate: { type: "keyframes", duration: 0.6, ease: "easeInOut" },
+                  }}
+                  className="text-7xl mb-4"
+                >
+                  {emoji}
+                </motion.div>
 
-            {/* Description */}
-            <p className="text-sm font-semibold text-deep-violet/70 dark:text-cream-soft/70 mb-5 leading-relaxed max-w-sm">
-              {description}
-            </p>
+                {/* Title */}
+                <h3 className="text-2xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft mb-2 leading-tight">
+                  {title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-sm font-semibold text-deep-violet/70 dark:text-cream-soft/70 mb-5 leading-relaxed max-w-sm">
+                  {description}
+                </p>
+              </>
+            )}
 
             {/* Interactive Actions Grid */}
             <div className="w-full grid grid-cols-2 gap-3 mt-2">

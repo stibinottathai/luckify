@@ -131,6 +131,17 @@ h1, h2, h3, h4, h5, h6 {
   animation: hue-sweep 25s linear infinite;
 }
 
+/* 3D perspective and backface visibility utility classes */
+.perspective-1000 {
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 /* Premium Card Border Glow utility */
 .card-glow {
   position: relative;

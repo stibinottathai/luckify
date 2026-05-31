@@ -4,8 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lucky Dice 🎲 Roll 3D Perspective CSS Dice | Lucky Vibes",
-  description: "Roll up to three fully interactive 3D CSS perspective dice with real-time clattering audio and special Snake Eyes rare outcomes.",
+  title: "Lucky Dice 🎲 Roll 3D Perspective CSS Die | Lucky Vibes",
+  description: "Roll a fully interactive 3D CSS perspective die with real-time clattering audio and custom high-rolling outcomes.",
 };
 
 export default function DicePage() {

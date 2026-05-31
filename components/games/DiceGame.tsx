@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { DICE_MEANINGS } from "@/lib/prizes";
 import { playDiceRoll } from "@/lib/audio";
 import { useLuckStore } from "@/store/luckStore";
 import ResultCard from "@/components/ui/ResultCard";
@@ -11,11 +10,11 @@ import ShareModal from "@/components/ui/ShareModal";
 // Map each die face 1-6 to exact 3D cube rotation angles
 const FACE_ROTATIONS: Record<number, { x: number; y: number }> = {
   1: { x: 0, y: 0 },
-  6: { x: 180, y: 0 },
-  2: { x: 90, y: 0 },
-  5: { x: -90, y: 0 },
+  6: { x: 0, y: 180 },
+  2: { x: -90, y: 0 },
+  5: { x: 90, y: 0 },
   3: { x: 0, y: -90 },
-  4: { x: 0, y: 95 }, // slight offset looks more organic
+  4: { x: 0, y: 90 },
 };
 
 // Render dots on each face as simple SVGs
@@ -37,7 +36,7 @@ function DieFace({ value }: { value: number }) {
           cx={cx}
           cy={cy}
           r="8"
-          className="fill-deep-violet dark:fill-cream-soft"
+          className="fill-white"
         />
       ))}
     </svg>
@@ -45,12 +44,13 @@ function DieFace({ value }: { value: number }) {
 }
 
 export default function DiceGame() {
-  const [diceCount, setDiceCount] = useState<1 | 2 | 3>(2);
+  const diceCount = 1;
   const [isRolling, setIsRolling] = useState(false);
-  const [diceValues, setDiceValues] = useState<number[]>([3, 4]);
+  const [hasRolled, setHasRolled] = useState(false);
+  const [diceValues, setDiceValues] = useState<number[]>([4]);
   
-  // Custom controls for independent 3D rotations
-  const rollControls = [useAnimation(), useAnimation(), useAnimation()];
+  // Custom controls for 3D rotations
+  const rollControls = [useAnimation()];
 
   const [showResult, setShowResult] = useState(false);
   const [showShare, setShowShare] = useState(false);
@@ -69,6 +69,7 @@ export default function DiceGame() {
   const handleRoll = async () => {
     if (isRolling) return;
     setIsRolling(true);
+    setHasRolled(true);
     setShowResult(false);
 
     // Roll audio synthesis intervals
@@ -76,9 +77,7 @@ export default function DiceGame() {
       playDiceRoll();
     }, 100);
 
-    const newValues = Array.from({ length: diceCount }, () =>
-      Math.floor(Math.random() * 6) + 1
-    );
+    const newValues = [Math.floor(Math.random() * 6) + 1];
 
     // Roll animations
     const animationPromises = newValues.map(async (val, index) => {
@@ -110,48 +109,58 @@ export default function DiceGame() {
     setDiceValues(newValues);
     setIsRolling(false);
 
-    // Calculate outcomes
-    const sum = newValues.reduce((a, b) => a + b, 0);
-    const isSnakeEyes = diceCount === 2 && sum === 2;
-    const isMaxLuck = sum === diceCount * 6; // All sixes!
-    const isLucky7 = sum === 7;
-
+    // Calculate outcomes for single die (1-6)
+    const val = newValues[0];
     let scoreImpact = 5;
     let isWin = true;
-    let title = `You rolled a ${sum}!`;
+    let title = `You rolled a ${val}!`;
     let emoji = "🎲";
+    let description = "";
 
-    if (isSnakeEyes) {
-      scoreImpact = 25; // Snake eyes is highly rewarding!
-      title = "Snake Eyes! 🐍👀";
-      emoji = "🐍";
-    } else if (isMaxLuck) {
-      scoreImpact = 30; // Max luck!
-      title = "MAX LUCK ROLL! 🎰";
+    if (val === 6) {
+      scoreImpact = 30;
+      isWin = true;
+      title = "MAX LUCK 6! 🎰";
       emoji = "🔥";
-    } else if (isLucky7) {
+      description = "Absolute maximum rolling power! You have unlocked cosmic abundance!";
+    } else if (val === 5) {
       scoreImpact = 15;
-      title = "Classic Lucky 7! ✨";
+      isWin = true;
+      title = "High 5! 💥";
+      emoji = "💥";
+      description = "Adventure and change! A new path or opportunity is opening up for you.";
+    } else if (val === 4) {
+      scoreImpact = 12;
+      isWin = true;
+      title = "Solid 4! 🍀";
       emoji = "🍀";
-    } else if (sum < diceCount * 3) {
+      description = "Solid foundation! Strong support and steady progress are coming your way.";
+    } else if (val === 3) {
+      scoreImpact = 10;
+      isWin = true;
+      title = "Lucky 3! ✨";
+      emoji = "✨";
+      description = "Growth and creativity! Good news or inspiration will reach you soon.";
+    } else if (val === 2) {
+      scoreImpact = 5;
+      isWin = true;
+      title = "Rolled a 2 ⚖️";
+      emoji = "⚖️";
+      description = "Balance and duality. A great time to partner up or seek harmony.";
+    } else { // val === 1
       scoreImpact = -5;
       isWin = false;
-      title = `Rolled a ${sum}`;
+      title = "Rolled a 1 🌧️";
       emoji = "🌧️";
+      description = "A fresh start! Every journey begins with a single step. Let's shake it up again!";
     }
 
-    const description = isSnakeEyes
-      ? "Double ones! Incredibly rare and highly suspicious luck is aligning in your favor!"
-      : isMaxLuck
-      ? "Absolute maximum rolling power! You have unlocked cosmic abundance!"
-      : DICE_MEANINGS[sum] || "A solid roll of the dice. Keep shaking up your vibes!";
-
-    setOutcomeData({ sum, title, description, isWin, scoreImpact, emoji });
+    setOutcomeData({ sum: val, title, description, isWin, scoreImpact, emoji });
     setShowResult(true);
 
     addResult(
       "Lucky Dice",
-      `Rolled ${newValues.join(" + ")} = ${sum}`,
+      `Rolled a ${val}`,
       isWin,
       scoreImpact
     );
@@ -159,29 +168,8 @@ export default function DiceGame() {
 
   return (
     <div className="flex flex-col items-center max-w-lg mx-auto py-8">
-      {/* Selector tab controls */}
-      <div className="flex items-center gap-2 mb-6 bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 p-1 rounded-2xl select-none">
-        {([1, 2, 3] as const).map((cnt) => (
-          <button
-            key={cnt}
-            disabled={isRolling}
-            onClick={() => {
-              setDiceCount(cnt);
-              setDiceValues(Array.from({ length: cnt }, () => 4));
-            }}
-            className={`py-2 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              diceCount === cnt
-                ? "bg-primary-gold text-deep-violet shadow-xs"
-                : "text-deep-violet/60 dark:text-cream-soft/60 hover:bg-deep-violet/5 dark:hover:bg-white/5"
-            }`}
-          >
-            {cnt} {cnt === 1 ? "Die" : "Dice"}
-          </button>
-        ))}
-      </div>
-
       {/* Game board wrapper */}
-      <div className="relative w-full max-w-sm bg-white dark:bg-card border-4 border-primary-gold rounded-3xl p-6 shadow-xl flex flex-col items-center select-none overflow-hidden min-h-[340px] justify-center">
+      <div className="relative w-[320px] sm:w-[360px] bg-white dark:bg-card border-4 border-primary-gold rounded-3xl p-6 shadow-xl flex flex-col items-center select-none overflow-hidden min-h-[340px] justify-center">
         
         {/* Row container of 3D cubes */}
         <div className="flex items-center justify-center gap-8 py-8 perspective-1000">
@@ -190,6 +178,10 @@ export default function DiceGame() {
             return (
               <motion.div
                 key={i}
+                initial={{
+                  rotateX: FACE_ROTATIONS[currentVal]?.x || 0,
+                  rotateY: FACE_ROTATIONS[currentVal]?.y || 0,
+                }}
                 animate={rollControls[i]}
                 style={{
                   transformStyle: "preserve-3d",
@@ -203,7 +195,7 @@ export default function DiceGame() {
                   style={{
                     transform: "rotateY(0deg) translateZ(40px)",
                   }}
-                  className="absolute inset-0 bg-cream-soft dark:bg-deep-violet border-2 border-deep-violet/20 dark:border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
+                  className="absolute inset-0 bg-[#2D1B69] border-2 border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
                 >
                   <DieFace value={1} />
                 </div>
@@ -213,7 +205,7 @@ export default function DiceGame() {
                   style={{
                     transform: "rotateY(180deg) translateZ(40px)",
                   }}
-                  className="absolute inset-0 bg-cream-soft dark:bg-deep-violet border-2 border-deep-violet/20 dark:border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
+                  className="absolute inset-0 bg-[#2D1B69] border-2 border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
                 >
                   <DieFace value={6} />
                 </div>
@@ -223,7 +215,7 @@ export default function DiceGame() {
                   style={{
                     transform: "rotateY(90deg) translateZ(40px)",
                   }}
-                  className="absolute inset-0 bg-cream-soft dark:bg-deep-violet border-2 border-deep-violet/20 dark:border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
+                  className="absolute inset-0 bg-[#2D1B69] border-2 border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
                 >
                   <DieFace value={3} />
                 </div>
@@ -233,7 +225,7 @@ export default function DiceGame() {
                   style={{
                     transform: "rotateY(-90deg) translateZ(40px)",
                   }}
-                  className="absolute inset-0 bg-cream-soft dark:bg-deep-violet border-2 border-deep-violet/20 dark:border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
+                  className="absolute inset-0 bg-[#2D1B69] border-2 border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
                 >
                   <DieFace value={4} />
                 </div>
@@ -243,7 +235,7 @@ export default function DiceGame() {
                   style={{
                     transform: "rotateX(90deg) translateZ(40px)",
                   }}
-                  className="absolute inset-0 bg-cream-soft dark:bg-deep-violet border-2 border-deep-violet/20 dark:border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
+                  className="absolute inset-0 bg-[#2D1B69] border-2 border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
                 >
                   <DieFace value={2} />
                 </div>
@@ -253,7 +245,7 @@ export default function DiceGame() {
                   style={{
                     transform: "rotateX(-90deg) translateZ(40px)",
                   }}
-                  className="absolute inset-0 bg-cream-soft dark:bg-deep-violet border-2 border-deep-violet/20 dark:border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
+                  className="absolute inset-0 bg-[#2D1B69] border-2 border-white/20 rounded-xl flex items-center justify-center shadow-md backface-hidden"
                 >
                   <DieFace value={5} />
                 </div>
@@ -262,25 +254,23 @@ export default function DiceGame() {
           })}
         </div>
 
-        {/* Display Current Sum */}
-        {!isRolling && (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="mb-4 text-sm font-extrabold uppercase tracking-widest text-deep-violet/50 dark:text-cream-soft/50"
-          >
-            Total Rolled:{" "}
-            <span className="text-primary-gold text-lg font-black font-mono">
-              {diceValues.reduce((a, b) => a + b, 0)}
-            </span>
-          </motion.div>
-        )}
+        {/* Display Current Value */}
+        <div
+          className={`mb-4 text-sm font-extrabold uppercase tracking-widest text-deep-violet/50 dark:text-cream-soft/50 transition-all duration-300 ${
+            !hasRolled || isRolling ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"
+          }`}
+        >
+          You Rolled:{" "}
+          <span className="text-primary-gold text-lg font-black font-mono">
+            {diceValues[0]}
+          </span>
+        </div>
 
         {/* Action Trigger */}
         <button
           disabled={isRolling}
           onClick={handleRoll}
-          className={`py-3.5 px-8 rounded-2xl font-extrabold text-base select-none cursor-pointer tracking-wider shadow-lg transition-all transform active:scale-95 ${
+          className={`w-64 py-3.5 px-8 rounded-2xl font-extrabold text-base select-none cursor-pointer tracking-wider shadow-lg transition-all transform active:scale-95 ${
             isRolling
               ? "bg-deep-violet/30 dark:bg-white/10 text-deep-violet/50 dark:text-cream-soft/50 pointer-events-none"
               : "bg-primary-gold hover:bg-[#E0A700] text-deep-violet hover:shadow-xl"
@@ -297,12 +287,13 @@ export default function DiceGame() {
           onClose={() => setShowResult(false)}
           gameName="Lucky Dice"
           emoji={outcomeData.emoji}
-          title={outcomeData.title}
+          title={String(outcomeData.sum)}
           description={outcomeData.description}
           scoreImpact={outcomeData.scoreImpact}
           isWin={outcomeData.isWin}
           onRestart={handleRoll}
           onShare={() => setShowShare(true)}
+          justNumber={true}
         />
       )}
 

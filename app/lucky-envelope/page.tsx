@@ -64,14 +64,14 @@ export default function LuckyEnvelopePage() {
   };
 
   return (
-    <div className={`flex-1 flex flex-col items-center w-full min-h-[85vh] p-4 sm:p-6 rounded-[2.5rem] bg-[radial-gradient(ellipse_at_center,_#250b0b,_#0a0303)] border-4 border-[#501313] shadow-2xl relative overflow-hidden select-none ${cinzel.variable} ${cormorant.variable}`}>
+    <div className={`flex-1 flex flex-col items-center w-full min-h-[80vh] p-4 sm:py-5 sm:px-6 rounded-[2.5rem] bg-[radial-gradient(ellipse_at_center,_#250b0b,_#0a0303)] border-4 border-[#501313] shadow-2xl relative overflow-hidden select-none ${cinzel.variable} ${cormorant.variable}`}>
       
       {/* Visual background details: Soft gold lanterns / cloud sparks */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(245,183,0,0.06),transparent_40%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(245,183,0,0.06),transparent_40%)] pointer-events-none" />
       
       {/* Back button and breadcrumb */}
-      <div className="w-full max-w-4xl mb-8 flex flex-col items-start gap-3 z-10">
+      <div className="w-full max-w-4xl mb-3 flex flex-col items-start gap-3 z-10">
         <Link
           href="/"
           className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-amber-400/40 hover:text-amber-400 transition-colors cursor-pointer group"
@@ -79,28 +79,28 @@ export default function LuckyEnvelopePage() {
           <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
           Back to Lobby
         </Link>
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between w-full gap-2 border-b border-amber-950/40 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between w-full gap-2 border-b border-amber-950/40 pb-2">
           <div>
             <h1 className="text-3xl font-black font-cinzel text-amber-400 leading-none flex items-center gap-2">
               红包 <span className="text-2xl font-bold font-fredoka text-amber-300">Lucky Envelope</span>
             </h1>
-            <p className="text-xs font-bold text-amber-200/50 mt-2 font-cormorant italic tracking-wide">
+            <p className="text-xs font-bold text-amber-200/50 mt-1.5 font-cormorant italic tracking-wide">
               An ancient tradition of sharing blessings, fortune, and prosperity.
             </p>
           </div>
-          <div className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-amber-950/40 border border-amber-400/20 text-amber-300 font-cinzel uppercase tracking-widest">
+          <div className="text-[10px] font-black px-3 py-1 rounded-lg bg-amber-950/40 border border-amber-400/20 text-amber-300 font-cinzel uppercase tracking-widest">
             Traditional Fortune
           </div>
         </div>
       </div>
 
       {/* Main interactive envelope container */}
-      <div className="flex-1 flex flex-col items-center justify-center z-10 w-full max-w-sm mt-4 min-h-[420px]">
+      <div className="flex-1 flex flex-col items-center justify-center z-10 w-full max-w-sm mt-2 min-h-[385px]">
         <EnvelopeCard phase={phase} fortune={fortune} onClick={handleOpenEnvelope} />
       </div>
 
       {/* UX Instructions and Actions */}
-      <div className="w-full max-w-sm mt-8 flex flex-col items-center gap-4 z-10 min-h-[80px]">
+      <div className="w-full max-w-sm mt-4 flex flex-col items-center gap-3 z-10 min-h-[70px]">
         {phase === "idle" && (
           <div className="flex flex-col items-center gap-1 animate-pulse text-center">
             <p className="text-xs font-black uppercase tracking-widest text-amber-400 font-cinzel">

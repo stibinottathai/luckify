@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, Activity, Award } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
-import { DAILY_HOROSCOPES } from "@/lib/fortunes";
 
 interface GameCard {
   id: string;
@@ -78,16 +77,11 @@ const GAMES: GameCard[] = [
 const PARTICLE_EMOJIS = ["⭐", "🍀", "💫", "🎁", "🍎", "🍊", "💎", "🔮"];
 
 export default function Home() {
-  const [horoscope, setHoroscope] = useState("");
   const [particles, setParticles] = useState<{ id: number; emoji: string; x: number; delay: number; duration: number }[]>([]);
 
   const { totalPlays, winStreak } = useLuckStore();
 
   useEffect(() => {
-    // 1. Load random Daily Horoscope on mount
-    const randomHoroscope = DAILY_HOROSCOPES[Math.floor(Math.random() * DAILY_HOROSCOPES.length)];
-    setHoroscope(randomHoroscope);
-
     // 2. Generate floating background particles safely
     const initialParticles = Array.from({ length: 22 }).map((_, i) => ({
       id: i,
@@ -100,7 +94,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative flex-1 flex flex-col items-center">
+    <div className="flex-1 flex flex-col items-center">
       {/* 1. Floating particles background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {particles.map((p) => (
@@ -119,18 +113,6 @@ export default function Home() {
           </span>
         ))}
       </div>
-
-      {/* 2. Top horoscope alert banner */}
-      {horoscope && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-4xl bg-primary-gold/15 dark:bg-primary-gold/10 border-2 border-primary-gold/30 rounded-2xl p-3.5 mb-8 flex items-center justify-center gap-2.5 text-center text-xs sm:text-sm font-extrabold text-deep-violet dark:text-cream-soft select-none"
-        >
-          <Sparkles className="w-4 h-4 text-primary-gold animate-bounce shrink-0" />
-          <span>{horoscope}</span>
-        </motion.div>
-      )}
 
       {/* 3. Hero Introduction */}
       <section className="relative w-full max-w-4xl mb-6 select-none z-10 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-br from-[#2D1B69] to-[#1E1145] dark:from-[#1B0F40] dark:to-[#0D0725] border-4 border-primary-gold rounded-3xl p-4 sm:py-5 sm:px-6 shadow-xl text-white overflow-hidden">

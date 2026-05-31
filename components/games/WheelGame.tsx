@@ -46,23 +46,25 @@ export default function WheelGame() {
 
     // Robust canvas fallback for empty wheel
     if (numSegments === 0) {
+      const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
+
       // Draw outer gold ring
       ctx.beginPath();
       ctx.arc(center, center, radius, 0, 2 * Math.PI);
-      ctx.fillStyle = "rgba(45, 27, 105, 0.05)";
+      ctx.fillStyle = isDark ? "rgba(255, 248, 231, 0.05)" : "rgba(45, 27, 105, 0.05)";
       ctx.fill();
       ctx.lineWidth = 4;
       ctx.strokeStyle = "#F5B700";
       ctx.stroke();
 
       // Placeholder indicator text
-      ctx.fillStyle = "#2D1B69";
+      ctx.fillStyle = isDark ? "#FFF8E7" : "#2D1B69";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.font = "bold 13px var(--font-fredoka), sans-serif";
       ctx.fillText("Empty Wheel 🎡", center, center - 10);
       ctx.font = "bold 10px var(--font-nunito), sans-serif";
-      ctx.fillStyle = "rgba(45, 27, 105, 0.4)";
+      ctx.fillStyle = isDark ? "rgba(255, 248, 231, 0.4)" : "rgba(45, 27, 105, 0.4)";
       ctx.fillText("Add 2+ options to start", center, center + 12);
       return;
     }

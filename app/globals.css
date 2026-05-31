@@ -19,6 +19,9 @@
   --foreground: #FFF8E7; /* Soft cream light text */
   --card-bg: #1B103E;
   --card-border: #3A2385;
+  
+  /* Dynamic text overrides to fix contrast in night mode */
+  --violet-deep: #FFF8E7; /* Deep violet text becomes soft cream in dark mode! */
 }
 
 @theme {

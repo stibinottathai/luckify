@@ -107,6 +107,15 @@ const GAMES: GameCard[] = [
     badge: "CSS 3D Shake",
     color: "from-slate-950 to-slate-800",
   },
+  {
+    id: "message-in-bottle",
+    emoji: "🍾",
+    title: "Message in a Bottle",
+    description: "Cast a glass bottle into the sea, tap to pop the cork, and watch your handwritten fortune unfurl!",
+    href: "/message-in-bottle",
+    badge: "Animated SVG & CSS",
+    color: "from-teal-400 to-cyan-600",
+  },
 ];
 
 // Emojis pool for floating backgrounds

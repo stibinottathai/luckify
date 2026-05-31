@@ -169,7 +169,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       <span className="text-base sm:text-lg">🌳</span> 1. Game Mechanics & Spirit
                     </h4>
                     <p>
-                      All games on Lucky Vibes (including Shaking Tree, Lucky Dice, Fortune Wheel, Mystery Box, Scratch Card, and Number Picker) are designed strictly for entertainment, visualization, and cosmic amusement.
+                      All games on Lucky Vibes (including Shaking Tree, Lucky Dice, Fortune Wheel, Flip a Coin, Scratch Card, and Number Picker) are designed strictly for entertainment, visualization, and cosmic amusement.
                     </p>
                     <p>
                       No real currency, digital assets, or real-world stakes are wagered or generated here. Your winnings are magical numbers, points, and digital tokens residing solely in your heart and your local browser storage.

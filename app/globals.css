@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (.dark &);
+
 :root {
   /* Design System Theme Variables */
   --gold-primary: #F5B700;

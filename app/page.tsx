@@ -98,6 +98,15 @@ const GAMES: GameCard[] = [
     badge: "3D Origami",
     color: "from-amber-200 to-orange-400",
   },
+  {
+    id: "magic-8-ball",
+    emoji: "🔮",
+    title: "Magic 8-Ball",
+    description: "Ask a yes or no question, shake the glossy black sphere, and reveal the cosmic oracle's wisdom!",
+    href: "/magic-8-ball",
+    badge: "CSS 3D Shake",
+    color: "from-slate-950 to-slate-800",
+  },
 ];
 
 // Emojis pool for floating backgrounds

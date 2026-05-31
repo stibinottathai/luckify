@@ -1,0 +1,115 @@
+/* 8ball.css */
+
+/* Keyframe Animations */
+
+/* Ball shake animation */
+@keyframes ballShake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10%      { transform: translate(-8px, -6px) rotate(-3deg); }
+  20%      { transform: translate(8px, 6px) rotate(3deg); }
+  30%      { transform: translate(-10px, 4px) rotate(-2deg); }
+  40%      { transform: translate(10px, -4px) rotate(2deg); }
+  50%      { transform: translate(-6px, 8px) rotate(-4deg); }
+  60%      { transform: translate(6px, -8px) rotate(4deg); }
+  70%      { transform: translate(-8px, 2px) rotate(-1deg); }
+  80%      { transform: translate(8px, -2px) rotate(1deg); }
+  90%      { transform: translate(-4px, -4px) rotate(-2deg); }
+}
+
+/* Answer triangle floats up from below */
+@keyframes answerRise {
+  0%   { transform: translateY(40px) scale(0.8); opacity: 0; filter: blur(4px); }
+  60%  { transform: translateY(10px) scale(1.02); opacity: 1; filter: blur(0px); }
+  100% { transform: translateY(14px) scale(1);  opacity: 1; filter: blur(0px); }
+}
+
+/* Answer triangle sinks back down on resetting */
+@keyframes answerSink {
+  0%   { transform: translateY(14px) scale(1); opacity: 1; }
+  100% { transform: translateY(50px) scale(0.8); opacity: 0; filter: blur(4px); }
+}
+
+/* Window darkens when shaking */
+@keyframes windowDarken {
+  0%   { background: radial-gradient(circle, #1a1a4a 0%, #050515 70%); opacity: 0.5; }
+  100% { background: radial-gradient(circle, #020210 0%, #000002 100%); opacity: 1; }
+}
+
+/* Ambient glow pulses on answer */
+@keyframes ballGlow {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 2px #111,
+      0 20px 60px rgba(0, 0, 0, 0.8),
+      0 0 40px rgba(0, 0, 0, 0.5),
+      inset 0 -10px 30px rgba(0, 0, 0, 0.9);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 2px #111,
+      0 20px 65px rgba(0, 0, 0, 0.9),
+      0 0 80px var(--glow-color),
+      inset 0 -10px 35px rgba(0, 0, 0, 0.95);
+  }
+}
+
+/* Floating mystical particles ambient effect */
+@keyframes orbitFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(1) rotate(0deg);
+    opacity: 0.3; 
+  }
+  50% { 
+    transform: translateY(-16px) scale(1.3) rotate(180deg);
+    opacity: 0.8; 
+  }
+}
+
+/* Helper Utility Classes */
+
+.animate-shake {
+  animation: ballShake 0.9s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.animate-glow {
+  animation: ballGlow 3s infinite ease-in-out;
+}
+
+.animate-window-darken {
+  animation: windowDarken 0.9s forwards ease-in-out;
+}
+
+.animate-rise {
+  animation: answerRise 0.8s forwards cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.animate-sink {
+  animation: answerSink 0.4s forwards ease-in-out;
+}
+
+.animate-particle {
+  animation: orbitFloat var(--duration, 3s) infinite ease-in-out;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Premium 8-Ball glossiness & highlights */
+.ball-glow-positive {
+  --glow-color: rgba(74, 222, 128, 0.5);
+}
+
+.ball-glow-neutral {
+  --glow-color: rgba(96, 165, 250, 0.5);
+}
+
+.ball-glow-negative {
+  --glow-color: rgba(248, 113, 113, 0.5);
+}
+
+/* Smooth transitions for ball contents */
+.ball-circle-transition {
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
+}
+
+.window-transition {
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}

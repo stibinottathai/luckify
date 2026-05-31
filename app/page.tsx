@@ -71,6 +71,24 @@ const GAMES: GameCard[] = [
     badge: "Lotto Stats",
     color: "from-teal-400 to-cyan-500",
   },
+  {
+    id: "pendulum",
+    emoji: "🔮",
+    title: "Pendulum Divination",
+    description: "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
+    href: "/pendulum",
+    badge: "Astral Physics",
+    color: "from-purple-500 to-indigo-600",
+  },
+  {
+    id: "lucky-envelope",
+    emoji: "🧧",
+    title: "Lucky Envelope",
+    description: "Receive a traditional red envelope, unfold its 3D golden seal, and uncover your daily blessing!",
+    href: "/lucky-envelope",
+    badge: "3D Folding",
+    color: "from-red-500 to-amber-600",
+  },
 ];
 
 // Emojis pool for floating backgrounds

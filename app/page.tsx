@@ -89,6 +89,15 @@ const GAMES: GameCard[] = [
     badge: "3D Folding",
     color: "from-red-500 to-amber-600",
   },
+  {
+    id: "fortune-teller",
+    emoji: "🔮",
+    title: "Origami Fortune",
+    description: "Select colors and numbers to unfold the 3D paper cootie catcher and reveal your hidden fate!",
+    href: "/fortune-teller",
+    badge: "3D Origami",
+    color: "from-amber-200 to-orange-400",
+  },
 ];
 
 // Emojis pool for floating backgrounds

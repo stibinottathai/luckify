@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, History, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
-import HistoryDrawer from "@/components/ui/HistoryDrawer";
 import ShareModal from "@/components/ui/ShareModal";
 import LegalModal from "@/components/ui/LegalModal";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 interface ShellProps {
   children: React.ReactNode;
@@ -17,7 +17,6 @@ export default function Shell({ children }: ShellProps) {
   const { luckyScore } = useLuckStore();
   const [mounted, setMounted] = useState(false);
   const [dark, setDark] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
   const [legalTab, setLegalTab] = useState<"terms" | "privacy" | "cookies">("terms");
@@ -89,24 +88,10 @@ export default function Shell({ children }: ShellProps) {
           {/* Right Navigation controls */}
           <div className="flex items-center gap-2 sm:gap-4">
 
-            {/* Dark mode toggler */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-xl bg-deep-violet/5 hover:bg-deep-violet/10 dark:bg-white/5 dark:hover:bg-white/10 text-deep-violet dark:text-cream-soft border border-deep-violet/10 dark:border-white/10 transition-all active:scale-95 cursor-pointer"
-              aria-label="Toggle theme"
-            >
-              {dark ? <Sun className="w-4 h-4 text-primary-gold" /> : <Moon className="w-4 h-4" />}
-            </button>
+            {/* Redesigned Premium Theme Switcher */}
+            <ThemeToggle dark={dark} toggleTheme={toggleTheme} />
 
-            {/* History logs drawer button */}
-            <button
-              onClick={() => setDrawerOpen(true)}
-              className="p-2 rounded-xl bg-deep-violet/5 hover:bg-deep-violet/10 dark:bg-white/5 dark:hover:bg-white/10 text-deep-violet dark:text-cream-soft border border-deep-violet/10 dark:border-white/10 transition-all active:scale-95 cursor-pointer flex items-center gap-1"
-              aria-label="View history"
-            >
-              <History className="w-4 h-4" />
-              <span className="hidden sm:inline text-xs font-bold font-fredoka">History</span>
-            </button>
+
           </div>
         </div>
       </header>
@@ -163,7 +148,6 @@ export default function Shell({ children }: ShellProps) {
       </footer>
 
       {/* Global Modals / Drawers */}
-      <HistoryDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <ShareModal isOpen={shareOpen} onClose={() => setShareOpen(false)} score={luckyScore} />
       <LegalModal isOpen={legalOpen} onClose={() => setLegalOpen(false)} initialTab={legalTab} />
     </div>

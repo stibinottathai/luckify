@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, HelpCircle, Compass, History } from "lucide-react";
+import { ArrowLeft, Sparkles, HelpCircle, Compass } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 import { usePendulum } from "./usePendulum";
 import ResultCard from "@/components/ui/ResultCard";

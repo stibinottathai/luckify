@@ -182,7 +182,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       Your stats, high scores, play counts, and win streaks are saved using standard browser Web Storage API (`localStorage`). 
                     </p>
                     <p>
-                      These values are subject to clearing if you reset your browser cache, perform a site history wipe, or invoke the "Reset Play History" function. We do not maintain offsite backups of your personal fortune milestones.
+                      These values are subject to clearing if you reset your browser cache or perform a site data wipe. We do not maintain offsite backups of your personal fortune milestones.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
@@ -278,7 +278,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                             Performance & Insights
                           </h5>
                           <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-cream-soft/60 mt-1">
-                            Keeps a tally of total plays and games chosen so you can review statistics in your History drawer and help optimize client load speeds.
+                            Keeps a tally of total plays and games chosen to help optimize client load speeds.
                           </p>
                         </div>
                         <button

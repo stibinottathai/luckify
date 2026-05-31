@@ -143,7 +143,7 @@ export default function Home() {
 
       {/* 3. Hero Introduction */}
       <section className="relative w-full max-w-4xl mb-6 select-none z-10 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-br from-[#2D1B69] to-[#1E1145] dark:from-[#1B0F40] dark:to-[#0D0725] border-4 border-primary-gold rounded-3xl p-4 sm:py-5 sm:px-6 shadow-xl text-white overflow-hidden">
-        
+
         {/* Hue-rotating mesh gradient background */}
         <div className="absolute inset-0 bg-radial from-violet-500/10 via-transparent to-transparent pointer-events-none animate-hue-sweep opacity-50" />
 

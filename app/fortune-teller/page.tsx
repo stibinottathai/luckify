@@ -49,7 +49,7 @@ export default function FortuneTellerPage() {
 
     // Toggle pinch axis
     setOpenAxis((prev) => (prev === "x" ? "y" : "x"));
-    
+
     // Play wood fold tick sound
     playTick();
 
@@ -122,11 +122,10 @@ export default function FortuneTellerPage() {
           return (
             <span
               key={idx}
-              className={`px-2 py-0.5 rounded transition-all duration-300 ${
-                isActive
+              className={`px-2 py-0.5 rounded transition-all duration-300 ${isActive
                   ? "bg-amber-500 text-white scale-110 shadow-md shadow-amber-500/20"
                   : "text-amber-800/40"
-              }`}
+                }`}
             >
               {letter}
             </span>
@@ -149,13 +148,12 @@ export default function FortuneTellerPage() {
           return (
             <span
               key={idx}
-              className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${
-                isActive
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isActive
                   ? "bg-amber-600 text-white scale-110 shadow-md shadow-amber-600/20"
                   : numValue < currentCount
-                  ? "bg-amber-200/50 text-amber-800/40"
-                  : "text-amber-800/20"
-              }`}
+                    ? "bg-amber-200/50 text-amber-800/40"
+                    : "text-amber-800/20"
+                }`}
             >
               {numValue}
             </span>
@@ -166,10 +164,11 @@ export default function FortuneTellerPage() {
   };
 
   return (
-    <div className={`flex-1 flex flex-col items-center w-full min-h-[80vh] p-4 sm:py-5 sm:px-6 rounded-[2.5rem] bg-[#fdf8f0] border-4 border-[#e6ded4] shadow-2xl relative overflow-hidden select-none dot-grid ${nunito.variable}`}>
-      
+    <div className={`flex-1 flex flex-col items-center w-full min-h-[85vh] p-4 sm:p-6 rounded-[2.5rem] bg-[#fdf8f0] border-4 border-[#e6ded4] shadow-2xl relative overflow-hidden select-none dot-grid ${nunito.variable}`}>
+
       {/* Visual background details: subtle dot-grid pattern & soft paper gradients */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .dot-grid {
           background-size: 24px 24px;
           background-image: radial-gradient(circle, #e9e2d7 1.5px, transparent 1.5px);
@@ -177,7 +176,7 @@ export default function FortuneTellerPage() {
       `}} />
 
       {/* Back button and breadcrumb */}
-      <div className="w-full max-w-4xl mb-3 flex flex-col items-start gap-3 z-10">
+      <div className="w-full max-w-4xl mb-6 flex flex-col items-start gap-3 z-10">
         <Link
           href="/"
           className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-amber-800/40 hover:text-amber-800 transition-colors cursor-pointer group"
@@ -185,23 +184,23 @@ export default function FortuneTellerPage() {
           <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
           Back to Lobby
         </Link>
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between w-full gap-2 border-b border-amber-800/10 pb-2">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between w-full gap-2 border-b border-amber-800/10 pb-4">
           <div>
             <h1 className="text-3xl font-black text-amber-900 leading-none">
               Origami Fortune <span className="text-2xl font-bold text-amber-600">Cootie Catcher</span>
             </h1>
-            <p className="text-xs font-bold text-amber-800/50 mt-1.5 italic tracking-wide">
+            <p className="text-xs font-bold text-amber-800/50 mt-1 italic tracking-wide">
               An interactive 3D folding paper game packed with mystical answers.
             </p>
           </div>
-          <div className="text-[10px] font-black px-3 py-1 rounded-lg bg-amber-100 border border-amber-200 text-amber-700 uppercase tracking-widest">
+          <div className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-amber-100 border border-amber-200 text-amber-700 uppercase tracking-widest">
             3D Folding Paper
           </div>
         </div>
       </div>
 
       {/* Cootie Catcher container */}
-      <div className="flex-1 flex items-center justify-center z-10 w-full max-w-sm mt-2 min-h-[385px]">
+      <div className="flex-1 flex items-center justify-center z-10 w-full max-w-sm mt-4 min-h-[400px]">
         <CootieCatcher
           phase={phase}
           openAxis={openAxis}
@@ -216,7 +215,7 @@ export default function FortuneTellerPage() {
       </div>
 
       {/* Instructions Overlay / Controller panel */}
-      <div className="w-full max-w-sm mt-4 flex flex-col items-center gap-3 z-10 min-h-[70px] text-center">
+      <div className="w-full max-w-sm mt-8 flex flex-col items-center gap-4 z-10 min-h-[100px] text-center">
         {phase === "idle" && (
           <div className="flex flex-col items-center gap-1.5 animate-pulse">
             <p className="text-xs font-black uppercase tracking-widest text-amber-800/80">
@@ -278,7 +277,7 @@ export default function FortuneTellerPage() {
                 Your future blessing has been revealed under the lifted paper flap
               </p>
             </div>
-            
+
             <button
               onClick={handleReset}
               className="py-3 px-8 rounded-2xl font-black text-sm select-none cursor-pointer tracking-wider shadow-lg bg-amber-600 hover:bg-amber-500 text-white hover:shadow-xl hover:shadow-amber-600/10 active:scale-95 transition-all flex items-center gap-2 group font-mono uppercase"
@@ -290,7 +289,8 @@ export default function FortuneTellerPage() {
         )}
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }

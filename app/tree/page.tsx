@@ -1,6 +1,12 @@
 import TreeGame from "@/components/games/TreeGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shaking Tree 🌳 Catch Mystical Fortune Fruits | Lucky Vibes",
+  description: "Shake the branches of the illustrated SVG Shaking Tree! Catch glowing staggered falling fruits to find your mystical fortunes.",
+};
 
 export default function TreePage() {
   return (
@@ -14,9 +20,9 @@ export default function TreePage() {
           Back to Lobby
         </Link>
         <div>
-          <h2 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
             Shaking Tree 🌳
-          </h2>
+          </h1>
           <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
             Shake the branches and catch whichever glowing fruit drops!
           </p>

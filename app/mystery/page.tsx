@@ -1,6 +1,12 @@
 import MysteryGame from "@/components/games/MysteryGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Mystery Box 🎁 Hunt the Golden Unicorn Jackpot | Lucky Vibes",
+  description: "Open 3D perspective gift boxes on a 3x3 mystery grid to hunt down the mythical golden unicorn jackpot in as few attempts as possible.",
+};
 
 export default function MysteryPage() {
   return (
@@ -14,9 +20,9 @@ export default function MysteryPage() {
           Back to Lobby
         </Link>
         <div>
-          <h2 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
             Mystery Box 🎁
-          </h2>
+          </h1>
           <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
             Pick and open gift boxes to hunt for the elusive golden jackpot unicorn!
           </p>

@@ -1,6 +1,12 @@
 import ScratchGame from "@/components/games/ScratchGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Scratch Card 🪙 Rub Silver Covers to Reveal Prizes | Lucky Vibes",
+  description: "Scratch off a metallic silver cover card using tactile canvas mouse sweeps to reveal secret win cards and bonus fortunes instantly.",
+};
 
 export default function ScratchPage() {
   return (
@@ -14,9 +20,9 @@ export default function ScratchPage() {
           Back to Lobby
         </Link>
         <div>
-          <h2 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
             Scratch Card 🪙
-          </h2>
+          </h1>
           <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
             Rub off the silver layer and check what spectacular fortunes lay beneath!
           </p>

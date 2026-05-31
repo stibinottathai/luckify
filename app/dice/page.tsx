@@ -1,6 +1,12 @@
 import DiceGame from "@/components/games/DiceGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Lucky Dice 🎲 Roll 3D Perspective CSS Dice | Lucky Vibes",
+  description: "Roll up to three fully interactive 3D CSS perspective dice with real-time clattering audio and special Snake Eyes rare outcomes.",
+};
 
 export default function DicePage() {
   return (
@@ -14,9 +20,9 @@ export default function DicePage() {
           Back to Lobby
         </Link>
         <div>
-          <h2 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
             Lucky Dice 🎲
-          </h2>
+          </h1>
           <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
             Shake up the 3D dice machine and find out your rolling alignment!
           </p>

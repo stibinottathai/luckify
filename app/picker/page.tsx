@@ -1,6 +1,12 @@
 import PickerGame from "@/components/games/PickerGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Number Picker 🎰 Run Staggered Lottery Ball Drops | Lucky Vibes",
+  description: "Pick 6 lottery numbers, run the staggered ball drop machine, and chart your session draws frequencies in a custom inline SVG graph.",
+};
 
 export default function PickerPage() {
   return (
@@ -14,9 +20,9 @@ export default function PickerPage() {
           Back to Lobby
         </Link>
         <div>
-          <h2 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
             Lucky Number Picker 🎰
-          </h2>
+          </h1>
           <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
             Pick 6 lucky lottery numbers, run the drop machine, and check how many matches you get!
           </p>

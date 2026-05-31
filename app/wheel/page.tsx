@@ -1,6 +1,12 @@
 import WheelGame from "@/components/games/WheelGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Fortune Wheel 🎡 Spin to Claim Daily Prizes | Lucky Vibes",
+  description: "Spin the Fortune Wheel of Lucky Vibes! Customize segments, add custom prize names, set spin speed timers, and test your daily fortune outcomes.",
+};
 
 export default function WheelPage() {
   return (
@@ -15,9 +21,9 @@ export default function WheelPage() {
           Back to Lobby
         </Link>
         <div>
-          <h2 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
             Fortune Wheel 🎡
-          </h2>
+          </h1>
           <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
             Give the wheel a spin and claim your daily lucky prize!
           </p>

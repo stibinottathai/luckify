@@ -186,11 +186,28 @@ export default function HomeClient() {
 
         <div className="flex-1 text-center md:text-left space-y-2.5 z-10">
           <h1 className="text-2xl sm:text-3xl font-black font-fredoka leading-none tracking-tight text-primary-gold drop-shadow-md">
-            Lucky Vibes ✨
+            Lucky Vibes ✨ Virtual Garden of Luck & Fortunes
           </h1>
           <p className="text-xs sm:text-sm font-semibold text-cream-soft/80 max-w-xl">
-            Step into the garden of fortunes! Shake the SVG tree, roll 3D dice, spin the wheel, scratch cards, and claim your mystical daily fortunes!
+            Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, roll 3D dice, scratch card covers, and test your vibes score today.
           </p>
+
+          {/* Core Call to Actions (CTAs) above the fold */}
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1.5 pb-2">
+            <Link
+              href="/wheel"
+              className="py-2.5 px-5 rounded-2xl font-black text-xs select-none cursor-pointer tracking-wider shadow-md bg-primary-gold hover:bg-amber-300 text-[#1E1145] hover:shadow-lg active:scale-95 transition-all flex items-center gap-2 group font-fredoka uppercase"
+            >
+              <span>Spin the Fortune Wheel 🎡</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="/lucky-envelope"
+              className="py-2.5 px-4 rounded-2xl font-black text-xs select-none cursor-pointer tracking-wider border border-white/20 hover:bg-white/5 text-white active:scale-95 transition-all flex items-center gap-2 font-fredoka uppercase"
+            >
+              Open Red Packet 🧧
+            </Link>
+          </div>
 
           {/* Miniature Player Stats Dashboard */}
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">

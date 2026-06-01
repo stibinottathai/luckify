@@ -160,9 +160,10 @@ export default function WheelGame() {
     const segmentCenterAngle = (prizeIndex * segmentAngle) + (segmentAngle / 2);
     const targetAngle = 270 - segmentCenterAngle;
     
-    // Normalize target angle and add multiple full revolutions (5 spins)
+    // Normalize target angle and calculate the delta required from current rotation
     const normalizedTarget = ((targetAngle % 360) + 360) % 360;
-    const finalRotation = rotation - (360 * 5) - (360 - normalizedTarget);
+    const rotationDelta = ((rotation - normalizedTarget) % 360 + 360) % 360;
+    const finalRotation = rotation - rotationDelta - (360 * 5);
 
     let lastTickAngle = rotation;
 
@@ -251,7 +252,7 @@ export default function WheelGame() {
           <div className="relative mb-8 p-6 bg-white dark:bg-card border-4 border-primary-gold rounded-3xl shadow-xl flex flex-col items-center w-full max-w-md">
             
             {/* Top gold needle pointer */}
-            <div className="absolute top-2 z-10 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-t-primary-gold drop-shadow-md" />
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-t-primary-gold drop-shadow-md" />
 
             {/* Outer Wheel boundary glow */}
             <div className="rounded-full border-8 border-deep-violet/10 dark:border-white/10 overflow-hidden shadow-inner">

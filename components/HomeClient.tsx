@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, Activity, Award } from "lucide-react";
-import { useLuckStore } from "@/store/luckStore";
+import { ArrowRight } from "lucide-react";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
 
 interface GameCard {
@@ -144,8 +143,6 @@ const PARTICLE_EMOJIS = ["⭐", "🍀", "💫", "🎁", "🍎", "🍊", "💎", 
 export default function HomeClient() {
   const [particles, setParticles] = useState<{ id: number; emoji: string; x: number; delay: number; duration: number }[]>([]);
 
-  const { totalPlays, winStreak } = useLuckStore();
-
   useEffect(() => {
     // Generate floating background particles safely
     const initialParticles = Array.from({ length: 22 }).map((_, i) => ({
@@ -209,19 +206,7 @@ export default function HomeClient() {
             </Link>
           </div>
 
-          {/* Miniature Player Stats Dashboard */}
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">
-            <div className="flex items-center gap-1 py-1 px-2.5 rounded-lg bg-white/5 border border-white/10 text-[10px] sm:text-xs font-bold text-cream-soft/70">
-              <Activity className="w-3.5 h-3.5 text-accent-teal" />
-              Total Plays:{" "}
-              <span className="text-primary-gold font-mono font-black">{totalPlays}</span>
-            </div>
-            <div className="flex items-center gap-1 py-1 px-2.5 rounded-lg bg-white/5 border border-white/10 text-[10px] sm:text-xs font-bold text-cream-soft/70">
-              <Award className="w-3.5 h-3.5 text-alert-coral" />
-              Win Streak:{" "}
-              <span className="text-primary-gold font-mono font-black">{winStreak}</span>
-            </div>
-          </div>
+
         </div>
       </section>
 

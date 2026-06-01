@@ -250,14 +250,14 @@ export default function ScratchGame() {
       </div>
 
       {/* Auto-reveal button */}
-      {!isRevealed && scratchedPercent > 5 && (
+      {!isRevealed && (
         <button
           onClick={() => {
             const canvas = canvasRef.current;
             const ctx = canvas?.getContext("2d");
             revealCard(ctx || undefined, canvas?.width, canvas?.height);
           }}
-          className="mt-6 py-2 px-4 rounded-xl text-xs font-bold bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 text-deep-violet dark:text-cream-soft hover:bg-deep-violet/10 dark:hover:bg-white/10 cursor-pointer active:scale-95 transition-all"
+          className="mt-6 py-2 px-4 rounded-xl text-xs font-bold bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 text-deep-violet dark:text-cream-soft hover:bg-deep-violet/10 dark:hover:bg-white/10 cursor-pointer active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-gold focus-visible:border-transparent"
         >
           Auto-Reveal Card 🪙
         </button>

@@ -36,8 +36,16 @@ export default function Bottle({ phase, onTap }: BottleProps) {
       {/* Tap trigger zone - invisible overlay to capture taps easily */}
       {phase === "idle" && (
         <div
+          role="button"
+          tabIndex={0}
           onClick={onTap}
-          className="absolute inset-0 cursor-pointer z-30 rounded-3xl"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onTap();
+            }
+          }}
+          className="absolute inset-0 cursor-pointer z-30 rounded-3xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2d7d6e] focus-visible:ring-offset-4 focus-visible:ring-offset-[#fde9c4]"
           title="Tap to open the bottle!"
         />
       )}

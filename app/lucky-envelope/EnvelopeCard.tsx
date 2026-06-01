@@ -84,9 +84,17 @@ export default function EnvelopeCard({ phase, fortune, onClick }: EnvelopeCardPr
 
       {/* Outer wrapper with float animation when idle */}
       <div 
+        role="button"
+        tabIndex={isIdle ? 0 : -1}
         onClick={isIdle ? onClick : undefined}
-        className={`w-[290px] h-[370px] relative perspective-1000 cursor-pointer transition-all duration-300 ${
-          isIdle ? "hover:scale-[1.03] pulse-animated" : ""
+        onKeyDown={(e) => {
+          if (isIdle && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        className={`w-[290px] h-[370px] relative perspective-1000 cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 focus-visible:ring-offset-4 focus-visible:ring-offset-[#250b0b] rounded-2xl ${
+          isIdle ? "hover:scale-[1.03] focus-visible:scale-[1.03] pulse-animated" : ""
         }`}
         style={{
           animation: isIdle ? "floatPulse 3s ease-in-out infinite" : "none"

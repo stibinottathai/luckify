@@ -277,6 +277,36 @@ export default function HomeClient() {
 
       {/* AEO FAQ Section */}
       <AeoFaqSection items={LOBBY_FAQS} />
+
+      {/* Structured Authority & Sourcing Block (AEO / E-E-A-T) */}
+      <div className="w-full max-w-4xl border-t border-deep-violet/10 dark:border-white/10 pt-6 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-xs font-semibold text-deep-violet/40 dark:text-cream-soft/40 select-none">
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
+          <span>
+            Last Updated: <span className="font-bold text-deep-violet/60 dark:text-cream-soft/60">June 1, 2026</span>
+          </span>
+          <span className="hidden sm:inline">•</span>
+          <span>
+            Verified by: <span className="font-bold text-deep-violet/60 dark:text-cream-soft/60">Lucky Vibes Editorial Board</span>
+          </span>
+        </div>
+        <div className="flex items-center justify-center gap-4">
+          <Link
+            href="/llms.txt"
+            target="_blank"
+            className="hover:text-primary-gold underline transition-colors"
+          >
+            AI Context (llms.txt)
+          </Link>
+          <span>•</span>
+          <Link
+            href="/pricing.md"
+            target="_blank"
+            className="hover:text-primary-gold underline transition-colors"
+          >
+            Agent Specs (pricing.md)
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

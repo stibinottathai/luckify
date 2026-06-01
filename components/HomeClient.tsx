@@ -93,7 +93,7 @@ const GAMES: GameCard[] = [
   },
   {
     id: "pendulum",
-    emoji: "🔮",
+    emoji: "☯️",
     title: "Pendulum Divination",
     description: "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
     href: "/pendulum",
@@ -111,7 +111,7 @@ const GAMES: GameCard[] = [
   },
   {
     id: "fortune-teller",
-    emoji: "🔮",
+    emoji: "💮",
     title: "Origami Fortune",
     description: "Select colors and numbers to unfold the 3D paper cootie catcher and reveal your hidden fate!",
     href: "/fortune-teller",
@@ -120,7 +120,7 @@ const GAMES: GameCard[] = [
   },
   {
     id: "magic-8-ball",
-    emoji: "🔮",
+    emoji: "🎱",
     title: "Magic 8-Ball",
     description: "Ask a yes or no question, shake the glossy black sphere, and reveal the cosmic oracle's wisdom!",
     href: "/magic-8-ball",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronDown, HelpCircle } from "lucide-react";
 
 export interface FaqItem {
@@ -60,20 +60,16 @@ export default function AeoFaqSection({
               </button>
 
               {/* Answer Content */}
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                  >
-                    <div className="border-t border-deep-violet/5 dark:border-white/5 py-4 px-6 text-xs sm:text-sm font-semibold text-deep-violet/70 dark:text-cream-soft/75 leading-relaxed bg-deep-violet/[0.01] dark:bg-black/10">
-                      {item.answer}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <motion.div
+                initial={false}
+                animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="border-t border-deep-violet/5 dark:border-white/5 py-4 px-6 text-xs sm:text-sm font-semibold text-deep-violet/70 dark:text-cream-soft/75 leading-relaxed bg-deep-violet/[0.01] dark:bg-black/10">
+                  {item.answer}
+                </div>
+              </motion.div>
             </div>
           );
         })}

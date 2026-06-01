@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lottery Number Picker Online 🎰 Free Lotto Ball Generator | Lucky Vibes",
+  title: "Lottery Number Picker Online - Free Lotto Ball Generator | Lucky Vibes",
   description: "Pick 6 lucky lottery numbers, run the dynamic staggered ball drop machine, and chart your session draws frequencies in a detailed custom inline SVG graph.",
   openGraph: {
-    title: "Lottery Number Picker Online 🎰 Free Lotto Ball Generator | Lucky Vibes",
+    title: "Lottery Number Picker Online - Free Lotto Ball Generator | Lucky Vibes",
     description: "An interactive lottery number generator. Select 6 balls, trigger the drop machine, and review matching statistics.",
     type: "website",
   },

@@ -3,10 +3,10 @@ import LuckyEnvelopeClient from "./LuckyEnvelopeClient";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
 
 export const metadata: Metadata = {
-  title: "Lucky Envelope 🧧 Open Virtual Red Packets (Hongbao) | Lucky Vibes",
+  title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Lucky Vibes",
   description: "Receive a traditional lucky red envelope, fold away its 3D golden seal, and reveal your daily blessing of prosperity, wealth, luck, and happiness.",
   openGraph: {
-    title: "Lucky Envelope 🧧 Open Virtual Red Packets (Hongbao) | Lucky Vibes",
+    title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Lucky Vibes",
     description: "An elegant virtual Hongbao simulation. Open your red packet to reveal mystical fortunes and daily luck blessings.",
     type: "website",
   },

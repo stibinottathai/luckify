@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Virtual Scratch Card Online 🪙 Rub Silver Covers | Lucky Vibes",
+  title: "Virtual Scratch Card Online - Rub Silver Covers | Lucky Vibes",
   description: "Rub away the silver metallic layer of our virtual Scratch Card! Sweep your cursor across the tactile canvas, reveal hidden fortunes, and see if you hit the daily jackpot.",
   openGraph: {
-    title: "Virtual Scratch Card Online 🪙 Rub Silver Covers | Lucky Vibes",
+    title: "Virtual Scratch Card Online - Rub Silver Covers | Lucky Vibes",
     description: "An interactive tactile scratchcard simulator. Rub away the silver surface to reveal cosmic fortunes instantly.",
     type: "website",
   },

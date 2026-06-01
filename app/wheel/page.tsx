@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Fortune Wheel Online 🎡 Spin Virtual Prize Wheel | Lucky Vibes",
+  title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
   description: "Spin the Fortune Wheel of Lucky Vibes! Customize wheel segments, add custom prize names, set spin speed timers, and test your daily fortune outcomes instantly.",
   openGraph: {
-    title: "Fortune Wheel Online 🎡 Spin Virtual Prize Wheel | Lucky Vibes",
+    title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
     description: "An interactive HTML5 Canvas prize wheel spinner. Spin the wheel to claim daily blessings and fortunes.",
     type: "website",
   },

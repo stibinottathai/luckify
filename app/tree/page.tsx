@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shaking Tree Simulator 🌳 Random Choice Generator | Lucky Vibes",
+  title: "Shaking Tree Simulator - Random Choice Generator | Lucky Vibes",
   description: "Shake the branches of the interactive SVG Shaking Tree! Add custom names or choices, trigger realistic physics shaking, and catch whichever name drops to decide your fate.",
   openGraph: {
-    title: "Shaking Tree Simulator 🌳 Random Choice Generator | Lucky Vibes",
+    title: "Shaking Tree Simulator - Random Choice Generator | Lucky Vibes",
     description: "An interactive choice selector. Shake the magical SVG tree branches and catch whichever names fruit drops.",
     type: "website",
   },

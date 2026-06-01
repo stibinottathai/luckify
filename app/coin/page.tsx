@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Flip a Coin Online 🪙 Free 3D Cosmic Coin Toss | Lucky Vibes",
+  title: "Flip a Coin Online - Free 3D Cosmic Coin Toss | Lucky Vibes",
   description: "Toss the mystical 3D cosmic golden coin in space! Choose Heads or Tails, flip the virtual coin with realistic tumbling physics, and see where fate aligns your path.",
   openGraph: {
-    title: "Flip a Coin Online 🪙 Free 3D Cosmic Coin Toss | Lucky Vibes",
+    title: "Flip a Coin Online - Free 3D Cosmic Coin Toss | Lucky Vibes",
     description: "Predict Heads or Tails and toss the golden cosmic coin online to resolve decisions instantly.",
     type: "website",
   },

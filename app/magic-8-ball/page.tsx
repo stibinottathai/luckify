@@ -3,10 +3,10 @@ import Magic8BallClient from "./Magic8BallClient";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
 
 export const metadata: Metadata = {
-  title: "Magic 8-Ball Online 🔮 Shake the Virtual Cosmic Ball | Lucky Vibes",
+  title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Lucky Vibes",
   description: "Ask any yes or no question, shake the realistic 3D gloss-black sphere, and reveal the cosmic oracle's mysterious floating wisdom answers.",
   openGraph: {
-    title: "Magic 8-Ball Online 🔮 Shake the Virtual Cosmic Ball | Lucky Vibes",
+    title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Lucky Vibes",
     description: "Seek instant cosmic validation! Ask your question and shake the 3D Magic 8-Ball oracle online.",
     type: "website",
   },

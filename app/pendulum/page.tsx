@@ -3,10 +3,10 @@ import PendulumClient from "./PendulumClient";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
 
 export const metadata: Metadata = {
-  title: "Pendulum Divination 🔮 Virtual Dowsing Pendulum | Lucky Vibes",
+  title: "Pendulum Divination - Virtual Dowsing Pendulum | Lucky Vibes",
   description: "Focus your energy and query on the digital canvas, release the cosmic silver pendulum bob on its string, and let physical gravity simulate the oracle's answer.",
   openGraph: {
-    title: "Pendulum Divination 🔮 Virtual Dowsing Pendulum | Lucky Vibes",
+    title: "Pendulum Divination - Virtual Dowsing Pendulum | Lucky Vibes",
     description: "Type your query, release the silver pendulum, and let physical forces guide your cosmic yes or no decision.",
     type: "website",
   },

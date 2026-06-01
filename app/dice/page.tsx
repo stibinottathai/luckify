@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lucky Dice Roller Online 🎲 Roll 3D CSS Cubes | Lucky Vibes",
+  title: "Lucky Dice Roller Online - Roll 3D CSS Cubes | Lucky Vibes",
   description: "Roll up to three fully interactive 3D CSS dice! Customize target scoring, trigger clattering audio, and check your rolling luck score alignment instantly.",
   openGraph: {
-    title: "Lucky Dice Roller Online 🎲 Roll 3D CSS Cubes | Lucky Vibes",
+    title: "Lucky Dice Roller Online - Roll 3D CSS Cubes | Lucky Vibes",
     description: "An interactive 3D virtual dice rolling simulator. Roll up to three customizable dice with realistic rotational physics.",
     type: "website",
   },

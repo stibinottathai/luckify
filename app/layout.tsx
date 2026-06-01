@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Lucky Vibes ✨ Try Your Luck. Find Your Fortune.",
+  title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
   description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, shake the SVG tree, select lottery numbers, scratch a card, and test your vibes score today.",
 };
 

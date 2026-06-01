@@ -1,7 +1,15 @@
-import DiceGame from "@/components/games/DiceGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const DiceGame = dynamic(() => import("@/components/games/DiceGame"), {
+  loading: () => (
+    <div className="w-full max-w-lg h-[450px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black">
+      <span>Preparing Dice Roller... 🎲</span>
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Lucky Dice Roller Online - Roll 3D CSS Cubes | Lucky Vibes",

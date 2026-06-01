@@ -1,7 +1,15 @@
-import PickerGame from "@/components/games/PickerGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const PickerGame = dynamic(() => import("@/components/games/PickerGame"), {
+  loading: () => (
+    <div className="w-full max-w-2xl h-[500px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black">
+      <span>Charging Lotto Machine... 🎰</span>
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Lottery Number Picker Online - Free Lotto Ball Generator | Lucky Vibes",

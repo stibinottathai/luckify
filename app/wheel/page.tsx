@@ -1,7 +1,15 @@
-import WheelGame from "@/components/games/WheelGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const WheelGame = dynamic(() => import("@/components/games/WheelGame"), {
+  loading: () => (
+    <div className="w-full max-w-lg h-[500px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black">
+      <span>Calibrating Fortune Wheel... 🎡</span>
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",

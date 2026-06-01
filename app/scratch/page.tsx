@@ -1,7 +1,15 @@
-import ScratchGame from "@/components/games/ScratchGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const ScratchGame = dynamic(() => import("@/components/games/ScratchGame"), {
+  loading: () => (
+    <div className="w-full max-w-lg h-[450px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black">
+      <span>Preparing Scratch Layer... 🎟️</span>
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Virtual Scratch Card Online - Rub Silver Covers | Lucky Vibes",

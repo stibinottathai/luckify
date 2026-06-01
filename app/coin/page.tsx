@@ -1,7 +1,15 @@
-import CoinFlipGame from "@/components/games/CoinFlipGame";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const CoinFlipGame = dynamic(() => import("@/components/games/CoinFlipGame"), {
+  loading: () => (
+    <div className="w-full max-w-md h-[450px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black">
+      <span>Aligning Gravity... 🪙</span>
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Flip a Coin Online - Free 3D Cosmic Coin Toss | Lucky Vibes",

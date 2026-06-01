@@ -7,9 +7,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
     description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, shake the SVG tree, select lottery numbers, scratch a card, and test your vibes score today.",
-    type: "website",
-    locale: "en_US",
+    url: "https://luckify.vercel.app",
     siteName: "Lucky Vibes",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Lucky Vibes - Virtual Lucky Garden and Fortune Oracle",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
+    description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, shake the SVG tree, flip cosmic golden coins, open traditional red envelopes, scratch cards, and check your vibes score today.",
+    images: ["/og-image.png"],
   },
 };
 

@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
-import MessageInBottleClient from "./MessageInBottleClient";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
+import dynamic from "next/dynamic";
+
+const MessageInBottleClient = dynamic(() => import("./MessageInBottleClient"), {
+  loading: () => (
+    <div className="w-full max-w-sm h-[380px] bg-teal-500/5 border-2 border-teal-500/10 rounded-[2.5rem] animate-pulse flex flex-col items-center justify-center gap-3 text-teal-700/30 font-fredoka font-black mx-auto">
+      <span>Stirring Ocean Waves... 🌊</span>
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Message in a Bottle Online - Cast Fortunes to Sea | Lucky Vibes",

@@ -59,6 +59,9 @@ export default function RootLayout({
       className={`${fredoka.variable} ${nunito.variable} h-full antialiased`}
       style={{ colorScheme: "light" }}
     >
+      <head>
+        <link rel="preconnect" href="https://www.affirmations.dev" />
+      </head>
       <body className="min-h-full flex flex-col">
         <Shell>{children}</Shell>
       </body>

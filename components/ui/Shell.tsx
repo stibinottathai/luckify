@@ -8,8 +8,9 @@ import { useLuckStore } from "@/store/luckStore";
 import ShareModal from "@/components/ui/ShareModal";
 import LegalModal from "@/components/ui/LegalModal";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import { SessionProvider } from "next-auth/react";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import AuthButton from "@/components/auth/AuthButton";
+
 
 
 interface ShellProps {
@@ -70,7 +71,7 @@ export default function Shell({ children }: ShellProps) {
   }
 
   return (
-    <SessionProvider>
+    <AuthProvider>
       <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
       {/* Sticky top navbar */}
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-deep-violet/10 dark:border-white/10 select-none">
@@ -155,6 +156,6 @@ export default function Shell({ children }: ShellProps) {
       <ShareModal isOpen={shareOpen} onClose={() => setShareOpen(false)} score={luckyScore} />
       <LegalModal isOpen={legalOpen} onClose={() => setLegalOpen(false)} initialTab={legalTab} />
       </div>
-    </SessionProvider>
+    </AuthProvider>
   );
 }

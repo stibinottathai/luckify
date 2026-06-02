@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signInWithPopup, signOut } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, User, Sparkles, History, Compass, ArrowRight } from "lucide-react";
+import { LogOut, User, Sparkles, History, ArrowRight } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 
 export default function AuthButton() {
-  const { data: session, status } = useSession();
+  const { user, loading } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { luckyScore, totalPlays } = useLuckStore();
@@ -25,14 +27,29 @@ export default function AuthButton() {
     };
   }, []);
 
-  if (status === "loading") {
+  const handleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Firebase Google Sign-in failed:", error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Firebase Sign-out failed:", error);
+    }
+  };
+
+  if (loading) {
     return (
       <div className="w-8 h-8 rounded-full border-2 border-primary-gold/30 border-t-primary-gold animate-spin" />
     );
   }
 
-  if (session && session.user) {
-    const user = session.user;
+  if (user) {
     return (
       <div className="relative" ref={dropdownRef}>
         {/* User Profile Avatar Trigger */}
@@ -40,17 +57,17 @@ export default function AuthButton() {
           onClick={() => setDropdownOpen(!dropdownOpen)}
           className="flex items-center gap-2 p-1 rounded-full border-2 border-primary-gold/50 hover:border-primary-gold bg-cream-soft dark:bg-deep-violet/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none"
         >
-          {user.image ? (
+          {user.photoURL ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={user.image}
-              alt={user.name || "User"}
+              src={user.photoURL}
+              alt={user.displayName || "User"}
               className="w-7 h-7 rounded-full object-cover"
               referrerPolicy="no-referrer"
             />
           ) : (
             <div className="w-7 h-7 rounded-full bg-primary-gold/20 flex items-center justify-center text-primary-gold font-bold text-sm">
-              {user.name ? user.name[0].toUpperCase() : "U"}
+              {user.displayName ? user.displayName[0].toUpperCase() : "U"}
             </div>
           )}
         </button>
@@ -68,22 +85,22 @@ export default function AuthButton() {
               {/* Header Info */}
               <div className="p-4 border-b border-deep-violet/5 dark:border-white/5 bg-gradient-to-br from-deep-violet/5 via-transparent to-primary-gold/5 dark:from-white/5 dark:to-transparent">
                 <div className="flex items-center gap-3">
-                  {user.image ? (
+                  {user.photoURL ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={user.image}
-                      alt={user.name || "User"}
+                      src={user.photoURL}
+                      alt={user.displayName || "User"}
                       className="w-12 h-12 rounded-full border-2 border-primary-gold object-cover"
                       referrerPolicy="no-referrer"
                     />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-primary-gold/20 border-2 border-primary-gold flex items-center justify-center text-primary-gold font-bold text-lg">
-                      {user.name ? user.name[0].toUpperCase() : "U"}
+                      {user.displayName ? user.displayName[0].toUpperCase() : "U"}
                     </div>
                   )}
                   <div className="overflow-hidden">
                     <h4 className="font-fredoka text-sm font-bold text-deep-violet dark:text-cream-soft truncate">
-                      {user.name}
+                      {user.displayName}
                     </h4>
                     <p className="text-xs text-deep-violet/60 dark:text-cream-soft/60 truncate">
                       {user.email}
@@ -139,7 +156,7 @@ export default function AuthButton() {
                 <button
                   onClick={() => {
                     setDropdownOpen(false);
-                    signOut();
+                    handleSignOut();
                   }}
                   className="w-full flex items-center gap-2 p-2.5 rounded-xl hover:bg-rose-500/10 hover:text-rose-500 text-deep-violet/70 dark:text-cream-soft/70 text-xs font-bold transition-all duration-200 cursor-pointer text-left"
                 >
@@ -157,7 +174,7 @@ export default function AuthButton() {
   // Not signed in: Renders premium, visually stunning Google sign-in button
   return (
     <button
-      onClick={() => signIn("google")}
+      onClick={handleSignIn}
       className="relative flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-fredoka font-extrabold rounded-full bg-gradient-to-r from-deep-violet to-[#4f3583] hover:from-primary-gold hover:to-[#dfa72b] text-white hover:text-deep-violet border border-primary-gold/30 hover:scale-105 active:scale-95 shadow-md hover:shadow-primary-gold/20 transition-all duration-300 group cursor-pointer focus:outline-none overflow-hidden"
     >
       {/* Light glow effects */}

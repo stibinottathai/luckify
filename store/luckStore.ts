@@ -62,6 +62,11 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   wheelPaidSpinsUsed: 0,
 });
 
+export const createGuestProfile = (): UserLuckProfile => ({
+  ...createDefaultProfile(),
+  coinBalance: 0,
+});
+
 export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile => {
   const defaults = createDefaultProfile();
   const nextProfile = {
@@ -69,6 +74,12 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
     ...profile,
     history: profile?.history ?? defaults.history,
   };
+
+  // Self-healing rule: If they are a new user (total plays is 0),
+  // they must have the starting coin balance of 500!
+  if (nextProfile.totalPlays === 0) {
+    nextProfile.coinBalance = STARTING_COIN_BALANCE;
+  }
 
   if (nextProfile.wheelSpinDate !== getTodayKey()) {
     return {
@@ -101,14 +112,21 @@ export const useLuckStore = create<LuckStore>()(
     (set, get) => ({
       activeUserKey: GUEST_USER_KEY,
       profiles: {
-        [GUEST_USER_KEY]: createDefaultProfile(),
+        [GUEST_USER_KEY]: createGuestProfile(),
       },
-      ...createDefaultProfile(),
+      ...createGuestProfile(),
 
       setActiveUser: (userKey) => {
         const nextUserKey = userKey || GUEST_USER_KEY;
         set((state) => {
-          const profile = normalizeProfile(state.profiles[nextUserKey]);
+          const rawProfile = state.profiles[nextUserKey];
+          const isGuestKey = nextUserKey === GUEST_USER_KEY;
+
+          let profile = normalizeProfile(rawProfile);
+          if (isGuestKey) {
+            profile.coinBalance = 0;
+          }
+
           return applyProfile(nextUserKey, profile, {
             ...state.profiles,
             [nextUserKey]: profile,

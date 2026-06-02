@@ -9,10 +9,34 @@ import { useLuckStore } from "@/store/luckStore";
 import ShareModal from "@/components/ui/ShareModal";
 import LegalModal from "@/components/ui/LegalModal";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import { AuthProvider } from "@/components/auth/AuthProvider";
+import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
 import AuthButton from "@/components/auth/AuthButton";
 
+function PointsHeaderDisplay() {
+  const { user } = useAuth();
+  const coinBalance = useLuckStore((s) => s.coinBalance);
 
+  if (!user) return null;
+
+  return (
+    <div
+      aria-label={`${coinBalance.toLocaleString()} points`}
+      className="h-10 px-2.5 sm:px-3 rounded-full border border-primary-gold/35 bg-primary-gold/10 dark:bg-primary-gold/15 shadow-[0_8px_24px_rgba(245,183,0,0.16)] flex items-center gap-2"
+    >
+      <span className="w-7 h-7 rounded-full bg-primary-gold text-deep-violet flex items-center justify-center shadow-inner">
+        <Coins className="w-4 h-4" />
+      </span>
+      <span className="min-w-0 text-left leading-none">
+        <span className="block font-fredoka text-sm sm:text-base font-black text-deep-violet dark:text-cream-soft tabular-nums">
+          {coinBalance.toLocaleString()}
+        </span>
+        <span className="hidden sm:block text-[9px] uppercase tracking-wider font-extrabold text-deep-violet/45 dark:text-cream-soft/45">
+          Points
+        </span>
+      </span>
+    </div>
+  );
+}
 
 interface ShellProps {
   children: React.ReactNode;
@@ -122,22 +146,7 @@ export default function Shell({ children }: ShellProps) {
 
           {/* Right Navigation controls */}
           <div className="flex items-center gap-2 sm:gap-4">
-            <div
-              aria-label={`${coinBalance.toLocaleString()} points`}
-              className="h-10 px-2.5 sm:px-3 rounded-full border border-primary-gold/35 bg-primary-gold/10 dark:bg-primary-gold/15 shadow-[0_8px_24px_rgba(245,183,0,0.16)] flex items-center gap-2"
-            >
-              <span className="w-7 h-7 rounded-full bg-primary-gold text-deep-violet flex items-center justify-center shadow-inner">
-                <Coins className="w-4 h-4" />
-              </span>
-              <span className="min-w-0 text-left leading-none">
-                <span className="block font-fredoka text-sm sm:text-base font-black text-deep-violet dark:text-cream-soft tabular-nums">
-                  {coinBalance.toLocaleString()}
-                </span>
-                <span className="hidden sm:block text-[9px] uppercase tracking-wider font-extrabold text-deep-violet/45 dark:text-cream-soft/45">
-                  Points
-                </span>
-              </span>
-            </div>
+            <PointsHeaderDisplay />
 
             {/* Google Authentication Control */}
             <AuthButton />

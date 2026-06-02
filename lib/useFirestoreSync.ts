@@ -16,7 +16,7 @@ import type { User } from "firebase/auth";
 import { useLuckStore } from "@/store/luckStore";
 import { saveFirestoreProfile } from "@/lib/firestoreProfile";
 
-const DEBOUNCE_MS = 1500; // wait 1.5 s after last change before writing
+const DEBOUNCE_MS = 100; // wait 100ms after last change before writing
 
 export function useFirestoreSync(user: User | null) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

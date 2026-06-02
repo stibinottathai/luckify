@@ -10,6 +10,7 @@ import {
 } from "@/lib/prizes";
 import { playTick } from "@/lib/audio";
 import { useLuckStore } from "@/store/luckStore";
+import { useAuth } from "@/components/auth/AuthProvider";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
 import { animate } from "framer-motion";
@@ -27,6 +28,9 @@ function shadeHexColor(hex: string, amount: number) {
 }
 
 export default function WheelGame() {
+  const { user } = useAuth();
+  const isGuest = !user;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
@@ -54,8 +58,8 @@ export default function WheelGame() {
   const totalSpinsLeft = (freeSpinAvailable ? 1 : 0) + paidSpinsLeft;
   const isDailyLimitReached = totalSpinsLeft === 0;
   const canAffordPaidSpin = coinBalance >= WHEEL_PAID_SPIN_COST;
-  // Can spin if: has free spin, OR has paid spins left and enough coins
-  const canSpin = freeSpinAvailable || (paidSpinsLeft > 0 && canAffordPaidSpin);
+  // Can spin if: signed in AND (has free spin, OR has paid spins left and enough coins)
+  const canSpin = !isGuest && (freeSpinAvailable || (paidSpinsLeft > 0 && canAffordPaidSpin));
 
   // Redraw the canvas wheel whenever rotation changes
   const drawWheel = useCallback((currentRotation: number) => {
@@ -365,25 +369,32 @@ export default function WheelGame() {
         >
           {isSpinning
             ? "Spinning..."
-            : isDailyLimitReached
-              ? "SPINS EXHAUSTED FOR TODAY"
-              : freeSpinAvailable
-                ? "SPIN THE WHEEL — FREE"
-                : canAffordPaidSpin
-                  ? `SPIN — ${WHEEL_PAID_SPIN_COST} PTS`
-                  : `NEED ${WHEEL_PAID_SPIN_COST} PTS TO SPIN`}
+            : isGuest
+              ? "SIGN IN TO SPIN"
+              : isDailyLimitReached
+                ? "SPINS EXHAUSTED FOR TODAY"
+                : freeSpinAvailable
+                  ? "SPIN THE WHEEL — FREE"
+                  : canAffordPaidSpin
+                    ? `SPIN — ${WHEEL_PAID_SPIN_COST} PTS`
+                    : `NEED ${WHEEL_PAID_SPIN_COST} PTS TO SPIN`}
         </button>
-        {walletMessage && (
+        {isGuest && (
+          <p className="mt-3 text-xs font-bold text-[#F5B700] text-center animate-pulse">
+            ✨ Sign in using Google at the top to spin the wheel and claim rewards!
+          </p>
+        )}
+        {walletMessage && !isGuest && (
           <p className="mt-3 text-xs font-bold text-alert-coral text-center">
             {walletMessage}
           </p>
         )}
-        {!walletMessage && isDailyLimitReached && (
+        {!walletMessage && !isGuest && isDailyLimitReached && (
           <p className="mt-3 text-xs font-bold text-alert-coral text-center">
             Daily limit: 1 free + 5 paid spins. Come back tomorrow!
           </p>
         )}
-        {!walletMessage && !isDailyLimitReached && !freeSpinAvailable && !canAffordPaidSpin && (
+        {!walletMessage && !isGuest && !isDailyLimitReached && !freeSpinAvailable && !canAffordPaidSpin && (
           <p className="mt-3 text-xs font-bold text-alert-coral text-center">
             You need {WHEEL_PAID_SPIN_COST} points to spin again.
           </p>

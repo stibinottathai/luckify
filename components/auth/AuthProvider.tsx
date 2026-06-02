@@ -98,19 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           };
         });
 
-        // Persist initial profile (fire-and-forget)
-        saveFirestoreProfile(uid, {
-          coinBalance: STARTING_COIN_BALANCE,
-          luckyScore: 50,
-          totalPlays: 0,
-          winStreak: 0,
-          history: [],
-          wheelSpinDate: new Date().toISOString().slice(0, 10),
-          wheelDailySpinsUsed: 0,
-          wheelPaidSpinsUsed: 0,
-          displayName: firebaseUser.displayName ?? "Lucky Player",
-          photoURL: firebaseUser.photoURL ?? "",
-        }).catch(() => {/* silent — sync hook will retry */});
+
       }
 
       setLoading(false);

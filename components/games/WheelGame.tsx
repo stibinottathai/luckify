@@ -1,12 +1,30 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { WHEEL_PRIZES, WHEEL_SPIN_COST, Prize } from "@/lib/prizes";
+import {
+  WHEEL_EXTRA_SPIN_PACK_COST,
+  WHEEL_EXTRA_SPIN_PACK_SIZE,
+  WHEEL_FREE_DAILY_SPINS,
+  WHEEL_PRIZES,
+  Prize,
+} from "@/lib/prizes";
 import { playTick } from "@/lib/audio";
 import { useLuckStore } from "@/store/luckStore";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
 import { animate } from "framer-motion";
+
+const SPIN_DURATION_SECONDS = 7.5;
+
+function shadeHexColor(hex: string, amount: number) {
+  const normalizedHex = hex.replace("#", "");
+  const color = Number.parseInt(normalizedHex, 16);
+  const r = Math.max(0, Math.min(255, (color >> 16) + amount));
+  const g = Math.max(0, Math.min(255, ((color >> 8) & 0xff) + amount));
+  const b = Math.max(0, Math.min(255, (color & 0xff) + amount));
+
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
 
 export default function WheelGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -19,13 +37,20 @@ export default function WheelGame() {
 
   // Use the standard WHEEL_PRIZES segments
   const segments = WHEEL_PRIZES;
-  const [spinDuration, setSpinDuration] = useState<5 | 10 | 15>(5);
 
   const addResult = useLuckStore((state) => state.addResult);
   const addCoins = useLuckStore((state) => state.addCoins);
-  const spendCoins = useLuckStore((state) => state.spendCoins);
   const coinBalance = useLuckStore((state) => state.coinBalance);
   const currentScore = useLuckStore((state) => state.luckyScore);
+  const wheelDailySpinsUsed = useLuckStore((state) => state.wheelDailySpinsUsed);
+  const wheelBonusSpins = useLuckStore((state) => state.wheelBonusSpins);
+  const refreshWheelSpins = useLuckStore((state) => state.refreshWheelSpins);
+  const consumeWheelSpin = useLuckStore((state) => state.consumeWheelSpin);
+  const buyWheelSpinPack = useLuckStore((state) => state.buyWheelSpinPack);
+
+  const dailySpinsRemaining = Math.max(0, WHEEL_FREE_DAILY_SPINS - wheelDailySpinsUsed);
+  const spinsAvailable = dailySpinsRemaining + wheelBonusSpins;
+  const canBuySpinPack = coinBalance >= WHEEL_EXTRA_SPIN_PACK_COST;
 
   // Redraw the canvas wheel whenever rotation changes
   const drawWheel = useCallback((currentRotation: number) => {
@@ -70,6 +95,21 @@ export default function WheelGame() {
 
     const arcSize = (2 * Math.PI) / numSegments;
 
+    const wheelBase = ctx.createRadialGradient(center, center, radius * 0.1, center, center, radius + 10);
+    wheelBase.addColorStop(0, "#FFF8E7");
+    wheelBase.addColorStop(0.72, "#F5B700");
+    wheelBase.addColorStop(1, "#7C4A12");
+
+    ctx.save();
+    ctx.shadowColor = "rgba(45, 27, 105, 0.28)";
+    ctx.shadowBlur = 22;
+    ctx.shadowOffsetY = 12;
+    ctx.beginPath();
+    ctx.arc(center, center, radius + 8, 0, 2 * Math.PI);
+    ctx.fillStyle = wheelBase;
+    ctx.fill();
+    ctx.restore();
+
     // Save state for global rotation
     ctx.save();
     ctx.translate(center, center);
@@ -85,13 +125,22 @@ export default function WheelGame() {
       ctx.arc(0, 0, radius, angle, angle + arcSize);
       ctx.closePath();
 
-      // Wedge background
-      ctx.fillStyle = prize.color;
+      const wedgeGradient = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius);
+      wedgeGradient.addColorStop(0, shadeHexColor(prize.color, 38));
+      wedgeGradient.addColorStop(0.62, prize.color);
+      wedgeGradient.addColorStop(1, shadeHexColor(prize.color, -38));
+      ctx.fillStyle = wedgeGradient;
       ctx.fill();
 
       // Wedges border divider
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = "#FFF8E7";
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "rgba(255, 248, 231, 0.92)";
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius - 14, angle + 0.015, angle + arcSize - 0.015);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
       ctx.stroke();
 
       // Draw prize text radially
@@ -100,6 +149,9 @@ export default function WheelGame() {
       ctx.textAlign = "right";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#ffffff";
+      ctx.shadowColor = "rgba(45, 27, 105, 0.45)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetY = 2;
       
       // Determine font size based on segment count to prevent overlapping text
       const fontSize = numSegments > 10 ? "11px" : "13px";
@@ -112,10 +164,40 @@ export default function WheelGame() {
 
     ctx.restore();
 
-    // Draw central golden peg hub
+    ctx.save();
     ctx.beginPath();
-    ctx.arc(center, center, 18, 0, 2 * Math.PI);
-    ctx.fillStyle = "#F5B700";
+    ctx.arc(center, center, radius + 5, 0, 2 * Math.PI);
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "#F5B700";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(center, center, radius - 2, 0, 2 * Math.PI);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(255, 248, 231, 0.85)";
+    ctx.stroke();
+
+    const rivetCount = 16;
+    for (let i = 0; i < rivetCount; i++) {
+      const angle = (i / rivetCount) * Math.PI * 2;
+      const x = center + Math.cos(angle) * (radius + 6);
+      const y = center + Math.sin(angle) * (radius + 6);
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = i % 2 === 0 ? "#FFF8E7" : "#2D1B69";
+      ctx.globalAlpha = 0.78;
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // Draw central golden peg hub
+    const hubGradient = ctx.createRadialGradient(center - 6, center - 8, 4, center, center, 24);
+    hubGradient.addColorStop(0, "#FFF8E7");
+    hubGradient.addColorStop(0.4, "#F5B700");
+    hubGradient.addColorStop(1, "#9C6518");
+    ctx.beginPath();
+    ctx.arc(center, center, 24, 0, 2 * Math.PI);
+    ctx.fillStyle = hubGradient;
     ctx.fill();
     ctx.lineWidth = 4;
     ctx.strokeStyle = "#FFF8E7";
@@ -123,7 +205,7 @@ export default function WheelGame() {
 
     // Hub core decoration
     ctx.beginPath();
-    ctx.arc(center, center, 8, 0, 2 * Math.PI);
+    ctx.arc(center, center, 9, 0, 2 * Math.PI);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
   }, [segments]);
@@ -132,6 +214,10 @@ export default function WheelGame() {
   useEffect(() => {
     drawWheel(rotation);
   }, [drawWheel, rotation]);
+
+  useEffect(() => {
+    refreshWheelSpins();
+  }, [refreshWheelSpins]);
 
   const getWeightedPrizeIndex = () => {
     const totalWeight = segments.reduce((sum, prize) => sum + prize.weight, 0);
@@ -156,8 +242,12 @@ export default function WheelGame() {
 
     if (isSpinning) return;
 
-    if (!spendCoins(WHEEL_SPIN_COST)) {
-      setWalletMessage(`You need ${WHEEL_SPIN_COST} coins to spin the wheel.`);
+    if (!consumeWheelSpin()) {
+      setWalletMessage(
+        canBuySpinPack
+          ? `Your daily spins are used. Unlock ${WHEEL_EXTRA_SPIN_PACK_SIZE} more for ${WHEEL_EXTRA_SPIN_PACK_COST} points.`
+          : `Your daily spins are used. You need ${WHEEL_EXTRA_SPIN_PACK_COST} points to unlock ${WHEEL_EXTRA_SPIN_PACK_SIZE} more.`
+      );
       return;
     }
 
@@ -183,13 +273,13 @@ export default function WheelGame() {
     // Normalize target angle and calculate the delta required from current rotation
     const normalizedTarget = ((targetAngle % 360) + 360) % 360;
     const rotationDelta = ((rotation - normalizedTarget) % 360 + 360) % 360;
-    const finalRotation = rotation - rotationDelta - (360 * 5);
+    const finalRotation = rotation - rotationDelta - (360 * 7);
 
     let lastTickAngle = rotation;
 
     // Animate rotation using framer motion controls
     animate(rotation, finalRotation, {
-      duration: spinDuration, // Dynamic spin duration
+      duration: SPIN_DURATION_SECONDS,
       ease: [0.1, 0.8, 0.1, 1], // Perfect fast spin to deceleration curve
       onUpdate: (latest) => {
         setRotation(latest);
@@ -211,7 +301,7 @@ export default function WheelGame() {
         addResult(
           "Fortune Wheel",
           prize.isWin
-            ? `${prize.emoji} Won ${prize.coinReward} coins`
+            ? `${prize.emoji} Won ${prize.coinReward} points`
             : `${prize.emoji} Try again`,
           prize.isWin,
           prize.scoreImpact
@@ -220,86 +310,94 @@ export default function WheelGame() {
     });
   };
 
+  const handleBuySpinPack = () => {
+    if (isSpinning) return;
+
+    if (!buyWheelSpinPack()) {
+      setWalletMessage(`You need ${WHEEL_EXTRA_SPIN_PACK_COST} points to unlock ${WHEEL_EXTRA_SPIN_PACK_SIZE} more spins.`);
+      return;
+    }
+
+    setWalletMessage(`${WHEEL_EXTRA_SPIN_PACK_SIZE} more spins unlocked for today.`);
+  };
+
+  const handlePrimaryAction = () => {
+    if (spinsAvailable > 0) {
+      handleSpin();
+      return;
+    }
+
+    handleBuySpinPack();
+  };
+
   return (
     <div className="w-full max-w-md mx-auto py-0 sm:py-4 flex flex-col items-center select-none">
       {/* Game board wrapper */}
-      <div className="relative mb-4 sm:mb-8 p-3 sm:p-6 bg-white dark:bg-card border-4 border-primary-gold rounded-3xl shadow-xl flex flex-col items-center w-full">
-        <div className="w-full mb-3 sm:mb-5 grid grid-cols-2 gap-2 sm:gap-3">
-          <div className="rounded-xl sm:rounded-2xl border border-deep-violet/10 dark:border-white/10 bg-deep-violet/5 dark:bg-white/5 p-2 sm:p-3 text-center">
-            <span className="block text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40">
-              Coin Balance
-            </span>
-            <span className="font-fredoka text-xl sm:text-2xl font-black text-primary-gold leading-none">
-              {coinBalance.toLocaleString()}
-            </span>
-          </div>
-          <div className="rounded-xl sm:rounded-2xl border border-deep-violet/10 dark:border-white/10 bg-deep-violet/5 dark:bg-white/5 p-2 sm:p-3 text-center">
-            <span className="block text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40">
-              Spin Cost
-            </span>
-            <span className="font-fredoka text-xl sm:text-2xl font-black text-deep-violet dark:text-cream-soft leading-none">
-              {WHEEL_SPIN_COST}
-            </span>
-          </div>
-        </div>
+      <div className="relative mb-4 sm:mb-8 p-4 sm:p-6 bg-[radial-gradient(circle_at_50%_0%,rgba(245,183,0,0.24),transparent_38%),linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,248,231,0.78))] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(245,183,0,0.22),transparent_40%),linear-gradient(145deg,rgba(27,16,62,0.98),rgba(8,5,20,0.96))] border border-primary-gold/45 rounded-[28px] shadow-[0_22px_60px_rgba(45,27,105,0.18)] dark:shadow-[0_22px_60px_rgba(0,0,0,0.45)] flex flex-col items-center w-full overflow-hidden">
+        <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
+        <div className="absolute -left-10 top-16 w-28 h-28 rounded-full border border-accent-teal/20" />
+        <div className="absolute -right-8 bottom-20 w-24 h-24 rounded-full border border-primary-gold/25" />
         
         {/* Top gold needle pointer */}
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-t-primary-gold drop-shadow-md" />
+        <div className="absolute top-5 sm:top-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center drop-shadow-lg">
+          <div className="w-9 h-9 rounded-full bg-deep-violet dark:bg-cream-soft border-[5px] border-primary-gold" />
+          <div className="-mt-2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[34px] border-t-primary-gold" />
+        </div>
 
         {/* Outer Wheel boundary glow */}
-        <div className="rounded-full border-[6px] sm:border-8 border-deep-violet/10 dark:border-white/10 overflow-hidden shadow-inner">
+        <div className="relative mt-7 sm:mt-8 rounded-full p-2 sm:p-3 bg-deep-violet/10 dark:bg-white/10 border border-white/70 dark:border-white/10 shadow-[inset_0_0_28px_rgba(45,27,105,0.12),0_18px_40px_rgba(45,27,105,0.16)]">
+          <div className="absolute inset-1 rounded-full border border-primary-gold/45 pointer-events-none" />
           <canvas
             ref={canvasRef}
             width={340}
             height={340}
-            className="w-[230px] h-[230px] min-[390px]:w-[250px] min-[390px]:h-[250px] sm:w-[340px] sm:h-[340px]"
+            className="relative w-[240px] h-[240px] min-[390px]:w-[260px] min-[390px]:h-[260px] sm:w-[340px] sm:h-[340px]"
           />
         </div>
 
-        {/* Spin Duration Selector Segmented Control */}
-        <div className="w-full mt-3 sm:mt-5 flex items-center justify-between border-t border-deep-violet/10 dark:border-white/10 pt-3 sm:pt-4 pb-1 sm:pb-2 px-1">
-          <span className="text-xs font-bold text-deep-violet/50 dark:text-cream-soft/50 uppercase tracking-wider">
-            Duration:
-          </span>
-          <div className="flex gap-1 bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 p-0.5 rounded-xl">
-            {([5, 10, 15] as const).map((dur) => (
-              <button
-                key={dur}
-                type="button"
-                disabled={isSpinning}
-                onClick={() => setSpinDuration(dur)}
-                className={`py-1 px-2.5 sm:px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  spinDuration === dur
-                    ? "bg-primary-gold text-deep-violet shadow-xs font-black"
-                    : "text-deep-violet/60 dark:text-cream-soft/60 hover:bg-deep-violet/5 dark:hover:bg-white/5"
-                }`}
-              >
-                {dur}s
-              </button>
-            ))}
+        <div className="relative z-[1] mt-4 w-full grid grid-cols-2 gap-2">
+          <div className="rounded-xl border border-white/60 dark:border-white/10 bg-white/75 dark:bg-black/35 px-3 py-2 text-center shadow-sm">
+            <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-cream-soft/45">
+              Daily Spins
+            </span>
+            <span className="font-fredoka text-lg font-black text-deep-violet dark:text-cream-soft">
+              {dailySpinsRemaining}/{WHEEL_FREE_DAILY_SPINS}
+            </span>
+          </div>
+          <div className="rounded-xl border border-white/60 dark:border-white/10 bg-white/75 dark:bg-black/35 px-3 py-2 text-center shadow-sm">
+            <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-cream-soft/45">
+              Extra Spins
+            </span>
+            <span className="font-fredoka text-lg font-black text-primary-gold">
+              {wheelBonusSpins}
+            </span>
           </div>
         </div>
 
         {/* Play Action button */}
         <button
-          disabled={isSpinning || coinBalance < WHEEL_SPIN_COST}
-          onClick={handleSpin}
-          className={`mt-3 sm:mt-4 py-3 sm:py-4 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-extrabold text-base sm:text-lg select-none cursor-pointer tracking-wider shadow-lg transition-all transform active:scale-95 w-full ${
-            isSpinning || coinBalance < WHEEL_SPIN_COST
+          disabled={isSpinning || (spinsAvailable === 0 && !canBuySpinPack)}
+          onClick={handlePrimaryAction}
+          className={`mt-5 sm:mt-6 py-3.5 sm:py-4 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-extrabold text-base sm:text-lg select-none cursor-pointer tracking-wider shadow-lg transition-all transform active:scale-95 w-full ${
+            isSpinning || (spinsAvailable === 0 && !canBuySpinPack)
               ? "bg-deep-violet/30 dark:bg-white/10 text-deep-violet/50 dark:text-cream-soft/50 pointer-events-none cursor-not-allowed"
-              : "bg-primary-gold hover:bg-[#E0A700] text-deep-violet hover:shadow-xl"
+              : "bg-deep-violet hover:bg-primary-gold text-cream-soft hover:text-deep-violet dark:bg-primary-gold dark:text-deep-violet dark:hover:bg-[#E0A700] hover:shadow-xl"
           }`}
         >
-          {isSpinning ? "Spinning..." : `SPIN FOR ${WHEEL_SPIN_COST} COINS`}
+          {isSpinning
+            ? "Spinning..."
+            : spinsAvailable > 0
+              ? "SPIN THE WHEEL"
+              : `UNLOCK ${WHEEL_EXTRA_SPIN_PACK_SIZE} SPINS - ${WHEEL_EXTRA_SPIN_PACK_COST} POINTS`}
         </button>
         {walletMessage && (
           <p className="mt-3 text-xs font-bold text-alert-coral text-center">
             {walletMessage}
           </p>
         )}
-        {!walletMessage && coinBalance < WHEEL_SPIN_COST && (
+        {!walletMessage && spinsAvailable === 0 && !canBuySpinPack && (
           <p className="mt-3 text-xs font-bold text-alert-coral text-center">
-            You need {WHEEL_SPIN_COST} coins to spin the wheel.
+            You need {WHEEL_EXTRA_SPIN_PACK_COST} points to unlock {WHEEL_EXTRA_SPIN_PACK_SIZE} more spins.
           </p>
         )}
       </div>
@@ -314,8 +412,8 @@ export default function WheelGame() {
           title={`Wheel selected: ${result.name}!`}
           description={
             result.isWin
-              ? `You spent ${WHEEL_SPIN_COST} coins and won ${result.coinReward.toLocaleString()} coins.`
-              : `You spent ${WHEEL_SPIN_COST} coins. Try again when you are ready.`
+              ? `You won ${result.coinReward.toLocaleString()} points.`
+              : "Try again when you are ready."
           }
           scoreImpact={result.scoreImpact}
           isWin={result.isWin}
@@ -330,7 +428,7 @@ export default function WheelGame() {
           onClose={() => setShowShare(false)}
           score={currentScore}
           game="Fortune Wheel"
-          prize={result.isWin ? `${result.emoji} ${result.coinReward} coins` : `${result.emoji} Try Again`}
+          prize={result.isWin ? `${result.emoji} ${result.coinReward} points` : `${result.emoji} Try Again`}
         />
       )}
     </div>

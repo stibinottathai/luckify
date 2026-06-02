@@ -80,7 +80,7 @@ export default function AuthButton() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute right-0 mt-3 w-72 bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-deep-violet/10 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden z-50"
+              className="absolute right-0 mt-3 w-72 bg-white dark:bg-[#130b2f] border border-deep-violet/10 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
             >
               {/* Header Info */}
               <div className="p-4 border-b border-deep-violet/5 dark:border-white/5 bg-gradient-to-br from-deep-violet/5 via-transparent to-primary-gold/5 dark:from-white/5 dark:to-transparent">
@@ -110,16 +110,16 @@ export default function AuthButton() {
               </div>
 
               {/* Personalized Luck Stats */}
-              <div className="px-4 py-3 bg-deep-violet/5 dark:bg-white/5 border-b border-deep-violet/5 dark:border-white/5 grid grid-cols-3 gap-2 text-center select-none">
-                <div className="p-2 rounded-xl bg-white/50 dark:bg-black/40 border border-deep-violet/5 dark:border-white/5">
+              <div className="px-4 py-3 bg-deep-violet/5 dark:bg-white/10 border-b border-deep-violet/5 dark:border-white/10 grid grid-cols-3 gap-2 text-center select-none">
+                <div className="p-2 rounded-xl bg-white dark:bg-[#21164a] border border-deep-violet/8 dark:border-white/10">
                   <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
-                    Coins
+                    Points
                   </span>
                   <span className="font-fredoka text-lg font-extrabold text-primary-gold">
                     {coinBalance.toLocaleString()}
                   </span>
                 </div>
-                <div className="p-2 rounded-xl bg-white/50 dark:bg-black/40 border border-deep-violet/5 dark:border-white/5">
+                <div className="p-2 rounded-xl bg-white dark:bg-[#21164a] border border-deep-violet/8 dark:border-white/10">
                   <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
                     Vibe Score
                   </span>
@@ -127,7 +127,7 @@ export default function AuthButton() {
                     {luckyScore}%
                   </span>
                 </div>
-                <div className="p-2 rounded-xl bg-white/50 dark:bg-black/40 border border-deep-violet/5 dark:border-white/5">
+                <div className="p-2 rounded-xl bg-white dark:bg-[#21164a] border border-deep-violet/8 dark:border-white/10">
                   <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
                     Total Plays
                   </span>

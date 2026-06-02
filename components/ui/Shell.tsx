@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { ArrowLeft, Coins, Sparkles } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 import ShareModal from "@/components/ui/ShareModal";
 import LegalModal from "@/components/ui/LegalModal";
@@ -18,7 +19,8 @@ interface ShellProps {
 }
 
 export default function Shell({ children }: ShellProps) {
-  const { luckyScore } = useLuckStore();
+  const pathname = usePathname();
+  const { coinBalance, luckyScore } = useLuckStore();
   const [mounted, setMounted] = useState(false);
   const [dark, setDark] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
@@ -29,6 +31,7 @@ export default function Shell({ children }: ShellProps) {
     setLegalTab(tab);
     setLegalOpen(true);
   };
+  const showLobbyLink = pathname !== "/";
 
   // Hydration safety guard
   useEffect(() => {
@@ -77,7 +80,7 @@ export default function Shell({ children }: ShellProps) {
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-deep-violet/10 dark:border-white/10 select-none">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-4 sm:px-6">
           {/* Logo Brand */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group min-w-0">
             <motion.span
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
@@ -85,13 +88,41 @@ export default function Shell({ children }: ShellProps) {
             >
               ✨
             </motion.span>
-            <span className="font-fredoka text-xl sm:text-2xl font-extrabold tracking-tight text-deep-violet dark:text-cream-soft group-hover:text-primary-gold transition-colors duration-200">
+            <span className="font-fredoka text-xl sm:text-2xl font-extrabold tracking-tight text-deep-violet dark:text-cream-soft group-hover:text-primary-gold transition-colors duration-200 truncate">
               Lucky Vibes
             </span>
           </Link>
 
+          {showLobbyLink && (
+            <Link
+              href="/"
+              aria-label="Back to Lobby"
+              className="ml-2 mr-auto h-9 px-2 sm:px-3 rounded-full border border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+              <span className="hidden min-[460px]:inline">Lobby</span>
+            </Link>
+          )}
+
           {/* Right Navigation controls */}
           <div className="flex items-center gap-2 sm:gap-4">
+            <div
+              aria-label={`${coinBalance.toLocaleString()} points`}
+              className="h-10 px-2.5 sm:px-3 rounded-full border border-primary-gold/35 bg-primary-gold/10 dark:bg-primary-gold/15 shadow-[0_8px_24px_rgba(245,183,0,0.16)] flex items-center gap-2"
+            >
+              <span className="w-7 h-7 rounded-full bg-primary-gold text-deep-violet flex items-center justify-center shadow-inner">
+                <Coins className="w-4 h-4" />
+              </span>
+              <span className="min-w-0 text-left leading-none">
+                <span className="block font-fredoka text-sm sm:text-base font-black text-deep-violet dark:text-cream-soft tabular-nums">
+                  {coinBalance.toLocaleString()}
+                </span>
+                <span className="hidden sm:block text-[9px] uppercase tracking-wider font-extrabold text-deep-violet/45 dark:text-cream-soft/45">
+                  Points
+                </span>
+              </span>
+            </div>
+
             {/* Google Authentication Control */}
             <AuthButton />
 

@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 
@@ -13,10 +11,10 @@ const WheelGame = dynamic(() => import("@/components/games/WheelGame"), {
 
 export const metadata: Metadata = {
   title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
-  description: "Spin the Fortune Wheel with 100 coins per play and win coin rewards from 100 to the rare 1000-coin section.",
+  description: "Spin the Fortune Wheel with three daily spins, unlock more with points, and win rewards from 100 to the rare 1000-point section.",
   openGraph: {
     title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
-    description: "An interactive HTML5 Canvas coin reward wheel with eight sections and a 100-coin spin cost.",
+    description: "An interactive HTML5 Canvas points reward wheel with daily spins, optional extra spin packs, and eight prize sections.",
     type: "website",
   },
 };
@@ -33,7 +31,7 @@ export default function WheelPage() {
       "price": "0",
       "priceCurrency": "USD"
     },
-    "description": "An interactive HTML5 Canvas spinning wheel where users spend 100 coins per spin and can win coin rewards across eight visible sections."
+    "description": "An interactive HTML5 Canvas spinning wheel where users get three daily spins, can unlock extra spin packs with points, and can win point rewards across eight visible sections."
   };
 
   const faqSchema = {
@@ -53,7 +51,7 @@ export default function WheelPage() {
         "name": "What prizes can I win on the Fortune Wheel?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The Fortune Wheel has eight visible sections: 1000 coins, 800 coins, 700 coins, 500 coins, 300 coins, 200 coins, 100 coins, and Try Again. Each spin costs 100 coins, and the 1000-coin section is the rarest outcome."
+          "text": "The Fortune Wheel has eight visible sections: 1000 points, 800 points, 700 points, 500 points, 300 points, 200 points, 100 points, and Try Again. Users get three daily spins and can unlock three more spins for 200 points."
         }
       },
       {
@@ -61,7 +59,7 @@ export default function WheelPage() {
         "name": "Are the prize wheel outcomes statistically fair?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The wheel displays eight equal sections, while the reward outcome uses weighted random selection so higher coin rewards are harder to achieve and the 1000-coin section is the rarest."
+          "text": "The wheel displays eight equal sections, while the reward outcome uses weighted random selection so higher point rewards are harder to achieve and the 1000-point section is the rarest."
         }
       }
     ]
@@ -78,21 +76,14 @@ export default function WheelPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <div className="flex-1 flex flex-col items-center">
-        {/* Navigation and titles */}
+        {/* Titles */}
         <div className="w-full max-w-lg mb-3 sm:mb-6 flex flex-col items-start gap-2 sm:gap-3 select-none">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-cream-soft/40 dark:hover:text-cream-soft transition-colors cursor-pointer group"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-            Back to Lobby
-          </Link>
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
               Fortune Wheel 🎡
             </h1>
             <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
-              Spin for 100 coins and win up to the rare 1000-coin reward.
+              Use 3 daily spins, unlock extra spins with points, and chase the rare 1000-point reward.
             </p>
           </div>
         </div>

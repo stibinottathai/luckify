@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { STARTING_COIN_BALANCE } from "@/lib/prizes";
+import {
+  STARTING_COIN_BALANCE,
+  WHEEL_EXTRA_SPIN_PACK_COST,
+  WHEEL_EXTRA_SPIN_PACK_SIZE,
+  WHEEL_FREE_DAILY_SPINS,
+} from "@/lib/prizes";
 
 export interface HistoryItem {
   game: string;
@@ -11,25 +16,106 @@ export interface HistoryItem {
 }
 
 interface LuckStore {
+  activeUserKey: string;
+  profiles: Record<string, UserLuckProfile>;
   totalPlays: number;
   winStreak: number;
   luckyScore: number; // 0-100, updates after each game
   coinBalance: number;
   history: HistoryItem[];
+  wheelSpinDate: string;
+  wheelDailySpinsUsed: number;
+  wheelBonusSpins: number;
+  setActiveUser: (userKey: string) => void;
   addResult: (game: string, result: string, isWin: boolean, scoreImpact?: number) => void;
   addCoins: (amount: number) => void;
   spendCoins: (amount: number) => boolean;
+  refreshWheelSpins: () => void;
+  consumeWheelSpin: () => boolean;
+  buyWheelSpinPack: () => boolean;
   resetToday: () => void;
 }
+
+type UserLuckProfile = Pick<
+  LuckStore,
+  | "totalPlays"
+  | "winStreak"
+  | "luckyScore"
+  | "coinBalance"
+  | "history"
+  | "wheelSpinDate"
+  | "wheelDailySpinsUsed"
+  | "wheelBonusSpins"
+>;
+
+const GUEST_USER_KEY = "guest";
+
+const getTodayKey = () => new Date().toISOString().slice(0, 10);
+
+const createDefaultProfile = (): UserLuckProfile => ({
+  totalPlays: 0,
+  winStreak: 0,
+  luckyScore: 50,
+  coinBalance: STARTING_COIN_BALANCE,
+  history: [],
+  wheelSpinDate: getTodayKey(),
+  wheelDailySpinsUsed: 0,
+  wheelBonusSpins: 0,
+});
+
+const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile => {
+  const defaults = createDefaultProfile();
+  const nextProfile = {
+    ...defaults,
+    ...profile,
+    history: profile?.history ?? defaults.history,
+  };
+
+  if (nextProfile.wheelSpinDate !== getTodayKey()) {
+    return {
+      ...nextProfile,
+      wheelSpinDate: getTodayKey(),
+      wheelDailySpinsUsed: 0,
+      wheelBonusSpins: 0,
+    };
+  }
+
+  return nextProfile;
+};
+
+const applyProfile = (userKey: string, profile: UserLuckProfile, profiles: Record<string, UserLuckProfile>) => ({
+  activeUserKey: userKey,
+  profiles,
+  ...profile,
+});
+
+const syncActiveProfile = (state: LuckStore, profile: UserLuckProfile) => ({
+  ...profile,
+  profiles: {
+    ...state.profiles,
+    [state.activeUserKey]: profile,
+  },
+});
 
 export const useLuckStore = create<LuckStore>()(
   persist(
     (set, get) => ({
-      totalPlays: 0,
-      winStreak: 0,
-      luckyScore: 50, // Starts at 50 (neutral luck)
-      coinBalance: STARTING_COIN_BALANCE,
-      history: [],
+      activeUserKey: GUEST_USER_KEY,
+      profiles: {
+        [GUEST_USER_KEY]: createDefaultProfile(),
+      },
+      ...createDefaultProfile(),
+
+      setActiveUser: (userKey) => {
+        const nextUserKey = userKey || GUEST_USER_KEY;
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[nextUserKey]);
+          return applyProfile(nextUserKey, profile, {
+            ...state.profiles,
+            [nextUserKey]: profile,
+          });
+        });
+      },
 
       addResult: (game, result, isWin, scoreImpact) => {
         set((state) => {
@@ -63,19 +149,30 @@ export const useLuckStore = create<LuckStore>()(
           // Limit history to last 20 elements
           const newHistory = [newHistoryItem, ...state.history].slice(0, 20);
 
-          return {
+          return syncActiveProfile(state, {
             totalPlays: newTotalPlays,
             winStreak: newWinStreak,
             luckyScore: newLuckyScore,
+            coinBalance: state.coinBalance,
             history: newHistory,
-          };
+            wheelSpinDate: state.wheelSpinDate,
+            wheelDailySpinsUsed: state.wheelDailySpinsUsed,
+            wheelBonusSpins: state.wheelBonusSpins,
+          });
         });
       },
 
       addCoins: (amount) => {
         if (amount <= 0) return;
-        set((state) => ({
+        set((state) => syncActiveProfile(state, {
+          totalPlays: state.totalPlays,
+          winStreak: state.winStreak,
+          luckyScore: state.luckyScore,
           coinBalance: state.coinBalance + amount,
+          history: state.history,
+          wheelSpinDate: state.wheelSpinDate,
+          wheelDailySpinsUsed: state.wheelDailySpinsUsed,
+          wheelBonusSpins: state.wheelBonusSpins,
         }));
       },
 
@@ -87,22 +184,102 @@ export const useLuckStore = create<LuckStore>()(
           return false;
         }
 
-        set({ coinBalance: coinBalance - amount });
+        set((state) => syncActiveProfile(state, {
+          totalPlays: state.totalPlays,
+          winStreak: state.winStreak,
+          luckyScore: state.luckyScore,
+          coinBalance: coinBalance - amount,
+          history: state.history,
+          wheelSpinDate: state.wheelSpinDate,
+          wheelDailySpinsUsed: state.wheelDailySpinsUsed,
+          wheelBonusSpins: state.wheelBonusSpins,
+        }));
+        return true;
+      },
+
+      refreshWheelSpins: () => {
+        set((state) => syncActiveProfile(state, normalizeProfile(state)));
+      },
+
+      consumeWheelSpin: () => {
+        const state = get();
+        const profile = normalizeProfile(state);
+        const dailySpinsRemaining = Math.max(0, WHEEL_FREE_DAILY_SPINS - profile.wheelDailySpinsUsed);
+
+        if (dailySpinsRemaining > 0) {
+          set((currentState) => syncActiveProfile(currentState, {
+            ...profile,
+            wheelDailySpinsUsed: profile.wheelDailySpinsUsed + 1,
+          }));
+          return true;
+        }
+
+        if (profile.wheelBonusSpins > 0) {
+          set((currentState) => syncActiveProfile(currentState, {
+            ...profile,
+            wheelBonusSpins: profile.wheelBonusSpins - 1,
+          }));
+          return true;
+        }
+
+        set((currentState) => syncActiveProfile(currentState, profile));
+        return false;
+      },
+
+      buyWheelSpinPack: () => {
+        const state = get();
+        const profile = normalizeProfile(state);
+
+        if (profile.coinBalance < WHEEL_EXTRA_SPIN_PACK_COST) {
+          set((currentState) => syncActiveProfile(currentState, profile));
+          return false;
+        }
+
+        set((currentState) => syncActiveProfile(currentState, {
+          ...profile,
+          coinBalance: profile.coinBalance - WHEEL_EXTRA_SPIN_PACK_COST,
+          wheelBonusSpins: profile.wheelBonusSpins + WHEEL_EXTRA_SPIN_PACK_SIZE,
+        }));
         return true;
       },
 
       resetToday: () => {
-        set({
-          totalPlays: 0,
-          winStreak: 0,
-          luckyScore: 50,
-          coinBalance: STARTING_COIN_BALANCE,
-          history: [],
-        });
+        set((state) => syncActiveProfile(state, createDefaultProfile()));
       },
     }),
     {
       name: "lucky-vibes-store",
+      version: 3,
+      migrate: (persistedState) => {
+        const state = persistedState as Partial<LuckStore> | undefined;
+        if (!state) {
+          const profile = createDefaultProfile();
+          return applyProfile(GUEST_USER_KEY, profile, { [GUEST_USER_KEY]: profile });
+        }
+
+        if (state.profiles && state.activeUserKey) {
+          const profiles = Object.fromEntries(
+            Object.entries(state.profiles).map(([userKey, profile]) => [userKey, normalizeProfile(profile)])
+          );
+          const profile = profiles[state.activeUserKey] ?? createDefaultProfile();
+          return {
+            ...state,
+            ...applyProfile(state.activeUserKey, profile, profiles),
+          };
+        }
+
+        const legacyProfile = normalizeProfile({
+          totalPlays: state.totalPlays ?? 0,
+          winStreak: state.winStreak ?? 0,
+          luckyScore: state.luckyScore ?? 50,
+          coinBalance: state.coinBalance ?? STARTING_COIN_BALANCE,
+          history: state.history ?? [],
+        });
+
+        return applyProfile(GUEST_USER_KEY, legacyProfile, {
+          [GUEST_USER_KEY]: legacyProfile,
+        });
+      },
     }
   )
 );

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ALL_DICE_SKINS } from "@/app/api/dice/roll/route";
-import { subscribeDiceCollection, UnlockedDiceDoc } from "@/lib/firestoreProfile";
+import { fetchDiceCollection, UnlockedDiceDoc } from "@/lib/firestoreProfile";
 import { useLuckStore } from "@/store/luckStore";
 import { useAuth } from "@/components/auth/AuthProvider";
 import DiceCard from "./DiceCard";
@@ -19,8 +19,10 @@ export default function DiceInventory() {
   const [activeFilter, setActiveFilter] = useState<"all" | "common" | "rare" | "epic" | "legendary" | "mythic">("all");
   const [craftingLoading, setCraftingLoading] = useState(false);
 
-  // Subscribe to real-time unlocked dice subcollection
+  // One-time fetch unlocked dice subcollection
   useEffect(() => {
+    let isMounted = true;
+
     if (!user || user.uid === "guest") {
       // Simulate guest collection (Wooden Dice only by default)
       setUnlockedDice([
@@ -34,25 +36,36 @@ export default function DiceInventory() {
       return;
     }
 
-    const unsubscribe = subscribeDiceCollection(user.uid, (list) => {
-      // Ensure "wooden_dice" is always in the list (fallback fallback)
-      const hasWood = list.some((d) => d.id === "wooden_dice");
-      if (!hasWood) {
-        setUnlockedDice([
-          {
-            id: "wooden_dice",
-            name: "Wooden Dice",
-            rarity: "common",
-            unlockedAt: new Date().toISOString(),
-          },
-          ...list,
-        ]);
-      } else {
-        setUnlockedDice(list);
-      }
-    });
+    const loadCollection = async () => {
+      try {
+        const list = await fetchDiceCollection(user.uid);
+        if (!isMounted) return;
 
-    return () => unsubscribe();
+        // Ensure "wooden_dice" is always in the list (fallback fallback)
+        const hasWood = list.some((d) => d.id === "wooden_dice");
+        if (!hasWood) {
+          setUnlockedDice([
+            {
+              id: "wooden_dice",
+              name: "Wooden Dice",
+              rarity: "common",
+              unlockedAt: new Date().toISOString(),
+            },
+            ...list,
+          ]);
+        } else {
+          setUnlockedDice(list);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dice collection", err);
+      }
+    };
+
+    loadCollection();
+
+    return () => {
+      isMounted = false;
+    };
   }, [user]);
 
   // Craft a new dice skin
@@ -111,6 +124,29 @@ export default function DiceInventory() {
         spread: 60,
         colors: ["#F5B700", "#FFD700", "#AA00FF", "#00FFFF"],
       });
+
+      // Re-fetch the collection to reflect the newly crafted dice in the UI
+      if (user && user.uid !== "guest") {
+        try {
+          const updatedList = await fetchDiceCollection(user.uid);
+          const hasWood = updatedList.some((d) => d.id === "wooden_dice");
+          if (!hasWood) {
+            setUnlockedDice([
+              {
+                id: "wooden_dice",
+                name: "Wooden Dice",
+                rarity: "common",
+                unlockedAt: new Date().toISOString(),
+              },
+              ...updatedList,
+            ]);
+          } else {
+            setUnlockedDice(updatedList);
+          }
+        } catch (err) {
+          console.error("Failed to refresh dice collection after crafting", err);
+        }
+      }
 
       setCraftingLoading(false);
     } catch (err) {

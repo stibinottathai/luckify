@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { subscribeAnnouncements, GoldenDiceAnnouncement } from "@/lib/firestoreProfile";
+import { fetchAnnouncements, GoldenDiceAnnouncement } from "@/lib/firestoreProfile";
 import { Sparkles, X } from "lucide-react";
 
 export default function GoldenDiceBanner() {
@@ -12,26 +12,40 @@ export default function GoldenDiceBanner() {
 
   useEffect(() => {
     setMounted(true);
-    const unsubscribe = subscribeAnnouncements((list) => {
-      if (list.length === 0) return;
-      const latest = list[0];
+    let isMounted = true;
+    let interval: NodeJS.Timeout;
 
-      const ageMs = Date.now() - new Date(latest.timestamp).getTime();
-      const isFresh = ageMs < 45 * 1000;
+    const checkForAnnouncements = async () => {
+      try {
+        const list = await fetchAnnouncements(3);
+        if (!isMounted || list.length === 0) return;
+        
+        const latest = list[0];
+        const ageMs = Date.now() - new Date(latest.timestamp).getTime();
+        const isFresh = ageMs < 45 * 1000;
 
-      if (isFresh && !seenIds.has(latest.id)) {
-        setSeenIds((prev) => new Set([...prev, latest.id]));
-        setActiveAnnouncement(latest);
+        if (isFresh && !seenIds.has(latest.id)) {
+          setSeenIds((prev) => new Set([...prev, latest.id]));
+          setActiveAnnouncement(latest);
 
-        const timer = setTimeout(() => {
-          setActiveAnnouncement(null);
-        }, 6500);
-
-        return () => clearTimeout(timer);
+          setTimeout(() => {
+            if (isMounted) {
+              setActiveAnnouncement((current) => current?.id === latest.id ? null : current);
+            }
+          }, 6500);
+        }
+      } catch (err) {
+        console.error("Error fetching announcements:", err);
       }
-    }, 3);
+    };
 
-    return () => unsubscribe();
+    checkForAnnouncements();
+    interval = setInterval(checkForAnnouncements, 15000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, [seenIds]);
 
   if (!mounted || !activeAnnouncement) return null;

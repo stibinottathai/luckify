@@ -37,6 +37,21 @@ export interface FirestoreUserProfile {
   displayName?: string;
   photoURL?: string;
   updatedAt?: unknown; // serverTimestamp()
+  
+  // Gamification & Progression Fields
+  xp?: number;
+  level?: number;
+  shakeStreak?: number;
+  shakeStreakLastClaimed?: string;
+  shakeStreakRecord?: number;
+  weeklyCoins?: number;
+  weeklyCoinsLastUpdated?: string;
+  collectedItems?: number;
+  mysteryBoxesCount?: number;
+  badges?: string[];
+  doubleRewardsUntil?: string;
+  streakShieldsCount?: number;
+  vipUntil?: string;
 }
 
 // ─── Leaderboard entry ────────────────────────────────────────────────────────
@@ -49,6 +64,11 @@ export interface LeaderboardEntry {
   winStreak: number;
   totalPlays: number;
   luckyScore: number;
+  level?: number;
+  badges?: string[];
+  weeklyCoins?: number;
+  shakeStreakRecord?: number;
+  collectedItems?: number;
 }
 
 // ─── Reference helper ─────────────────────────────────────────────────────────
@@ -149,6 +169,8 @@ export function subscribeLeaderboard(
           winStreak: data.winStreak ?? 0,
           totalPlays: data.totalPlays ?? 0,
           luckyScore: data.luckyScore ?? 50,
+          level: data.level ?? 1,
+          badges: data.badges ?? [],
         };
       });
       onChange(entries);
@@ -159,3 +181,55 @@ export function subscribeLeaderboard(
     }
   );
 }
+
+// ─── Tree Leaderboards query ─────────────────────────────────────────────────
+
+/**
+ * Subscribe to top-100 players ordered by chosen field for tree game leaderboards.
+ * Supported sorts: 'global' (coinBalance), 'weekly' (weeklyCoins), 'streak' (shakeStreakRecord), 'collection' (collectedItems)
+ */
+export function subscribeTreeLeaderboard(
+  sortBy: "global" | "weekly" | "streak" | "collection",
+  onChange: (entries: LeaderboardEntry[]) => void,
+  onError?: () => void
+): Unsubscribe {
+  let orderField = "coinBalance";
+  if (sortBy === "weekly") orderField = "weeklyCoins";
+  else if (sortBy === "streak") orderField = "shakeStreakRecord";
+  else if (sortBy === "collection") orderField = "collectedItems";
+
+  const q = query(
+    collection(db, "users"),
+    orderBy(orderField, "desc"),
+    limit(50) // Keep standard size
+  );
+
+  return onSnapshot(
+    q,
+    (snap) => {
+      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+        const data = d.data() as FirestoreUserProfile;
+        return {
+          uid: d.id,
+          displayName: data.displayName || "Lucky Player",
+          photoURL: data.photoURL ?? null,
+          coinBalance: data.coinBalance ?? 0,
+          winStreak: data.winStreak ?? 0,
+          totalPlays: data.totalPlays ?? 0,
+          luckyScore: data.luckyScore ?? 50,
+          level: data.level ?? 1,
+          badges: data.badges ?? [],
+          weeklyCoins: data.weeklyCoins ?? 0,
+          shakeStreakRecord: data.shakeStreakRecord ?? 0,
+          collectedItems: data.collectedItems ?? 0,
+        };
+      });
+      onChange(entries);
+    },
+    (err) => {
+      console.error(`[Firestore] Tree Leaderboard snapshot error for ${sortBy}:`, err);
+      onError?.();
+    }
+  );
+}
+

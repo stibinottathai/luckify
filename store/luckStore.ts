@@ -35,17 +35,35 @@ interface LuckStore {
   resetToday: () => void;
 }
 
-type UserLuckProfile = Pick<
-  LuckStore,
-  | "totalPlays"
-  | "winStreak"
-  | "luckyScore"
-  | "coinBalance"
-  | "history"
-  | "wheelSpinDate"
-  | "wheelDailySpinsUsed"
-  | "wheelPaidSpinsUsed"
->;
+export interface UserLuckProfile {
+  totalPlays: number;
+  winStreak: number;
+  luckyScore: number;
+  coinBalance: number;
+  history: HistoryItem[];
+  wheelSpinDate: string;
+  wheelDailySpinsUsed: number;
+  wheelPaidSpinsUsed: number;
+
+  // Gamification & Shaking Tree fields
+  xp?: number;
+  level?: number;
+  shakeStreak?: number;
+  shakeStreakLastClaimed?: string;
+  shakeStreakRecord?: number;
+  weeklyCoins?: number;
+  weeklyCoinsLastUpdated?: string;
+  collectedItems?: number;
+  mysteryBoxesCount?: number;
+  badges?: string[];
+  doubleRewardsUntil?: string;
+  streakShieldsCount?: number;
+  vipUntil?: string;
+  dailyShakesToday?: number;
+  extraShakesBalance?: number;
+  shakeSpinDate?: string;
+  collectibles?: Record<string, number>;
+}
 
 const GUEST_USER_KEY = "guest";
 
@@ -60,12 +78,32 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   wheelSpinDate: getTodayKey(),
   wheelDailySpinsUsed: 0,
   wheelPaidSpinsUsed: 0,
+
+  // Default values
+  xp: 0,
+  level: 1,
+  shakeStreak: 0,
+  shakeStreakLastClaimed: "",
+  shakeStreakRecord: 0,
+  weeklyCoins: 0,
+  weeklyCoinsLastUpdated: new Date().toISOString(),
+  collectedItems: 0,
+  mysteryBoxesCount: 0,
+  badges: [],
+  doubleRewardsUntil: "",
+  streakShieldsCount: 0,
+  vipUntil: "",
+  dailyShakesToday: 0,
+  extraShakesBalance: 0,
+  shakeSpinDate: "",
+  collectibles: {},
 });
 
 export const createGuestProfile = (): UserLuckProfile => ({
   ...createDefaultProfile(),
   coinBalance: 0,
 });
+
 
 export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile => {
   const defaults = createDefaultProfile();

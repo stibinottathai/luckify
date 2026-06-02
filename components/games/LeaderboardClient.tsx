@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { subscribeLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
+import { fetchLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
 import { useAuth } from "@/components/auth/AuthProvider";
+import Image from "next/image";
 
 // ─── Badge config ─────────────────────────────────────────────────────────────
 
@@ -46,12 +47,13 @@ function Avatar({
       style={{ width: size, height: size, background: "rgba(45,27,105,0.25)", ...ringStyle }}
     >
       {photoURL ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={photoURL}
           alt={displayName}
+          width={size}
+          height={size}
           className="w-full h-full object-cover"
-          referrerPolicy="no-referrer"
+          unoptimized={photoURL.includes('googleusercontent') || photoURL.includes('githubusercontent')}
         />
       ) : (
         <span style={{ fontSize: size * 0.38 }}>{initials || "?"}</span>
@@ -300,18 +302,25 @@ export default function LeaderboardClient() {
     setLoading(true);
     setPermError(false);
 
-    const unsub = subscribeLeaderboard(
-      (data) => {
+    let isMounted = true;
+
+    fetchLeaderboard()
+      .then((data) => {
+        if (!isMounted) return;
         setEntries(data);
         setLoading(false);
         setPermError(false);
-      },
-      () => {
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error(err);
         setLoading(false);
         setPermError(true);
-      }
-    );
-    return () => unsub();
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [user, authLoading]);
 
   const filtered = search.trim()

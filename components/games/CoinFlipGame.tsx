@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLuckStore } from "@/store/luckStore";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { subscribeCoinLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
+import { fetchCoinLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
 import { playDiceRoll, playTick, playWinChime, playDudSound, playGoldenDiceTrigger } from "@/lib/audio";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
@@ -104,18 +104,23 @@ export default function CoinFlipGame() {
     setLeaderboardLoading(true);
     const sortBy = leaderboardTab === "masters" ? "wins" : leaderboardTab === "profit" ? "profit" : "winrate";
     
-    const unsubscribe = subscribeCoinLeaderboard(
-      sortBy,
-      (data) => {
+    let isMounted = true;
+
+    fetchCoinLeaderboard(sortBy)
+      .then((data) => {
+        if (!isMounted) return;
         setLeaderboardEntries(data);
         setLeaderboardLoading(false);
-      },
-      () => {
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error(err);
         setLeaderboardLoading(false);
-      }
-    );
+      });
 
-    return () => unsubscribe();
+    return () => {
+      isMounted = false;
+    };
   }, [activeTab, leaderboardTab]);
 
   // Trigger secured Server-Side Coin Predict flip

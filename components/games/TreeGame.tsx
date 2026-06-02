@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLuckStore } from "@/store/luckStore";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { subscribeTreeLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
+import { fetchTreeLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
 import { playWinChime, playDudSound } from "@/lib/audio";
@@ -229,16 +229,26 @@ export default function TreeGame() {
   const currentProfile = useLuckStore((s) => s.profiles[s.activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   
-  // Real time updates
+  // One-time fetch updates
   useEffect(() => {
     setLeaderboardLoading(true);
-    const unsub = subscribeTreeLeaderboard(activeLeaderboardTab, (data) => {
-      setLeaderboardEntries(data);
-      setLeaderboardLoading(false);
-    }, () => {
-      setLeaderboardLoading(false);
-    });
-    return () => unsub();
+    let isMounted = true;
+
+    fetchTreeLeaderboard(activeLeaderboardTab)
+      .then((data) => {
+        if (!isMounted) return;
+        setLeaderboardEntries(data);
+        setLeaderboardLoading(false);
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error(err);
+        setLeaderboardLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [activeLeaderboardTab]);
 
   const levelInfo = getLevelProgress(currentProfile.xp ?? 0);

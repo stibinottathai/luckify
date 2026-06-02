@@ -203,56 +203,46 @@ export function subscribeFirestoreProfile(
 // ─── Leaderboard query ────────────────────────────────────────────────────────
 
 /**
- * Subscribe to live top-100 leaderboard ordered by coinBalance descending.
- * Returns the unsubscribe function.
+ * Fetch top-100 leaderboard ordered by coinBalance descending.
  */
-export function subscribeLeaderboard(
-  onChange: (entries: LeaderboardEntry[]) => void,
-  onError?: () => void
-): Unsubscribe {
+export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   const q = query(
     collection(db, "users"),
     orderBy("coinBalance", "desc"),
     limit(100)
   );
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
-        const data = d.data() as FirestoreUserProfile;
-        return {
-          uid: d.id,
-          displayName: data.displayName || "Lucky Player",
-          photoURL: data.photoURL ?? null,
-          coinBalance: data.coinBalance ?? 0,
-          winStreak: data.winStreak ?? 0,
-          totalPlays: data.totalPlays ?? 0,
-          luckyScore: data.luckyScore ?? 50,
-          level: data.level ?? 1,
-          badges: data.badges ?? [],
-        };
-      });
-      onChange(entries);
-    },
-    (err) => {
-      console.error("[Firestore] Leaderboard snapshot error:", err);
-      onError?.();
-    }
-  );
+  try {
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => {
+      const data = d.data() as FirestoreUserProfile;
+      return {
+        uid: d.id,
+        displayName: data.displayName || "Lucky Player",
+        photoURL: data.photoURL ?? null,
+        coinBalance: data.coinBalance ?? 0,
+        winStreak: data.winStreak ?? 0,
+        totalPlays: data.totalPlays ?? 0,
+        luckyScore: data.luckyScore ?? 50,
+        level: data.level ?? 1,
+        badges: data.badges ?? [],
+      };
+    });
+  } catch (err) {
+    console.error("[Firestore] Leaderboard fetch error:", err);
+    throw err;
+  }
 }
 
 // ─── Tree Leaderboards query ─────────────────────────────────────────────────
 
 /**
- * Subscribe to top-100 players ordered by chosen field for tree game leaderboards.
+ * Fetch top-50 players ordered by chosen field for tree game leaderboards.
  * Supported sorts: 'global' (coinBalance), 'weekly' (weeklyCoins), 'streak' (shakeStreakRecord), 'collection' (collectedItems)
  */
-export function subscribeTreeLeaderboard(
-  sortBy: "global" | "weekly" | "streak" | "collection",
-  onChange: (entries: LeaderboardEntry[]) => void,
-  onError?: () => void
-): Unsubscribe {
+export async function fetchTreeLeaderboard(
+  sortBy: "global" | "weekly" | "streak" | "collection"
+): Promise<LeaderboardEntry[]> {
   let orderField = "coinBalance";
   if (sortBy === "weekly") orderField = "weeklyCoins";
   else if (sortBy === "streak") orderField = "shakeStreakRecord";
@@ -264,33 +254,29 @@ export function subscribeTreeLeaderboard(
     limit(50) // Keep standard size
   );
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
-        const data = d.data() as FirestoreUserProfile;
-        return {
-          uid: d.id,
-          displayName: data.displayName || "Lucky Player",
-          photoURL: data.photoURL ?? null,
-          coinBalance: data.coinBalance ?? 0,
-          winStreak: data.winStreak ?? 0,
-          totalPlays: data.totalPlays ?? 0,
-          luckyScore: data.luckyScore ?? 50,
-          level: data.level ?? 1,
-          badges: data.badges ?? [],
-          weeklyCoins: data.weeklyCoins ?? 0,
-          shakeStreakRecord: data.shakeStreakRecord ?? 0,
-          collectedItems: data.collectedItems ?? 0,
-        };
-      });
-      onChange(entries);
-    },
-    (err) => {
-      console.error(`[Firestore] Tree Leaderboard snapshot error for ${sortBy}:`, err);
-      onError?.();
-    }
-  );
+  try {
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => {
+      const data = d.data() as FirestoreUserProfile;
+      return {
+        uid: d.id,
+        displayName: data.displayName || "Lucky Player",
+        photoURL: data.photoURL ?? null,
+        coinBalance: data.coinBalance ?? 0,
+        winStreak: data.winStreak ?? 0,
+        totalPlays: data.totalPlays ?? 0,
+        luckyScore: data.luckyScore ?? 50,
+        level: data.level ?? 1,
+        badges: data.badges ?? [],
+        weeklyCoins: data.weeklyCoins ?? 0,
+        shakeStreakRecord: data.shakeStreakRecord ?? 0,
+        collectedItems: data.collectedItems ?? 0,
+      };
+    });
+  } catch (err) {
+    console.error(`[Firestore] Tree Leaderboard fetch error for ${sortBy}:`, err);
+    throw err;
+  }
 }
 
 // ─── Golden Dice Announcements & Leaderboard ─────────────────────────────────
@@ -306,90 +292,78 @@ export interface GoldenDiceAnnouncement {
   timestamp: string;
 }
 
-export function subscribeGoldenDiceLeaderboard(
-  onChange: (entries: LeaderboardEntry[]) => void,
-  onError?: () => void
-): Unsubscribe {
+export async function fetchGoldenDiceLeaderboard(): Promise<LeaderboardEntry[]> {
   const q = query(
     collection(db, "users"),
     orderBy("totalGoldenDiceEvents", "desc"),
     limit(50)
   );
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
-        const data = d.data() as FirestoreUserProfile;
-        return {
-          uid: d.id,
-          displayName: data.displayName || "Lucky Player",
-          photoURL: data.photoURL ?? null,
-          coinBalance: data.coinBalance ?? 0,
-          winStreak: data.winStreak ?? 0,
-          totalPlays: data.totalPlays ?? 0,
-          luckyScore: data.luckyScore ?? 50,
-          level: data.level ?? 1,
-          badges: data.badges ?? [],
-          // Golden Dice stats
-          totalDiceRolls: data.totalDiceRolls ?? 0,
-          totalGoldenDiceEvents: data.totalGoldenDiceEvents ?? 0,
-          goldenDiceRate: data.goldenDiceRate ?? 0,
-          highestRewardWon: data.highestRewardWon ?? "None",
-          highestRewardPoints: data.highestRewardPoints ?? 0,
-          legendaryRewardsCount: data.legendaryRewardsCount ?? 0,
-        };
-      });
+  try {
+    const snap = await getDocs(q);
+    const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+      const data = d.data() as FirestoreUserProfile;
+      return {
+        uid: d.id,
+        displayName: data.displayName || "Lucky Player",
+        photoURL: data.photoURL ?? null,
+        coinBalance: data.coinBalance ?? 0,
+        winStreak: data.winStreak ?? 0,
+        totalPlays: data.totalPlays ?? 0,
+        luckyScore: data.luckyScore ?? 50,
+        level: data.level ?? 1,
+        badges: data.badges ?? [],
+        // Golden Dice stats
+        totalDiceRolls: data.totalDiceRolls ?? 0,
+        totalGoldenDiceEvents: data.totalGoldenDiceEvents ?? 0,
+        goldenDiceRate: data.goldenDiceRate ?? 0,
+        highestRewardWon: data.highestRewardWon ?? "None",
+        highestRewardPoints: data.highestRewardPoints ?? 0,
+        legendaryRewardsCount: data.legendaryRewardsCount ?? 0,
+      };
+    });
 
-      const sortedEntries = [...entries].sort((a, b) => {
-        const eventsDiff = (b.totalGoldenDiceEvents || 0) - (a.totalGoldenDiceEvents || 0);
-        if (eventsDiff !== 0) return eventsDiff;
-        const legendaryDiff = (b.legendaryRewardsCount || 0) - (a.legendaryRewardsCount || 0);
-        if (legendaryDiff !== 0) return legendaryDiff;
-        return (b.highestRewardPoints || 0) - (a.highestRewardPoints || 0);
-      });
-
-      onChange(sortedEntries);
-    },
-    (err) => {
-      console.error("[Firestore] Golden Dice Leaderboard error:", err);
-      onError?.();
-    }
-  );
+    return [...entries].sort((a, b) => {
+      const eventsDiff = (b.totalGoldenDiceEvents || 0) - (a.totalGoldenDiceEvents || 0);
+      if (eventsDiff !== 0) return eventsDiff;
+      const legendaryDiff = (b.legendaryRewardsCount || 0) - (a.legendaryRewardsCount || 0);
+      if (legendaryDiff !== 0) return legendaryDiff;
+      return (b.highestRewardPoints || 0) - (a.highestRewardPoints || 0);
+    });
+  } catch (err) {
+    console.error("[Firestore] Golden Dice Leaderboard error:", err);
+    throw err;
+  }
 }
 
-export function subscribeAnnouncements(
-  onChange: (announcements: GoldenDiceAnnouncement[]) => void,
+export async function fetchAnnouncements(
   limitCount: number = 3
-): Unsubscribe {
+): Promise<GoldenDiceAnnouncement[]> {
   const q = query(
     collection(db, "announcements"),
     orderBy("timestamp", "desc"),
     limit(limitCount)
   );
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const announcements: GoldenDiceAnnouncement[] = snap.docs.map((d) => {
-        const data = d.data();
-        return {
-          id: d.id,
-          userUid: data.userUid || "",
-          displayName: data.displayName || "Lucky Player",
-          rewardName: data.rewardName || "",
-          rewardEmoji: data.rewardEmoji || "🎁",
-          rewardRarity: data.rewardRarity || "common",
-          text: data.text || "",
-          timestamp: data.timestamp || new Date().toISOString(),
-        };
-      });
-      onChange(announcements);
-    },
-    (err) => {
-      console.error("[Firestore] Announcements snapshot error:", err);
-    }
-  );
+  try {
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        userUid: data.userUid || "",
+        displayName: data.displayName || "Lucky Player",
+        rewardName: data.rewardName || "",
+        rewardEmoji: data.rewardEmoji || "🎁",
+        rewardRarity: data.rewardRarity || "common",
+        text: data.text || "",
+        timestamp: data.timestamp || new Date().toISOString(),
+      };
+    });
+  } catch (err) {
+    console.error("[Firestore] Announcements fetch error:", err);
+    throw err;
+  }
 }
 
 // ─── Dice Collection System Subscriptions ────────────────────────────────────
@@ -402,105 +376,89 @@ export interface UnlockedDiceDoc {
 }
 
 /**
- * Subscribe to a user's unlocked dice collection subcollection.
+ * Fetch a user's unlocked dice collection subcollection.
  */
-export function subscribeDiceCollection(
-  uid: string,
-  onChange: (diceList: UnlockedDiceDoc[]) => void,
-  onError?: () => void
-): Unsubscribe {
+export async function fetchDiceCollection(
+  uid: string
+): Promise<UnlockedDiceDoc[]> {
   const q = query(
     collection(db, "users", uid, "diceCollection"),
     orderBy("unlockedAt", "desc")
   );
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const diceList: UnlockedDiceDoc[] = snap.docs.map((d) => {
-        const data = d.data();
-        return {
-          id: d.id,
-          name: data.name || "",
-          rarity: data.rarity || "common",
-          unlockedAt: data.unlockedAt || new Date().toISOString(),
-        };
-      });
-      onChange(diceList);
-    },
-    (err) => {
-      console.error("[Firestore] Dice Collection subscription error:", err);
-      onError?.();
-    }
-  );
+  try {
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        name: data.name || "",
+        rarity: data.rarity || "common",
+        unlockedAt: data.unlockedAt || new Date().toISOString(),
+      };
+    });
+  } catch (err) {
+    console.error("[Firestore] Dice Collection fetch error:", err);
+    throw err;
+  }
 }
 
 /**
- * Subscribe to the top-50 Dice Collectors.
+ * Fetch the top-50 Dice Collectors.
  * Ordered by unique collectionProgress desc.
  */
-export function subscribeDiceCollectorsLeaderboard(
-  onChange: (entries: LeaderboardEntry[]) => void,
-  onError?: () => void
-): Unsubscribe {
+export async function fetchDiceCollectorsLeaderboard(): Promise<LeaderboardEntry[]> {
   const q = query(
     collection(db, "users"),
     orderBy("collectionProgress", "desc"),
     limit(50)
   );
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
-        const data = d.data() as FirestoreUserProfile;
-        return {
-          uid: d.id,
-          displayName: data.displayName || "Lucky Player",
-          photoURL: data.photoURL ?? null,
-          coinBalance: data.coinBalance ?? 0,
-          winStreak: data.winStreak ?? 0,
-          totalPlays: data.totalPlays ?? 0,
-          luckyScore: data.luckyScore ?? 50,
-          level: data.level ?? 1,
-          badges: data.badges ?? [],
-          equippedDice: data.equippedDice ?? "wooden_dice",
-          diceFragments: data.diceFragments ?? 0,
-          collectionProgress: data.collectionProgress ?? 1,
-          mythicDiceCount: data.mythicDiceCount ?? 0,
-        };
-      });
+  try {
+    const snap = await getDocs(q);
+    const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+      const data = d.data() as FirestoreUserProfile;
+      return {
+        uid: d.id,
+        displayName: data.displayName || "Lucky Player",
+        photoURL: data.photoURL ?? null,
+        coinBalance: data.coinBalance ?? 0,
+        winStreak: data.winStreak ?? 0,
+        totalPlays: data.totalPlays ?? 0,
+        luckyScore: data.luckyScore ?? 50,
+        level: data.level ?? 1,
+        badges: data.badges ?? [],
+        equippedDice: data.equippedDice ?? "wooden_dice",
+        diceFragments: data.diceFragments ?? 0,
+        collectionProgress: data.collectionProgress ?? 1,
+        mythicDiceCount: data.mythicDiceCount ?? 0,
+      };
+    });
 
-      // Perform in-memory sorting:
-      // 1. Total unique dice (collectionProgress)
-      // 2. Mythic dice owned (mythicDiceCount)
-      // 3. Coin balance descending
-      const sortedEntries = [...entries].sort((a, b) => {
-        const progressDiff = (b.collectionProgress || 1) - (a.collectionProgress || 1);
-        if (progressDiff !== 0) return progressDiff;
-        const mythicDiff = (b.mythicDiceCount || 0) - (a.mythicDiceCount || 0);
-        if (mythicDiff !== 0) return mythicDiff;
-        return (b.coinBalance || 0) - (a.coinBalance || 0);
-      });
-
-      onChange(sortedEntries);
-    },
-    (err) => {
-      console.error("[Firestore] Dice Collectors Leaderboard error:", err);
-      onError?.();
-    }
-  );
+    // Perform in-memory sorting:
+    // 1. Total unique dice (collectionProgress)
+    // 2. Mythic dice owned (mythicDiceCount)
+    // 3. Coin balance descending
+    return [...entries].sort((a, b) => {
+      const progressDiff = (b.collectionProgress || 1) - (a.collectionProgress || 1);
+      if (progressDiff !== 0) return progressDiff;
+      const mythicDiff = (b.mythicDiceCount || 0) - (a.mythicDiceCount || 0);
+      if (mythicDiff !== 0) return mythicDiff;
+      return (b.coinBalance || 0) - (a.coinBalance || 0);
+    });
+  } catch (err) {
+    console.error("[Firestore] Dice Collectors Leaderboard error:", err);
+    throw err;
+  }
 }
 
 /**
- * Subscribe to top Coin Prediction Arena players.
+ * Fetch top Coin Prediction Arena players.
  * Supported sorts: 'wins' (coinTotalWins desc), 'profit' (coinTotalProfit desc), 'winrate' (in-memory win rate with min 50 predictions)
  */
-export function subscribeCoinLeaderboard(
-  sortBy: "wins" | "profit" | "winrate",
-  onChange: (entries: LeaderboardEntry[]) => void,
-  onError?: () => void
-): Unsubscribe {
+export async function fetchCoinLeaderboard(
+  sortBy: "wins" | "profit" | "winrate"
+): Promise<LeaderboardEntry[]> {
   let orderField = "coinTotalWins";
   if (sortBy === "profit") orderField = "coinTotalProfit";
   else if (sortBy === "winrate") orderField = "coinTotalPredictions";
@@ -511,57 +469,54 @@ export function subscribeCoinLeaderboard(
     limit(100)
   );
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
-        const data = d.data() as any;
-        return {
-          uid: d.id,
-          displayName: data.displayName || "Lucky Player",
-          photoURL: data.photoURL ?? null,
-          coinBalance: data.coinBalance ?? 0,
-          winStreak: data.winStreak ?? 0,
-          totalPlays: data.totalPlays ?? 0,
-          luckyScore: data.luckyScore ?? 50,
-          level: data.level ?? 1,
-          badges: data.badges ?? [],
-          // Coin Stats
-          coinDailyAttempts: data.coinDailyAttempts ?? 0,
-          coinDailyAttemptsDate: data.coinDailyAttemptsDate ?? "",
-          coinTotalWins: data.coinTotalWins ?? 0,
-          coinTotalLosses: data.coinTotalLosses ?? 0,
-          coinTotalPredictions: data.coinTotalPredictions ?? 0,
-          coinWinStreak: data.coinWinStreak ?? 0,
-          coinBestStreak: data.coinBestStreak ?? 0,
-          coinLargestWin: data.coinLargestWin ?? 0,
-          coinTotalProfit: data.coinTotalProfit ?? 0,
-        };
-      });
+  try {
+    const snap = await getDocs(q);
+    const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+      const data = d.data() as any;
+      return {
+        uid: d.id,
+        displayName: data.displayName || "Lucky Player",
+        photoURL: data.photoURL ?? null,
+        coinBalance: data.coinBalance ?? 0,
+        winStreak: data.winStreak ?? 0,
+        totalPlays: data.totalPlays ?? 0,
+        luckyScore: data.luckyScore ?? 50,
+        level: data.level ?? 1,
+        badges: data.badges ?? [],
+        // Coin Stats
+        coinDailyAttempts: data.coinDailyAttempts ?? 0,
+        coinDailyAttemptsDate: data.coinDailyAttemptsDate ?? "",
+        coinTotalWins: data.coinTotalWins ?? 0,
+        coinTotalLosses: data.coinTotalLosses ?? 0,
+        coinTotalPredictions: data.coinTotalPredictions ?? 0,
+        coinWinStreak: data.coinWinStreak ?? 0,
+        coinBestStreak: data.coinBestStreak ?? 0,
+        coinLargestWin: data.coinLargestWin ?? 0,
+        coinTotalProfit: data.coinTotalProfit ?? 0,
+      };
+    });
 
-      let sortedEntries = [...entries];
-      if (sortBy === "winrate") {
-        sortedEntries = sortedEntries
-          .filter((e) => (e.coinTotalPredictions || 0) >= 50)
-          .sort((a, b) => {
-            const wrA = ((a.coinTotalWins || 0) / (a.coinTotalPredictions || 1)) * 100;
-            const wrB = ((b.coinTotalWins || 0) / (b.coinTotalPredictions || 1)) * 100;
-            if (wrB !== wrA) return wrB - wrA;
-            return (b.coinTotalWins || 0) - (a.coinTotalWins || 0); // Tie breaker: absolute wins
-          });
-      } else if (sortBy === "wins") {
-        sortedEntries = sortedEntries.sort((a, b) => (b.coinTotalWins || 0) - (a.coinTotalWins || 0));
-      } else if (sortBy === "profit") {
-        sortedEntries = sortedEntries.sort((a, b) => (b.coinTotalProfit || 0) - (a.coinTotalProfit || 0));
-      }
-
-      onChange(sortedEntries.slice(0, 50));
-    },
-    (err) => {
-      console.error(`[Firestore] Coin Leaderboard snapshot error for ${sortBy}:`, err);
-      onError?.();
+    let sortedEntries = [...entries];
+    if (sortBy === "winrate") {
+      sortedEntries = sortedEntries
+        .filter((e) => (e.coinTotalPredictions || 0) >= 50)
+        .sort((a, b) => {
+          const wrA = ((a.coinTotalWins || 0) / (a.coinTotalPredictions || 1)) * 100;
+          const wrB = ((b.coinTotalWins || 0) / (b.coinTotalPredictions || 1)) * 100;
+          if (wrB !== wrA) return wrB - wrA;
+          return (b.coinTotalWins || 0) - (a.coinTotalWins || 0); // Tie breaker: absolute wins
+        });
+    } else if (sortBy === "wins") {
+      sortedEntries = sortedEntries.sort((a, b) => (b.coinTotalWins || 0) - (a.coinTotalWins || 0));
+    } else if (sortBy === "profit") {
+      sortedEntries = sortedEntries.sort((a, b) => (b.coinTotalProfit || 0) - (a.coinTotalProfit || 0));
     }
-  );
+
+    return sortedEntries.slice(0, 50);
+  } catch (err) {
+    console.error(`[Firestore] Coin Leaderboard fetch error for ${sortBy}:`, err);
+    throw err;
+  }
 }
 
 

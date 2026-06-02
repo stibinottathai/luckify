@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { subscribeGoldenDiceLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
+import { fetchGoldenDiceLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
 import { Trophy } from "lucide-react";
 import Image from "next/image";
 
@@ -11,16 +11,23 @@ export default function GoldenDiceLeaderboard() {
 
   useEffect(() => {
     setLoading(true);
-    const unsubscribe = subscribeGoldenDiceLeaderboard(
-      (data) => {
+    let isMounted = true;
+
+    fetchGoldenDiceLeaderboard()
+      .then((data) => {
+        if (!isMounted) return;
         setEntries(data);
         setLoading(false);
-      },
-      () => {
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error(err);
         setLoading(false);
-      }
-    );
-    return () => unsubscribe();
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) {

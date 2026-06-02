@@ -182,32 +182,42 @@ export default function HomeClient() {
             >
               <Link
                 href={game.href}
-                className="group flex flex-col h-full bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl p-5 hover:border-primary-gold dark:hover:border-primary-gold card-glow"
+                className="relative group flex flex-col h-full bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2rem] p-6 hover:border-primary-gold/50 dark:hover:border-primary-gold/50 transition-all duration-300 shadow-lg hover:shadow-2xl overflow-hidden"
               >
+                {/* Dynamic hover gradient background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${game.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none`} />
+                
                 {/* Header card details */}
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-3xl filter drop-shadow-sm group-hover:scale-110 transition-transform duration-200">
-                    {game.emoji}
-                  </span>
-                  <span className="text-[9px] font-extrabold font-fredoka px-2 py-0.5 rounded-md uppercase tracking-wider bg-deep-violet/5 dark:bg-white/5 text-deep-violet/60 dark:text-cream-soft/60">
+                <div className="flex items-center justify-between gap-2 mb-4 relative z-10">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white dark:bg-[#120A2C] shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                    <span className="text-2xl filter drop-shadow-sm">
+                      {game.emoji}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-extrabold font-fredoka px-2.5 py-1 rounded-lg uppercase tracking-wider bg-deep-violet/5 dark:bg-white/5 text-deep-violet/70 dark:text-cream-soft/70 border border-deep-violet/5 dark:border-white/5">
                     {game.badge}
                   </span>
                 </div>
 
                 {/* Game Title */}
-                <h3 className="text-lg font-black font-fredoka text-deep-violet dark:text-cream-soft group-hover:text-primary-gold transition-colors mb-2">
+                <h3 className="text-xl font-black font-fredoka text-deep-violet dark:text-cream-soft group-hover:text-primary-gold transition-colors mb-2.5 relative z-10">
                   {game.title}
                 </h3>
 
                 {/* Game Description */}
-                <p className="text-xs font-semibold text-deep-violet/60 dark:text-cream-soft/60 leading-relaxed flex-1 mb-5">
+                <p className="text-xs font-bold text-deep-violet/60 dark:text-cream-soft/60 leading-relaxed flex-1 mb-6 relative z-10">
                   {game.description}
                 </p>
 
                 {/* Entry Action */}
-                <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-primary-gold group-hover:underline">
+                <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-primary-gold group-hover:text-[#E0A700] relative z-10">
                   Let's Play
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <motion.div
+                    animate={{ x: [0, 4, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                  >
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </motion.div>
                 </div>
               </Link>
             </motion.div>

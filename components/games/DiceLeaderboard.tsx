@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { subscribeDiceCollectorsLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
+import { fetchDiceCollectorsLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
 import { Trophy, ShieldCheck, Flame, Star } from "lucide-react";
 import Image from "next/image";
 
@@ -11,16 +11,23 @@ export default function DiceLeaderboard() {
 
   useEffect(() => {
     setLoading(true);
-    const unsubscribe = subscribeDiceCollectorsLeaderboard(
-      (data) => {
+    let isMounted = true;
+
+    fetchDiceCollectorsLeaderboard()
+      .then((data) => {
+        if (!isMounted) return;
         setEntries(data);
         setLoading(false);
-      },
-      () => {
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        console.error(err);
         setLoading(false);
-      }
-    );
-    return () => unsubscribe();
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) {

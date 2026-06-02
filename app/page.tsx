@@ -3,10 +3,10 @@ import HomeClient from "@/components/HomeClient";
 
 export const metadata: Metadata = {
   title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
-  description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, shake the SVG tree, flip cosmic golden coins, open traditional red envelopes, scratch cards, and check your vibes score today.",
+  description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, shake the SVG tree, flip cosmic golden coins, scratch cards, and check your vibes score today.",
   openGraph: {
     title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
-    description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, shake the SVG tree, select lottery numbers, scratch a card, and test your vibes score today.",
+    description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, shake the SVG tree, scratch a card, and test your vibes score today.",
     url: "https://luckify.vercel.app",
     siteName: "Lucky Vibes",
     images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
-    description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, shake the SVG tree, flip cosmic golden coins, open traditional red envelopes, scratch cards, and check your vibes score today.",
+    description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, shake the SVG tree, flip cosmic golden coins, scratch cards, and check your vibes score today.",
     images: ["/og-image.png"],
   },
 };
@@ -46,7 +46,7 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "Lucky Vibes Interactive Fortune & Luck Games",
-    "numberOfItems": 11,
+    "numberOfItems": 6,
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -66,7 +66,7 @@ export default function Page() {
         "@type": "ListItem",
         "position": 3,
         "name": "Lucky Dice",
-        "description": "Roll up to three fully interactive 3D CSS dice to find your current numbers alignment!",
+        "description": "Get 1 free roll daily! Additional rolls cost 200 points (max 5/day). Win points equal to your Roll Value × 100!",
         "url": "https://luckify.vercel.app/dice"
       },
       {
@@ -86,44 +86,9 @@ export default function Page() {
       {
         "@type": "ListItem",
         "position": 6,
-        "name": "Number Picker",
-        "description": "Pick 6 lottery balls, run the staggered drop machine, and check your matches frequency!",
-        "url": "https://luckify.vercel.app/picker"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
         "name": "Pendulum Divination",
         "description": "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
         "url": "https://luckify.vercel.app/pendulum"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "name": "Lucky Envelope",
-        "description": "Receive a traditional red envelope, unfold its 3D golden seal, and uncover your daily blessing!",
-        "url": "https://luckify.vercel.app/lucky-envelope"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "name": "Origami Fortune",
-        "description": "Select colors and numbers to unfold the 3D paper cootie catcher and reveal your hidden fate!",
-        "url": "https://luckify.vercel.app/fortune-teller"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "name": "Magic 8-Ball",
-        "description": "Ask a yes or no question, shake the glossy black sphere, and reveal the cosmic oracle's wisdom!",
-        "url": "https://luckify.vercel.app/magic-8-ball"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "name": "Message in a Bottle",
-        "description": "Cast a glass bottle into the sea, tap to pop the cork, and watch your handwritten fortune unfurl!",
-        "url": "https://luckify.vercel.app/message-in-bottle"
       }
     ]
   };

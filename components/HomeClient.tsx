@@ -82,15 +82,6 @@ const GAMES: GameCard[] = [
     color: "from-gray-300 to-slate-400",
   },
   {
-    id: "picker",
-    emoji: "🎰",
-    title: "Number Picker",
-    description: "Pick 6 lottery balls, run the staggered drop machine, and check your matches frequency!",
-    href: "/picker",
-    badge: "Lotto Stats",
-    color: "from-teal-400 to-cyan-500",
-  },
-  {
     id: "pendulum",
     emoji: "☯️",
     title: "Pendulum Divination",
@@ -98,42 +89,6 @@ const GAMES: GameCard[] = [
     href: "/pendulum",
     badge: "Astral Physics",
     color: "from-purple-500 to-indigo-600",
-  },
-  {
-    id: "lucky-envelope",
-    emoji: "🧧",
-    title: "Lucky Envelope",
-    description: "Receive a traditional red envelope, unfold its 3D golden seal, and uncover your daily blessing!",
-    href: "/lucky-envelope",
-    badge: "3D Folding",
-    color: "from-red-500 to-amber-600",
-  },
-  {
-    id: "fortune-teller",
-    emoji: "💮",
-    title: "Origami Fortune",
-    description: "Select colors and numbers to unfold the 3D paper cootie catcher and reveal your hidden fate!",
-    href: "/fortune-teller",
-    badge: "3D Origami",
-    color: "from-amber-200 to-orange-400",
-  },
-  {
-    id: "magic-8-ball",
-    emoji: "🎱",
-    title: "Magic 8-Ball",
-    description: "Ask a yes or no question, shake the glossy black sphere, and reveal the cosmic oracle's wisdom!",
-    href: "/magic-8-ball",
-    badge: "CSS 3D Shake",
-    color: "from-slate-950 to-slate-800",
-  },
-  {
-    id: "message-in-bottle",
-    emoji: "🍾",
-    title: "Message in a Bottle",
-    description: "Cast a glass bottle into the sea, tap to pop the cork, and watch your handwritten fortune unfurl!",
-    href: "/message-in-bottle",
-    badge: "Animated SVG & CSS",
-    color: "from-teal-400 to-cyan-600",
   },
 ];
 
@@ -199,10 +154,10 @@ export default function HomeClient() {
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/lucky-envelope"
+              href="/dice"
               className="py-2.5 px-4 rounded-2xl font-black text-xs select-none cursor-pointer tracking-wider border border-white/20 hover:bg-white/5 text-white active:scale-95 transition-all flex items-center gap-2 font-fredoka uppercase"
             >
-              Open Red Packet 🧧
+              Roll Lucky Dice 🎲
             </Link>
           </div>
 

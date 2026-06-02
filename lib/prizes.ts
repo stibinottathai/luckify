@@ -35,10 +35,26 @@ export const SCRATCH_OUTCOMES = [
   { id: "bonus", emoji: "⭐", name: "BONUS SPIN", isWin: true, scoreImpact: 8, fortune: "Bonus energy is heading your way!" }
 ];
 
+export interface ScratchPrize {
+  id: string;
+  emoji: string;
+  name: string;
+  coinReward: number;
+  weight: number;
+  isWin: boolean;
+  scoreImpact: number;
+  fortune: string;
+}
+
+export const SCRATCH_PRIZES: ScratchPrize[] = [
+  { id: "scratch-1000", emoji: "👑", name: "1000 Coins", coinReward: 1000, weight: 1, isWin: true, scoreImpact: 15, fortune: "Incredible jackpot! Absolute luck flows through you today!" },
+  { id: "scratch-500", emoji: "💎", name: "500 Coins", coinReward: 500, weight: 4, isWin: true, scoreImpact: 10, fortune: "A magnificent treasure! You are in absolute alignment!" },
+  { id: "scratch-300", emoji: "⭐", name: "300 Coins", coinReward: 300, weight: 10, isWin: true, scoreImpact: 8, fortune: "Sparkling success! Abundance is finding its way to you!" },
+  { id: "scratch-100", emoji: "🪙", name: "100 Coins", coinReward: 100, weight: 25, isWin: true, scoreImpact: 5, fortune: "Nice prize! A clean boost to keep your luck flowing!" },
+  { id: "scratch-try-again", emoji: "↻", name: "Try Again", coinReward: 0, weight: 30, isWin: false, scoreImpact: -3, fortune: "No points this time, but the stars are aligning. Try again tomorrow!" }
+];
+
 export const DICE_MEANINGS: Record<number, string> = {
-  2: "Snake Eyes! Double trouble, but double rare luck!",
-  3: "Lucky day! Good news will reach you soon.",
-  4: "Solid roll! Balance and harmony are aligned.",
   5: "Progress! A path is opening up for you.",
   6: "Nirvana! Peaceful times are ahead.",
   7: "Classic lucky 7! Magic is in the air.",

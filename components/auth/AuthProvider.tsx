@@ -124,6 +124,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       useLuckStore.setState((state) => {
         const merged = normalizeProfile(remoteProfile);
+        // Preserve client-side localVersion so it does not trigger a redundant write
+        merged.localVersion = state.profiles[uid]?.localVersion ?? 0;
 
         return {
           ...merged,

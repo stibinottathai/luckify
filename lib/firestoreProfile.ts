@@ -77,6 +77,11 @@ export interface FirestoreUserProfile {
   coinBestStreak?: number;
   coinLargestWin?: number;
   coinTotalProfit?: number;
+
+  // Daily Scratch Card Fields
+  scratchUsed?: boolean;
+  scratchDate?: string;
+  scratchPrizeWon?: number;
 }
 
 // ─── Leaderboard entry ────────────────────────────────────────────────────────
@@ -119,6 +124,11 @@ export interface LeaderboardEntry {
   coinBestStreak?: number;
   coinLargestWin?: number;
   coinTotalProfit?: number;
+
+  // Daily Scratch Card Fields
+  scratchUsed?: boolean;
+  scratchDate?: string;
+  scratchPrizeWon?: number;
 }
 
 // ─── Reference helper ─────────────────────────────────────────────────────────

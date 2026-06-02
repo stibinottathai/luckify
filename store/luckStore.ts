@@ -33,6 +33,7 @@ interface LuckStore {
   refreshWheelSpins: () => void;
   consumeWheelSpin: () => boolean;
   resetToday: () => void;
+  claimScratchCard: (coinsWon: number, outcomeName: string, isWin: boolean, scoreImpact: number) => void;
 }
 
 export interface UserLuckProfile {
@@ -92,6 +93,14 @@ export interface UserLuckProfile {
   coinBestStreak?: number;
   coinLargestWin?: number;
   coinTotalProfit?: number;
+
+  // Daily Scratch Card Fields
+  scratchDate?: string;
+  scratchUsed?: boolean;
+  scratchPrizeWon?: number;
+
+  // Local Sync Coordinates
+  localVersion?: number;
 }
 
 const GUEST_USER_KEY = "guest";
@@ -155,6 +164,14 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   coinBestStreak: 0,
   coinLargestWin: 0,
   coinTotalProfit: 0,
+
+  // Daily Scratch defaults
+  scratchDate: "",
+  scratchUsed: false,
+  scratchPrizeWon: 0,
+
+  // Local Sync Coordinates defaults
+  localVersion: 0,
 });
 
 export const createGuestProfile = (): UserLuckProfile => ({
@@ -196,6 +213,13 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
     nextProfile.coinDailyAttempts = 0;
   }
 
+  // Handle Daily Scratch resets
+  if (nextProfile.scratchDate !== getTodayKey()) {
+    nextProfile.scratchDate = getTodayKey();
+    nextProfile.scratchUsed = false;
+    nextProfile.scratchPrizeWon = 0;
+  }
+
   return nextProfile;
 };
 
@@ -205,13 +229,19 @@ const applyProfile = (userKey: string, profile: UserLuckProfile, profiles: Recor
   ...profile,
 });
 
-const syncActiveProfile = (state: LuckStore, profile: UserLuckProfile) => ({
-  ...profile,
-  profiles: {
-    ...state.profiles,
-    [state.activeUserKey]: profile,
-  },
-});
+const syncActiveProfile = (state: LuckStore, profile: UserLuckProfile) => {
+  const nextProfile = {
+    ...profile,
+    localVersion: (profile.localVersion ?? 0) + 1,
+  };
+  return {
+    ...nextProfile,
+    profiles: {
+      ...state.profiles,
+      [state.activeUserKey]: nextProfile,
+    },
+  };
+};
 
 export const useLuckStore = create<LuckStore>()(
   persist(
@@ -361,6 +391,38 @@ export const useLuckStore = create<LuckStore>()(
 
       resetToday: () => {
         set((state) => syncActiveProfile(state, createDefaultProfile()));
+      },
+
+      claimScratchCard: (coinsWon, outcomeName, isWin, scoreImpact) => {
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          const newTotalPlays = profile.totalPlays + 1;
+          const newWinStreak = isWin ? profile.winStreak + 1 : 0;
+          const newLuckyScore = Math.max(0, Math.min(100, profile.luckyScore + scoreImpact));
+          
+          const newHistoryItem: HistoryItem = {
+            game: "Scratch Card",
+            result: coinsWon > 0 ? `🎉 Won ${coinsWon} coins` : `🌧️ Try Again`,
+            timestamp: new Date().toISOString(),
+            isWin,
+            scoreImpact,
+          };
+          const newHistory = [newHistoryItem, ...profile.history].slice(0, 20);
+
+          const updated = {
+            ...profile,
+            totalPlays: newTotalPlays,
+            winStreak: newWinStreak,
+            luckyScore: newLuckyScore,
+            coinBalance: profile.coinBalance + coinsWon,
+            history: newHistory,
+            scratchUsed: true,
+            scratchDate: getTodayKey(),
+            scratchPrizeWon: coinsWon,
+          };
+
+          return syncActiveProfile(state, updated);
+        });
       },
     }),
     {

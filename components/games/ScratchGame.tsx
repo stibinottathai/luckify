@@ -1,40 +1,80 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { SCRATCH_OUTCOMES } from "@/lib/prizes";
+import { motion } from "framer-motion";
+import { SCRATCH_PRIZES, ScratchPrize } from "@/lib/prizes";
 import { playScratch } from "@/lib/audio";
 import { useLuckStore } from "@/store/luckStore";
+import { useAuth } from "@/components/auth/AuthProvider";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
 
-interface Outcome {
-  id: string;
-  emoji: string;
-  name: string;
-  isWin: boolean;
-  scoreImpact: number;
-  fortune: string;
-}
-
 export default function ScratchGame() {
+  const { user } = useAuth();
+  const activeUserKey = useLuckStore((state) => state.activeUserKey);
+  const profile = useLuckStore((state) => state.profiles[activeUserKey]) || useLuckStore((state) => state.profiles["guest"]);
+  const claimScratchCard = useLuckStore((state) => state.claimScratchCard);
+  const currentScore = useLuckStore((state) => state.luckyScore);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawingRef = useRef(false);
   const scratchCountRef = useRef(0);
 
-  const [outcome, setOutcome] = useState<Outcome | null>(null);
+  const [outcome, setOutcome] = useState<ScratchPrize | null>(null);
   const [scratchedPercent, setScratchedPercent] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
 
   const [showResult, setShowResult] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [timeLeft, setTimeLeft] = useState("");
 
-  const addResult = useLuckStore((state) => state.addResult);
-  const currentScore = useLuckStore((state) => state.luckyScore);
+  const isScratchUsed = profile?.scratchUsed ?? false;
+
+  // Ticking countdown until midnight local time
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+
+      const diff = tomorrow.getTime() - now.getTime();
+      if (diff <= 0) {
+        setTimeLeft("00h 00m 00s");
+        return;
+      }
+      const hrs = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
+      const mins = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
+      const secs = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+
+      setTimeLeft(`${hrs}h ${mins}m ${secs}s`);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Weight-based probability selector
+  const getWeightedPrize = () => {
+    const totalWeight = SCRATCH_PRIZES.reduce((sum, prize) => sum + prize.weight, 0);
+    let ticket = Math.random() * totalWeight;
+
+    for (let i = 0; i < SCRATCH_PRIZES.length; i++) {
+      ticket -= SCRATCH_PRIZES[i].weight;
+      if (ticket <= 0) {
+        return SCRATCH_PRIZES[i];
+      }
+    }
+
+    return SCRATCH_PRIZES[SCRATCH_PRIZES.length - 1];
+  };
 
   const initializeScratcher = () => {
-    // 1. Pick a random outcome
-    const randomPick = SCRATCH_OUTCOMES[Math.floor(Math.random() * SCRATCH_OUTCOMES.length)];
+    if (isScratchUsed) return;
+
+    // 1. Pick a weighted prize outcome
+    const randomPick = getWeightedPrize();
     setOutcome(randomPick);
     setScratchedPercent(0);
     setIsRevealed(false);
@@ -87,7 +127,7 @@ export default function ScratchGame() {
 
   useEffect(() => {
     initializeScratcher();
-  }, []);
+  }, [isScratchUsed]);
 
   const getCoordinates = (e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current;
@@ -113,12 +153,12 @@ export default function ScratchGame() {
   };
 
   const startScratching = () => {
-    if (isRevealed) return;
+    if (isRevealed || isScratchUsed) return;
     isDrawingRef.current = true;
   };
 
   const scratch = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawingRef.current || isRevealed) return;
+    if (!isDrawingRef.current || isRevealed || isScratchUsed) return;
 
     const coords = getCoordinates(e.nativeEvent);
     if (!coords) return;
@@ -182,14 +222,88 @@ export default function ScratchGame() {
       activeCtx.clearRect(0, 0, w || canvas.width, h || canvas.height);
     }
 
-    // Trigger Result Popup after short slide animation delay
+    // Trigger Result Popup and update store
     setTimeout(() => {
       if (outcome) {
         setShowResult(true);
-        addResult("Scratch Card", outcome.name, outcome.isWin, outcome.scoreImpact);
+        claimScratchCard(outcome.coinReward, outcome.name, outcome.isWin, outcome.scoreImpact);
       }
     }, 600);
   };
+
+  // If the user has already scratched today, render the gorgeous used-ticket view
+  if (isScratchUsed) {
+    return (
+      <div className="w-full max-w-md mx-auto p-6 bg-[radial-gradient(circle_at_50%_0%,rgba(245,183,0,0.24),transparent_40%),linear-gradient(145deg,rgba(255,255,255,0.96),rgba(255,248,231,0.78))] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(245,183,0,0.22),transparent_40%),linear-gradient(145deg,rgba(27,16,62,0.98),rgba(8,5,20,0.96))] border border-primary-gold/45 rounded-[2.5rem] shadow-[0_22px_60px_rgba(45,27,105,0.18)] dark:shadow-[0_22px_60px_rgba(0,0,0,0.45)] flex flex-col items-center justify-center text-center overflow-hidden min-h-[420px] select-none relative font-fredoka">
+        
+        {/* Mesh magical backdrop */}
+        <div className="absolute inset-0 bg-radial from-violet-500/5 via-transparent to-transparent pointer-events-none animate-hue-sweep" />
+        
+        {/* Ticket Graphic Icon */}
+        <div className="relative mb-6">
+          <div className="w-24 h-24 rounded-full bg-deep-violet/5 dark:bg-white/5 flex items-center justify-center border border-deep-violet/10 dark:border-white/10 shadow-inner">
+            <span className="text-6xl animate-pulse select-none">🎟️</span>
+          </div>
+          <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-black border-2 border-white dark:border-card shadow-md animate-scale-up">
+            ✓
+          </div>
+        </div>
+
+        <h3 className="text-2xl font-black uppercase tracking-wider text-deep-violet dark:text-cream-soft leading-none">
+          Daily Card Claimed!
+        </h3>
+        
+        <p className="mt-2 text-xs font-bold text-deep-violet/50 dark:text-cream-soft/50 max-w-[260px] leading-relaxed">
+          You've completed your daily scratch session. Keep earning coins by rolling the dice or spinning the wheel!
+        </p>
+        
+        <div className="mt-5 px-6 py-4 rounded-3xl bg-primary-gold/10 border border-primary-gold/20 flex flex-col items-center shadow-inner min-w-[240px]">
+          <p className="text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40">
+            Coins Won Today
+          </p>
+          <p className="mt-1.5 font-mono text-3xl font-black text-primary-gold flex items-center gap-2 drop-shadow-sm select-none">
+            {profile.scratchPrizeWon && profile.scratchPrizeWon > 0 ? (
+              <>
+                <span className="text-3xl select-none">🪙</span>
+                <span>+{profile.scratchPrizeWon}</span>
+              </>
+            ) : (
+              <>
+                <span className="text-3xl select-none">🌧️</span>
+                <span className="text-2xl font-black font-fredoka uppercase tracking-wider">Try Again</span>
+              </>
+            )}
+          </p>
+        </div>
+
+        {/* Live ticking countdown timer */}
+        <div className="mt-8 w-full flex flex-col items-center">
+          <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40">
+            Next Ticket Available In:
+          </span>
+          <span className="mt-2 font-mono text-3xl font-black text-[#2D1B69] dark:text-primary-gold bg-deep-violet/5 dark:bg-white/5 py-2.5 px-7 rounded-2xl border border-deep-violet/10 dark:border-white/10 tracking-wider shadow-inner min-w-[210px] select-none">
+            {timeLeft}
+          </span>
+        </div>
+
+        {/* Guest prompt banner */}
+        {!user && (
+          <div className="mt-6 p-4 bg-primary-gold/10 border border-primary-gold/20 rounded-2xl text-center max-w-sm animate-pulse">
+            <p className="text-[10px] font-black text-primary-gold uppercase tracking-widest leading-relaxed">
+              🎮 Playing as Guest
+            </p>
+            <p className="text-[9px] font-bold text-deep-violet/60 dark:text-cream-soft/60 mt-1 normal-case leading-relaxed">
+              Your guest coins are stored locally. Sign in using Google at the top to sync your coins permanently to the cloud and compete in the leaderboards!
+            </p>
+          </div>
+        )}
+
+        <p className="mt-6 text-[9px] font-black text-deep-violet/30 dark:text-cream-soft/30 uppercase tracking-widest max-w-[260px] leading-relaxed">
+          ★ Maximum reward up to 1000 Coins daily ★
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center max-w-lg mx-auto py-8">
@@ -214,7 +328,7 @@ export default function ScratchGame() {
         
         {/* UNDERNEATH LAYER: The Reveal Message */}
         {outcome && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none">
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none bg-gradient-to-b from-white to-primary-gold/5 dark:from-card dark:to-primary-gold/5">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={isRevealed ? { scale: 1, opacity: 1 } : {}}
@@ -223,10 +337,15 @@ export default function ScratchGame() {
               <span className="text-5xl filter drop-shadow-sm mb-2 select-none">
                 {outcome.emoji}
               </span>
-              <h4 className="text-xl font-black font-fredoka text-deep-violet dark:text-cream-soft leading-tight">
+              <h4 className="text-2xl font-black font-fredoka text-deep-violet dark:text-cream-soft leading-tight">
                 {outcome.name}
               </h4>
-              <p className="text-[10px] font-bold text-deep-violet/50 dark:text-cream-soft/50 max-w-[200px] mt-1 italic">
+              {outcome.coinReward > 0 && (
+                <span className="text-xs font-black uppercase tracking-widest text-[#E0A700] mt-1 select-none animate-pulse">
+                  ★ Reward Earned! ★
+                </span>
+              )}
+              <p className="text-[10px] font-bold text-deep-violet/60 dark:text-cream-soft/60 max-w-[220px] mt-2 italic leading-relaxed">
                 "{outcome.fortune}"
               </p>
             </motion.div>
@@ -263,14 +382,16 @@ export default function ScratchGame() {
         </button>
       )}
 
-      {/* New Card button */}
-      {isRevealed && (
-        <button
-          onClick={initializeScratcher}
-          className="mt-6 py-3.5 px-8 rounded-2xl font-extrabold text-base bg-primary-gold hover:bg-[#E0A700] text-deep-violet shadow-lg hover:shadow-xl transition-all cursor-pointer active:scale-95"
-        >
-          GET A NEW CARD 🪙
-        </button>
+      {/* Guest Warning Hint Banner */}
+      {!user && (
+        <div className="mt-8 p-4 bg-primary-gold/10 border border-primary-gold/20 rounded-2xl text-center max-w-xs animate-pulse">
+          <p className="text-[10px] font-black text-primary-gold uppercase tracking-widest leading-relaxed">
+            🎮 Playing as Guest
+          </p>
+          <p className="text-[9px] font-bold text-deep-violet/60 dark:text-cream-soft/60 mt-1 normal-case leading-relaxed">
+            Guests are limited to 1 free daily scratch. To secure your rewards, unlock leaderboards, and save your coin balance permanently, please Sign In!
+          </p>
+        </div>
       )}
 
       {/* Popups & dialog triggers */}
@@ -284,7 +405,6 @@ export default function ScratchGame() {
           description={outcome.fortune}
           scoreImpact={outcome.scoreImpact}
           isWin={outcome.isWin}
-          onRestart={initializeScratcher}
           onShare={() => setShowShare(true)}
         />
       )}

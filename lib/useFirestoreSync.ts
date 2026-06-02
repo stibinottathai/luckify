@@ -21,18 +21,12 @@ const DEBOUNCE_MS = 100; // wait 100ms after last change before writing
 export function useFirestoreSync(user: User | null) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const coinBalance = useLuckStore((s) => s.coinBalance);
-  const luckyScore = useLuckStore((s) => s.luckyScore);
-  const totalPlays = useLuckStore((s) => s.totalPlays);
-  const winStreak = useLuckStore((s) => s.winStreak);
-  const history = useLuckStore((s) => s.history);
-  const wheelSpinDate = useLuckStore((s) => s.wheelSpinDate);
-  const wheelDailySpinsUsed = useLuckStore((s) => s.wheelDailySpinsUsed);
-  const wheelPaidSpinsUsed = useLuckStore((s) => s.wheelPaidSpinsUsed);
+  const activeUserKey = useLuckStore((s) => s.activeUserKey);
+  const profile = useLuckStore((s) => s.profiles[activeUserKey]);
 
   useEffect(() => {
     // Only sync for real (non-guest) users
-    if (!user || user.uid === "guest") return;
+    if (!user || user.uid === "guest" || !profile) return;
 
     const uid = user.uid;
 
@@ -41,32 +35,15 @@ export function useFirestoreSync(user: User | null) {
 
     timerRef.current = setTimeout(() => {
       saveFirestoreProfile(uid, {
-        coinBalance,
-        luckyScore,
-        totalPlays,
-        winStreak,
-        history,
-        wheelSpinDate,
-        wheelDailySpinsUsed,
-        wheelPaidSpinsUsed,
+        ...profile,
         // Always keep identity fresh for leaderboard
-        displayName: user.displayName ?? "Lucky Player",
-        photoURL: user.photoURL ?? "",
+        displayName: user.displayName ?? (profile as any).displayName ?? "Lucky Player",
+        photoURL: user.photoURL ?? (profile as any).photoURL ?? "",
       });
     }, DEBOUNCE_MS);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [
-    user,
-    coinBalance,
-    luckyScore,
-    totalPlays,
-    winStreak,
-    history,
-    wheelSpinDate,
-    wheelDailySpinsUsed,
-    wheelPaidSpinsUsed,
-  ]);
+  }, [user, profile]);
 }

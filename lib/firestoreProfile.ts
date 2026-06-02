@@ -66,6 +66,17 @@ export interface FirestoreUserProfile {
   diceFragments?: number;
   collectionProgress?: number;
   mythicDiceCount?: number;
+
+  // Coin Prediction Arena Fields
+  coinDailyAttempts?: number;
+  coinDailyAttemptsDate?: string;
+  coinTotalWins?: number;
+  coinTotalLosses?: number;
+  coinTotalPredictions?: number;
+  coinWinStreak?: number;
+  coinBestStreak?: number;
+  coinLargestWin?: number;
+  coinTotalProfit?: number;
 }
 
 // ─── Leaderboard entry ────────────────────────────────────────────────────────
@@ -97,6 +108,17 @@ export interface LeaderboardEntry {
   diceFragments?: number;
   collectionProgress?: number;
   mythicDiceCount?: number;
+
+  // Coin Prediction Arena Fields
+  coinDailyAttempts?: number;
+  coinDailyAttemptsDate?: string;
+  coinTotalWins?: number;
+  coinTotalLosses?: number;
+  coinTotalPredictions?: number;
+  coinWinStreak?: number;
+  coinBestStreak?: number;
+  coinLargestWin?: number;
+  coinTotalProfit?: number;
 }
 
 // ─── Reference helper ─────────────────────────────────────────────────────────
@@ -459,4 +481,77 @@ export function subscribeDiceCollectorsLeaderboard(
     }
   );
 }
+
+/**
+ * Subscribe to top Coin Prediction Arena players.
+ * Supported sorts: 'wins' (coinTotalWins desc), 'profit' (coinTotalProfit desc), 'winrate' (in-memory win rate with min 50 predictions)
+ */
+export function subscribeCoinLeaderboard(
+  sortBy: "wins" | "profit" | "winrate",
+  onChange: (entries: LeaderboardEntry[]) => void,
+  onError?: () => void
+): Unsubscribe {
+  let orderField = "coinTotalWins";
+  if (sortBy === "profit") orderField = "coinTotalProfit";
+  else if (sortBy === "winrate") orderField = "coinTotalPredictions";
+
+  const q = query(
+    collection(db, "users"),
+    orderBy(orderField, "desc"),
+    limit(100)
+  );
+
+  return onSnapshot(
+    q,
+    (snap) => {
+      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+        const data = d.data() as any;
+        return {
+          uid: d.id,
+          displayName: data.displayName || "Lucky Player",
+          photoURL: data.photoURL ?? null,
+          coinBalance: data.coinBalance ?? 0,
+          winStreak: data.winStreak ?? 0,
+          totalPlays: data.totalPlays ?? 0,
+          luckyScore: data.luckyScore ?? 50,
+          level: data.level ?? 1,
+          badges: data.badges ?? [],
+          // Coin Stats
+          coinDailyAttempts: data.coinDailyAttempts ?? 0,
+          coinDailyAttemptsDate: data.coinDailyAttemptsDate ?? "",
+          coinTotalWins: data.coinTotalWins ?? 0,
+          coinTotalLosses: data.coinTotalLosses ?? 0,
+          coinTotalPredictions: data.coinTotalPredictions ?? 0,
+          coinWinStreak: data.coinWinStreak ?? 0,
+          coinBestStreak: data.coinBestStreak ?? 0,
+          coinLargestWin: data.coinLargestWin ?? 0,
+          coinTotalProfit: data.coinTotalProfit ?? 0,
+        };
+      });
+
+      let sortedEntries = [...entries];
+      if (sortBy === "winrate") {
+        sortedEntries = sortedEntries
+          .filter((e) => (e.coinTotalPredictions || 0) >= 50)
+          .sort((a, b) => {
+            const wrA = ((a.coinTotalWins || 0) / (a.coinTotalPredictions || 1)) * 100;
+            const wrB = ((b.coinTotalWins || 0) / (b.coinTotalPredictions || 1)) * 100;
+            if (wrB !== wrA) return wrB - wrA;
+            return (b.coinTotalWins || 0) - (a.coinTotalWins || 0); // Tie breaker: absolute wins
+          });
+      } else if (sortBy === "wins") {
+        sortedEntries = sortedEntries.sort((a, b) => (b.coinTotalWins || 0) - (a.coinTotalWins || 0));
+      } else if (sortBy === "profit") {
+        sortedEntries = sortedEntries.sort((a, b) => (b.coinTotalProfit || 0) - (a.coinTotalProfit || 0));
+      }
+
+      onChange(sortedEntries.slice(0, 50));
+    },
+    (err) => {
+      console.error(`[Firestore] Coin Leaderboard snapshot error for ${sortBy}:`, err);
+      onError?.();
+    }
+  );
+}
+
 

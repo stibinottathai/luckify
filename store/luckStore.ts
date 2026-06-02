@@ -81,6 +81,17 @@ export interface UserLuckProfile {
   // Daily Dice Roll Limits
   diceRollDate?: string;
   diceRollsUsed?: number;
+
+  // Coin Prediction Arena fields
+  coinDailyAttempts?: number;
+  coinDailyAttemptsDate?: string;
+  coinTotalWins?: number;
+  coinTotalLosses?: number;
+  coinTotalPredictions?: number;
+  coinWinStreak?: number;
+  coinBestStreak?: number;
+  coinLargestWin?: number;
+  coinTotalProfit?: number;
 }
 
 const GUEST_USER_KEY = "guest";
@@ -133,6 +144,17 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   // Daily Dice limits defaults
   diceRollDate: getTodayKey(),
   diceRollsUsed: 0,
+
+  // Coin Prediction Arena defaults
+  coinDailyAttempts: 0,
+  coinDailyAttemptsDate: getTodayKey(),
+  coinTotalWins: 0,
+  coinTotalLosses: 0,
+  coinTotalPredictions: 0,
+  coinWinStreak: 0,
+  coinBestStreak: 0,
+  coinLargestWin: 0,
+  coinTotalProfit: 0,
 });
 
 export const createGuestProfile = (): UserLuckProfile => ({
@@ -166,6 +188,12 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
   if (nextProfile.diceRollDate !== getTodayKey()) {
     nextProfile.diceRollDate = getTodayKey();
     nextProfile.diceRollsUsed = 0;
+  }
+
+  // Handle Daily Coin Prediction date resets
+  if (nextProfile.coinDailyAttemptsDate !== getTodayKey()) {
+    nextProfile.coinDailyAttemptsDate = getTodayKey();
+    nextProfile.coinDailyAttempts = 0;
   }
 
   return nextProfile;

@@ -18,6 +18,7 @@ interface ResultCardProps {
   onRestart?: () => void;
   onShare?: () => void;
   justNumber?: boolean;
+  customContent?: React.ReactNode;
 }
 
 export default function ResultCard({
@@ -32,6 +33,7 @@ export default function ResultCard({
   onRestart,
   onShare,
   justNumber,
+  customContent,
 }: ResultCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -177,6 +179,12 @@ export default function ResultCard({
                 <p className="text-sm font-semibold text-deep-violet/70 dark:text-cream-soft/70 mb-5 leading-relaxed max-w-sm">
                   {description}
                 </p>
+
+                {customContent && (
+                  <div className="w-full mb-5 select-none">
+                    {customContent}
+                  </div>
+                )}
               </>
             )}
 

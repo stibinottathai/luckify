@@ -262,7 +262,7 @@ export default function ScratchGame() {
         </h3>
         
         <p className="mt-2 text-xs font-bold text-deep-violet/50 dark:text-cream-soft/50 max-w-[260px] leading-relaxed">
-          You've completed your daily scratch session. Keep earning coins by rolling the dice or spinning the wheel!
+          You've completed your daily scratch session. Keep earning coins by spinning the wheel!
         </p>
         
         <div className="mt-5 px-6 py-4 rounded-3xl bg-primary-gold/10 border border-primary-gold/20 flex flex-col items-center shadow-inner min-w-[240px]">

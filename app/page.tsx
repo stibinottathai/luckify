@@ -46,7 +46,7 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "Lucky Vibes Interactive Fortune & Luck Games",
-    "numberOfItems": 6,
+    "numberOfItems": 5,
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -65,27 +65,20 @@ export default function Page() {
       {
         "@type": "ListItem",
         "position": 3,
-        "name": "Lucky Dice",
-        "description": "Get 1 free roll daily! Additional rolls cost 200 points (max 5/day). Win points equal to your Roll Value × 100!",
-        "url": "https://luckify.vercel.app/dice"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
         "name": "Flip a Coin",
         "description": "Toss a beautiful golden cosmic coin to decide your path: Heads or Tails!",
         "url": "https://luckify.vercel.app/coin"
       },
       {
         "@type": "ListItem",
-        "position": 5,
+        "position": 4,
         "name": "Scratch Card",
         "description": "Rub off the silver glitter layer with your cursor to reveal hidden fortunes and wins!",
         "url": "https://luckify.vercel.app/scratch"
       },
       {
         "@type": "ListItem",
-        "position": 6,
+        "position": 5,
         "name": "Pendulum Divination",
         "description": "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
         "url": "https://luckify.vercel.app/pendulum"

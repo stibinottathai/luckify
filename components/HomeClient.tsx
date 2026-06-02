@@ -23,7 +23,7 @@ const LOBBY_FAQS = [
   },
   {
     question: "How is the vibes score and history calculated?",
-    answer: "Your vibes score acts as an aggregate rating of your current luck session. Wins on the scratch card, correct predictions on the coin toss, high rolls on dice, and positive 8-ball draws increment your score. Daily red envelopes and marine scroll bottle mail also boost your luck score. All stats are tracked locally in a client-side Zustand store.",
+    answer: "Your vibes score acts as an aggregate rating of your current luck session. Wins on the scratch card, correct predictions on the coin toss, and positive 8-ball draws increment your score. Daily red envelopes and marine scroll bottle mail also boost your luck score. All stats are tracked locally in a client-side Zustand store.",
   },
   {
     question: "Are the game randomizers fair?",
@@ -53,15 +53,6 @@ const GAMES: GameCard[] = [
     href: "/tree",
     badge: "SVG Physics",
     color: "from-green-400 to-emerald-500",
-  },
-  {
-    id: "dice",
-    emoji: "🎲",
-    title: "Lucky Dice",
-    description: "Get 1 free roll daily! Additional rolls cost 200 points (max 5/day). Win points equal to your Roll Value × 100!",
-    href: "/dice",
-    badge: "3D Cubes",
-    color: "from-indigo-400 to-violet-500",
   },
   {
     id: "coin",
@@ -141,7 +132,7 @@ export default function HomeClient() {
             Lucky Vibes ✨ Virtual Garden of Luck & Fortunes
           </h1>
           <p className="text-xs sm:text-sm font-semibold text-cream-soft/80 max-w-xl">
-            Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, roll 3D dice, scratch card covers, and test your vibes score today.
+            Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, scratch card covers, and test your vibes score today.
           </p>
 
           {/* Core Call to Actions (CTAs) above the fold */}
@@ -152,12 +143,6 @@ export default function HomeClient() {
             >
               <span>Spin the Fortune Wheel 🎡</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/dice"
-              className="py-2.5 px-4 rounded-2xl font-black text-xs select-none cursor-pointer tracking-wider border border-white/20 hover:bg-white/5 text-white active:scale-95 transition-all flex items-center gap-2 font-fredoka uppercase"
-            >
-              Roll Lucky Dice 🎲
             </Link>
           </div>
 

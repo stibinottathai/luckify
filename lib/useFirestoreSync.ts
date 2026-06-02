@@ -8,15 +8,17 @@
  * don't trigger multiple writes.
  *
  * Only runs for authenticated (non-guest) users.
+ * Also persists displayName and photoURL for leaderboard display.
  */
 
 import { useEffect, useRef } from "react";
+import type { User } from "firebase/auth";
 import { useLuckStore } from "@/store/luckStore";
 import { saveFirestoreProfile } from "@/lib/firestoreProfile";
 
 const DEBOUNCE_MS = 1500; // wait 1.5 s after last change before writing
 
-export function useFirestoreSync(uid: string | null) {
+export function useFirestoreSync(user: User | null) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const coinBalance = useLuckStore((s) => s.coinBalance);
@@ -30,7 +32,9 @@ export function useFirestoreSync(uid: string | null) {
 
   useEffect(() => {
     // Only sync for real (non-guest) users
-    if (!uid || uid === "guest") return;
+    if (!user || user.uid === "guest") return;
+
+    const uid = user.uid;
 
     // Clear any pending write
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -45,6 +49,9 @@ export function useFirestoreSync(uid: string | null) {
         wheelSpinDate,
         wheelDailySpinsUsed,
         wheelPaidSpinsUsed,
+        // Always keep identity fresh for leaderboard
+        displayName: user.displayName ?? "Lucky Player",
+        photoURL: user.photoURL ?? "",
       });
     }, DEBOUNCE_MS);
 
@@ -52,7 +59,7 @@ export function useFirestoreSync(uid: string | null) {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [
-    uid,
+    user,
     coinBalance,
     luckyScore,
     totalPlays,

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, Coins, Sparkles } from "lucide-react";
+import { ArrowLeft, Coins, Sparkles, Trophy } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 import ShareModal from "@/components/ui/ShareModal";
 import LegalModal from "@/components/ui/LegalModal";
@@ -103,6 +103,22 @@ export default function Shell({ children }: ShellProps) {
               <span className="hidden min-[460px]:inline">Lobby</span>
             </Link>
           )}
+
+          {/* Leaderboard nav link */}
+          <Link
+            href="/leaderboard"
+            aria-label="Leaderboard"
+            className={`${
+              showLobbyLink ? "ml-2" : "ml-auto"
+            } h-9 px-2 sm:px-3 rounded-full border flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group ${
+              pathname === "/leaderboard"
+                ? "bg-primary-gold border-primary-gold text-deep-violet"
+                : "border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75"
+            } ${showLobbyLink ? "" : "mr-auto"}`}
+          >
+            <Trophy className="w-3.5 h-3.5" />
+            <span className="hidden min-[520px]:inline">Leaderboard</span>
+          </Link>
 
           {/* Right Navigation controls */}
           <div className="flex items-center gap-2 sm:gap-4">

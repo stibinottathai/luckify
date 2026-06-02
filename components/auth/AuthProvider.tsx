@@ -3,9 +3,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useLuckStore } from "@/store/luckStore";
+import { useLuckStore, normalizeProfile } from "@/store/luckStore";
 import {
   loadFirestoreProfile,
+  saveFirestoreProfile,
   subscribeFirestoreProfile,
 } from "@/lib/firestoreProfile";
 import { useFirestoreSync } from "@/lib/useFirestoreSync";
@@ -21,10 +22,10 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
 });
 
-// ─── Inner component that can safely call hooks ────────────────────────────────
+// ─── Inner component that can safely call hooks ─────────────────────────────────────────────────────
 
-function FirestoreSyncLayer({ uid }: { uid: string | null }) {
-  useFirestoreSync(uid);
+function FirestoreSyncLayer({ user }: { user: User | null }) {
+  useFirestoreSync(user);
   return null;
 }
 
@@ -56,19 +57,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const firestoreProfile = await loadFirestoreProfile(uid);
 
       if (firestoreProfile) {
+        const updatedProfile = normalizeProfile(firestoreProfile);
+
         // Hydrate the Zustand store with cloud data (cloud wins)
         useLuckStore.setState((state) => {
-          const updatedProfile = {
-            totalPlays: firestoreProfile.totalPlays ?? state.totalPlays,
-            winStreak: firestoreProfile.winStreak ?? state.winStreak,
-            luckyScore: firestoreProfile.luckyScore ?? state.luckyScore,
-            coinBalance: firestoreProfile.coinBalance ?? state.coinBalance,
-            history: firestoreProfile.history ?? state.history,
-            wheelSpinDate: firestoreProfile.wheelSpinDate ?? state.wheelSpinDate,
-            wheelDailySpinsUsed: firestoreProfile.wheelDailySpinsUsed ?? state.wheelDailySpinsUsed,
-            wheelPaidSpinsUsed: firestoreProfile.wheelPaidSpinsUsed ?? state.wheelPaidSpinsUsed,
-          };
-
           return {
             ...updatedProfile,
             profiles: {
@@ -77,6 +69,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             },
           };
         });
+
+        // Always refresh display identity (fire-and-forget — don't block sign-in)
+        saveFirestoreProfile(uid, {
+          ...updatedProfile,
+          displayName: firebaseUser.displayName ?? firestoreProfile.displayName ?? "Lucky Player",
+          photoURL: firebaseUser.photoURL ?? firestoreProfile.photoURL ?? "",
+        }).catch(() => {/* silent — identity refresh is best-effort */});
       } else {
         // First time this user logs in — give them starting balance
         useLuckStore.setState((state) => {
@@ -98,6 +97,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             },
           };
         });
+
+        // Persist initial profile (fire-and-forget)
+        saveFirestoreProfile(uid, {
+          coinBalance: STARTING_COIN_BALANCE,
+          luckyScore: 50,
+          totalPlays: 0,
+          winStreak: 0,
+          history: [],
+          wheelSpinDate: new Date().toISOString().slice(0, 10),
+          wheelDailySpinsUsed: 0,
+          wheelPaidSpinsUsed: 0,
+          displayName: firebaseUser.displayName ?? "Lucky Player",
+          photoURL: firebaseUser.photoURL ?? "",
+        }).catch(() => {/* silent — sync hook will retry */});
       }
 
       setLoading(false);
@@ -122,16 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       useLuckStore.setState((state) => {
-        const merged = {
-          totalPlays: remoteProfile.totalPlays ?? state.totalPlays,
-          winStreak: remoteProfile.winStreak ?? state.winStreak,
-          luckyScore: remoteProfile.luckyScore ?? state.luckyScore,
-          coinBalance: remoteProfile.coinBalance ?? state.coinBalance,
-          history: remoteProfile.history ?? state.history,
-          wheelSpinDate: remoteProfile.wheelSpinDate ?? state.wheelSpinDate,
-          wheelDailySpinsUsed: remoteProfile.wheelDailySpinsUsed ?? state.wheelDailySpinsUsed,
-          wheelPaidSpinsUsed: remoteProfile.wheelPaidSpinsUsed ?? state.wheelPaidSpinsUsed,
-        };
+        const merged = normalizeProfile(remoteProfile);
 
         return {
           ...merged,
@@ -149,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={{ user, loading }}>
       {/* Mount the debounced sync layer for the active user */}
-      <FirestoreSyncLayer uid={user?.uid ?? null} />
+      <FirestoreSyncLayer user={user} />
       {children}
     </AuthContext.Provider>
   );

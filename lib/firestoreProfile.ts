@@ -11,6 +11,11 @@ import {
   getDoc,
   setDoc,
   onSnapshot,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
   serverTimestamp,
   Unsubscribe,
 } from "firebase/firestore";
@@ -28,7 +33,22 @@ export interface FirestoreUserProfile {
   wheelSpinDate: string;
   wheelDailySpinsUsed: number;
   wheelPaidSpinsUsed: number;
+  // Identity — saved for leaderboard display
+  displayName?: string;
+  photoURL?: string;
   updatedAt?: unknown; // serverTimestamp()
+}
+
+// ─── Leaderboard entry ────────────────────────────────────────────────────────
+
+export interface LeaderboardEntry {
+  uid: string;
+  displayName: string;
+  photoURL: string | null;
+  coinBalance: number;
+  winStreak: number;
+  totalPlays: number;
+  luckyScore: number;
 }
 
 // ─── Reference helper ─────────────────────────────────────────────────────────
@@ -96,6 +116,46 @@ export function subscribeFirestoreProfile(
     },
     (err) => {
       console.error("[Firestore] Snapshot error:", err);
+    }
+  );
+}
+
+// ─── Leaderboard query ────────────────────────────────────────────────────────
+
+/**
+ * Subscribe to live top-100 leaderboard ordered by coinBalance descending.
+ * Returns the unsubscribe function.
+ */
+export function subscribeLeaderboard(
+  onChange: (entries: LeaderboardEntry[]) => void,
+  onError?: () => void
+): Unsubscribe {
+  const q = query(
+    collection(db, "users"),
+    orderBy("coinBalance", "desc"),
+    limit(100)
+  );
+
+  return onSnapshot(
+    q,
+    (snap) => {
+      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+        const data = d.data() as FirestoreUserProfile;
+        return {
+          uid: d.id,
+          displayName: data.displayName || "Lucky Player",
+          photoURL: data.photoURL ?? null,
+          coinBalance: data.coinBalance ?? 0,
+          winStreak: data.winStreak ?? 0,
+          totalPlays: data.totalPlays ?? 0,
+          luckyScore: data.luckyScore ?? 50,
+        };
+      });
+      onChange(entries);
+    },
+    (err) => {
+      console.error("[Firestore] Leaderboard snapshot error:", err);
+      onError?.();
     }
   );
 }

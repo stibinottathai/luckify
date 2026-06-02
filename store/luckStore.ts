@@ -51,7 +51,7 @@ const GUEST_USER_KEY = "guest";
 
 const getTodayKey = () => new Date().toISOString().slice(0, 10);
 
-const createDefaultProfile = (): UserLuckProfile => ({
+export const createDefaultProfile = (): UserLuckProfile => ({
   totalPlays: 0,
   winStreak: 0,
   luckyScore: 50,
@@ -62,7 +62,7 @@ const createDefaultProfile = (): UserLuckProfile => ({
   wheelPaidSpinsUsed: 0,
 });
 
-const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile => {
+export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile => {
   const defaults = createDefaultProfile();
   const nextProfile = {
     ...defaults,

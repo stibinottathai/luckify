@@ -74,12 +74,21 @@ const GAMES: GameCard[] = [
   },
   {
     id: "pendulum",
-    emoji: "☯️",
+    emoji: "🔮",
     title: "Pendulum Divination",
     description: "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
     href: "/pendulum",
-    badge: "Astral Physics",
-    color: "from-purple-500 to-indigo-600",
+    badge: "Physics Simulation",
+    color: "from-slate-400 to-zinc-600",
+  },
+  {
+    id: "gift-hunt",
+    emoji: "🎁",
+    title: "Lucky Gift Hunt",
+    description: "Pick 3 mystery gift boxes every day! Will you find the legendary 5000 coin jackpot?",
+    href: "/gift-hunt",
+    badge: "Daily Board",
+    color: "from-pink-500 to-rose-600",
   },
 ];
 
@@ -143,6 +152,12 @@ export default function HomeClient() {
             >
               <span>Spin the Fortune Wheel 🎡</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="/gift-hunt"
+              className="py-2.5 px-4 rounded-2xl font-black text-xs select-none cursor-pointer tracking-wider border border-white/20 hover:bg-white/5 text-white active:scale-95 transition-all flex items-center gap-2 font-fredoka uppercase"
+            >
+              Play Gift Hunt 🎁
             </Link>
           </div>
 

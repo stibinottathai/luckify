@@ -46,7 +46,7 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "Lucky Vibes Interactive Fortune & Luck Games",
-    "numberOfItems": 5,
+    "numberOfItems": 6,
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -82,6 +82,13 @@ export default function Page() {
         "name": "Pendulum Divination",
         "description": "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
         "url": "https://luckify.vercel.app/pendulum"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "name": "Lucky Gift Hunt",
+        "description": "Pick 3 mystery gift boxes every day! Will you find the legendary 5000 coin jackpot?",
+        "url": "https://luckify.vercel.app/gift-hunt"
       }
     ]
   };

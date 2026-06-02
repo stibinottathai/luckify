@@ -104,6 +104,14 @@ export interface UserLuckProfile {
   pendulumDailyQuestionsDate?: string;
   pendulumDailyQuestionsUsed?: number;
 
+  // Gift Hunt Fields
+  giftHuntDate?: string;
+  giftHuntOpensUsed?: number;
+  giftHuntTotalOpened?: number;
+  giftHuntHighestGift?: number;
+  giftHuntTimes1000?: number;
+  giftHuntTimes5000?: number;
+
   // Local Sync Coordinates
   localVersion?: number;
 }
@@ -179,6 +187,14 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   pendulumDailyQuestionsDate: getTodayKey(),
   pendulumDailyQuestionsUsed: 0,
 
+  // Gift Hunt defaults
+  giftHuntDate: getTodayKey(),
+  giftHuntOpensUsed: 0,
+  giftHuntTotalOpened: 0,
+  giftHuntHighestGift: 0,
+  giftHuntTimes1000: 0,
+  giftHuntTimes5000: 0,
+
   // Local Sync Coordinates defaults
   localVersion: 0,
 });
@@ -243,6 +259,12 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
   if (nextProfile.pendulumDailyQuestionsDate !== getTodayKey()) {
     nextProfile.pendulumDailyQuestionsDate = getTodayKey();
     nextProfile.pendulumDailyQuestionsUsed = 0;
+  }
+
+  // Handle Daily Gift Hunt resets
+  if (nextProfile.giftHuntDate !== getTodayKey()) {
+    nextProfile.giftHuntDate = getTodayKey();
+    nextProfile.giftHuntOpensUsed = 0;
   }
 
   return nextProfile;

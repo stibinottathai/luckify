@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLuckStore } from "@/store/luckStore";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -60,6 +60,18 @@ export default function CoinFlipGame() {
   // Dev tools to force Golden Coin
   const [forceGoldenForDev, setForceGoldenForDev] = useState(false);
   const isDev = process.env.NODE_ENV === "development";
+
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const intervalsRef = useRef<NodeJS.Timeout[]>([]);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+      timeoutsRef.current.forEach(clearTimeout);
+      intervalsRef.current.forEach(clearInterval);
+    };
+  }, []);
 
   // Balance count animation helper
   const [displayedBalance, setDisplayedBalance] = useState(currentProfile.coinBalance ?? 0);
@@ -187,7 +199,11 @@ export default function CoinFlipGame() {
         setGoldenPortalActive(true);
 
         // Suspense delay for Golden Coin emergence (1.2 seconds)
-        await new Promise((resolve) => setTimeout(resolve, 1200));
+        await new Promise((resolve) => {
+          const t1 = setTimeout(resolve, 1200);
+          timeoutsRef.current.push(t1);
+        });
+        if (!isMounted.current) return;
         setGoldenPortalActive(false);
         setIsGoldenCoinResult(true);
 
@@ -195,21 +211,27 @@ export default function CoinFlipGame() {
         const goldenAudioInterval = setInterval(() => {
           playDiceRoll();
         }, 80);
+        intervalsRef.current.push(goldenAudioInterval);
 
-        setTimeout(() => {
+        const t2 = setTimeout(() => {
           clearInterval(goldenAudioInterval);
+          if (!isMounted.current) return;
           resolveFlipSettle(data, serverResult);
         }, 2400); // matching 2.4s Y-spin animation duration cleanly
+        timeoutsRef.current.push(t2);
       } else {
         // Normal settle sequence (approx 1.6 seconds)
         const audioInterval = setInterval(() => {
           playTick();
         }, 110);
+        intervalsRef.current.push(audioInterval);
 
-        setTimeout(() => {
+        const t3 = setTimeout(() => {
           clearInterval(audioInterval);
+          if (!isMounted.current) return;
           resolveFlipSettle(data, serverResult);
         }, 1600); // matching 1.6s Y-spin animation duration cleanly
+        timeoutsRef.current.push(t3);
       }
 
     } catch (err) {
@@ -275,7 +297,10 @@ export default function CoinFlipGame() {
       playWinChime();
     } else {
       setShowLossFlash(true);
-      setTimeout(() => setShowLossFlash(false), 500);
+      const t4 = setTimeout(() => {
+        if (isMounted.current) setShowLossFlash(false);
+      }, 500);
+      timeoutsRef.current.push(t4);
       playDudSound();
     }
 

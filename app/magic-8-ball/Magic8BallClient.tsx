@@ -54,9 +54,19 @@ export default function Magic8BallClient() {
 
   const addResult = useLuckStore((state) => state.addResult);
 
-  // Auto-focus input on initial mount
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const intervalsRef = useRef<NodeJS.Timeout[]>([]);
+  const isMounted = useRef(true);
+
+  // Auto-focus input on initial mount and setup cleanup
   useEffect(() => {
+    isMounted.current = true;
     inputRef.current?.focus();
+    return () => {
+      isMounted.current = false;
+      timeoutsRef.current.forEach(clearTimeout);
+      intervalsRef.current.forEach(clearInterval);
+    };
   }, []);
 
   const handleAsk = (e?: React.FormEvent) => {
@@ -72,10 +82,12 @@ export default function Magic8BallClient() {
     const audioInterval = setInterval(() => {
       playDiceRoll();
     }, 150);
+    intervalsRef.current.push(audioInterval);
 
     // 900ms -> Transition to revealing phase
-    setTimeout(() => {
+    timeoutsRef.current.push(setTimeout(() => {
       clearInterval(audioInterval);
+      if (!isMounted.current) return;
       setPhase("revealing");
 
       // Play final reveal chime or dud based on outcome
@@ -86,10 +98,11 @@ export default function Magic8BallClient() {
       } else {
         playDiceRoll();
       }
-    }, 900);
+    }, 900));
 
     // 1600ms -> Transition to final answer state, log to Zustand history store
-    setTimeout(() => {
+    timeoutsRef.current.push(setTimeout(() => {
+      if (!isMounted.current) return;
       setPhase("answer");
 
       const isWin = pick.type === "positive";
@@ -105,22 +118,23 @@ export default function Magic8BallClient() {
 
       const logText = `Consulted the Oracle: "${question}" -> "${pick.text}" (${pick.type.toUpperCase()})`;
       addResult("Magic 8-Ball", logText, isWin, scoreImpact);
-    }, 1600);
+    }, 1600));
   };
 
   const handleReset = () => {
     if (phase !== "answer") return;
     setPhase("resetting");
 
-    setTimeout(() => {
+    timeoutsRef.current.push(setTimeout(() => {
+      if (!isMounted.current) return;
       setPhase("idle");
       setAnswer(null);
       setQuestion("");
       // Force refocus the input
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 50);
-    }, 400);
+      timeoutsRef.current.push(setTimeout(() => {
+        if (isMounted.current) inputRef.current?.focus();
+      }, 50));
+    }, 400));
   };
 
   return (

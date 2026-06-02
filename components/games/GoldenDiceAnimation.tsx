@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playGoldenDiceTrigger, playGoldenDiceRoll } from "@/lib/audio";
 
@@ -48,7 +48,10 @@ export default function GoldenDiceAnimation({ onComplete, outcomeValue }: Golden
   const [phase, setPhase] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [particles, setParticles] = useState<{ id: number; x: number; y: number; scale: number; speed: number }[]>([]);
 
+  const isMounted = useRef(true);
+
   useEffect(() => {
+    isMounted.current = true;
     // Generate floating golden particles
     const list = Array.from({ length: 40 }).map((_, i) => ({
       id: i,
@@ -63,29 +66,36 @@ export default function GoldenDiceAnimation({ onComplete, outcomeValue }: Golden
     playGoldenDiceTrigger();
 
     const p2Timer = setTimeout(() => {
-      setPhase(2);
+      if (isMounted.current) setPhase(2);
     }, 1200);
 
     const p3Timer = setTimeout(() => {
-      setPhase(3);
+      if (isMounted.current) setPhase(3);
     }, 3200);
 
+    let interval: NodeJS.Timeout;
+    let innerTimer: NodeJS.Timeout;
+
     const p4Timer = setTimeout(() => {
+      if (!isMounted.current) return;
       setPhase(4);
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         playGoldenDiceRoll();
       }, 250);
       
-      setTimeout(() => {
+      innerTimer = setTimeout(() => {
         clearInterval(interval);
-        setPhase(5);
+        if (isMounted.current) setPhase(5);
       }, 3000);
     }, 5200);
 
     return () => {
+      isMounted.current = false;
       clearTimeout(p2Timer);
       clearTimeout(p3Timer);
       clearTimeout(p4Timer);
+      if (interval) clearInterval(interval);
+      if (innerTimer) clearTimeout(innerTimer);
     };
   }, []);
 

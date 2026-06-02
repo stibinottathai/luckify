@@ -19,6 +19,13 @@ export default function ScratchGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawingRef = useRef(false);
   const scratchCountRef = useRef(0);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const [outcome, setOutcome] = useState<ScratchPrize | null>(null);
   const [scratchedPercent, setScratchedPercent] = useState(0);
@@ -224,6 +231,7 @@ export default function ScratchGame() {
 
     // Trigger Result Popup and update store
     setTimeout(() => {
+      if (!isMounted.current) return;
       if (outcome) {
         setShowResult(true);
         claimScratchCard(outcome.coinReward, outcome.name, outcome.isWin, outcome.scoreImpact);

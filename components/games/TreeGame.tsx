@@ -170,6 +170,18 @@ function getLevelProgress(xp: number) {
 export default function TreeGame() {
   const { user } = useAuth();
   
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const intervalsRef = useRef<NodeJS.Timeout[]>([]);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+      timeoutsRef.current.forEach(clearTimeout);
+      intervalsRef.current.forEach(clearInterval);
+    };
+  }, []);
+
   // Local active option lists
   const [options, setOptions] = useState<TreeOption[]>(DEFAULT_OPTIONS);
   const [newOptionName, setNewOptionName] = useState("");
@@ -284,9 +296,11 @@ export default function TreeGame() {
     const soundInterval = setInterval(() => {
       playSoundSway();
     }, 200);
+    intervalsRef.current.push(soundInterval);
 
-    setTimeout(async () => {
+    const t = setTimeout(async () => {
       clearInterval(soundInterval);
+      if (!isMounted.current) return;
       setShaking(false);
       setSuspensePhase(true); // initiate suspense countdown
 
@@ -333,6 +347,7 @@ export default function TreeGame() {
         if (!shakeRes.ok) {
           const errData = await shakeRes.json();
           alert(`Shake failed: ${errData.error}`);
+          if (!isMounted.current) return;
           setSuspensePhase(false);
           setHasShaken(false);
           setFallingItems([]);
@@ -340,6 +355,7 @@ export default function TreeGame() {
         }
 
         const data = await shakeRes.json();
+        if (!isMounted.current) return;
         
         // Setup local rewards details
         setEarnedReward(data.reward);
@@ -386,21 +402,22 @@ export default function TreeGame() {
           
           if (eType === "lucky_bird") {
             setEventBirdTrigger(true);
-            setTimeout(() => playSoundChirp(), 1500);
+            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundChirp(), 1500));
           } else if (eType === "hidden_nest") {
             setEventNestTrigger(true);
-            setTimeout(() => playSoundMagic(), 1200);
+            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundMagic(), 1200));
           } else if (eType === "golden_fruit") {
             setEventGoldenAppleTrigger(true);
-            setTimeout(() => playSoundMagic(), 800);
+            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundMagic(), 800));
           } else if (eType === "tree_spirit") {
             setEventSpiritTrigger(true);
-            setTimeout(() => playSoundMagic(), 500);
+            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundMagic(), 500));
           }
         }
 
         // ─── Suspense phase ending, display outcome ──────────────────────
-        setTimeout(() => {
+        timeoutsRef.current.push(setTimeout(() => {
+          if (!isMounted.current) return;
           setSuspensePhase(false);
           setShowResultCard(true);
 
@@ -414,17 +431,18 @@ export default function TreeGame() {
             playWinChime();
           } else if (rarity === "epic") {
             setEpicGlowTrigger(true);
-            setTimeout(() => setEpicGlowTrigger(false), 2500);
+            timeoutsRef.current.push(setTimeout(() => isMounted.current && setEpicGlowTrigger(false), 2500));
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
             playWinChime();
           } else if (rarity === "legendary") {
             setLegendaryBeamTrigger(true);
-            setTimeout(() => setLegendaryBeamTrigger(false), 4500);
+            timeoutsRef.current.push(setTimeout(() => isMounted.current && setLegendaryBeamTrigger(false), 4500));
             playWinChime();
             // massive multi confetti blast
             let duration = 3 * 1000;
             let end = Date.now() + duration;
             (function frame() {
+              if (!isMounted.current) return;
               confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
               confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
               if (Date.now() < end) requestAnimationFrame(frame);
@@ -433,17 +451,19 @@ export default function TreeGame() {
             playWinChime(); // Standard short chime
           }
 
-        }, 1800); // 1.8s suspense duration
+        }, 1800)); // 1.8s suspense duration
 
       } catch (err) {
         console.error(err);
         alert("Network error occurred while shaking the tree!");
+        if (!isMounted.current) return;
         setSuspensePhase(false);
         setHasShaken(false);
         setFallingItems([]);
       }
 
     }, 1200); // Shaking swaying duration
+    timeoutsRef.current.push(t);
   };
 
   // ─── Mystery Box opening handler ──────────────────────────────────────────────

@@ -9,7 +9,11 @@ export interface Prize {
   weight: number;
 }
 
-export const WHEEL_FREE_DAILY_SPINS = 3;
+export const WHEEL_FREE_DAILY_SPINS = 1;
+export const WHEEL_PAID_SPIN_COST = 200;
+export const WHEEL_MAX_PAID_SPINS = 5;
+export const WHEEL_MAX_DAILY_SPINS = WHEEL_FREE_DAILY_SPINS + WHEEL_MAX_PAID_SPINS; // 6 total
+// Legacy exports kept for any other consumers
 export const WHEEL_EXTRA_SPIN_PACK_COST = 200;
 export const WHEEL_EXTRA_SPIN_PACK_SIZE = 3;
 export const STARTING_COIN_BALANCE = 500;

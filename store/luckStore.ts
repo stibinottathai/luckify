@@ -2,9 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   STARTING_COIN_BALANCE,
-  WHEEL_EXTRA_SPIN_PACK_COST,
-  WHEEL_EXTRA_SPIN_PACK_SIZE,
   WHEEL_FREE_DAILY_SPINS,
+  WHEEL_MAX_PAID_SPINS,
+  WHEEL_PAID_SPIN_COST,
 } from "@/lib/prizes";
 
 export interface HistoryItem {
@@ -24,15 +24,14 @@ interface LuckStore {
   coinBalance: number;
   history: HistoryItem[];
   wheelSpinDate: string;
-  wheelDailySpinsUsed: number;
-  wheelBonusSpins: number;
+  wheelDailySpinsUsed: number; // total spins used today (free + paid)
+  wheelPaidSpinsUsed: number;  // paid spins used today (max 5)
   setActiveUser: (userKey: string) => void;
   addResult: (game: string, result: string, isWin: boolean, scoreImpact?: number) => void;
   addCoins: (amount: number) => void;
   spendCoins: (amount: number) => boolean;
   refreshWheelSpins: () => void;
   consumeWheelSpin: () => boolean;
-  buyWheelSpinPack: () => boolean;
   resetToday: () => void;
 }
 
@@ -45,7 +44,7 @@ type UserLuckProfile = Pick<
   | "history"
   | "wheelSpinDate"
   | "wheelDailySpinsUsed"
-  | "wheelBonusSpins"
+  | "wheelPaidSpinsUsed"
 >;
 
 const GUEST_USER_KEY = "guest";
@@ -60,7 +59,7 @@ const createDefaultProfile = (): UserLuckProfile => ({
   history: [],
   wheelSpinDate: getTodayKey(),
   wheelDailySpinsUsed: 0,
-  wheelBonusSpins: 0,
+  wheelPaidSpinsUsed: 0,
 });
 
 const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile => {
@@ -76,7 +75,7 @@ const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile =
       ...nextProfile,
       wheelSpinDate: getTodayKey(),
       wheelDailySpinsUsed: 0,
-      wheelBonusSpins: 0,
+      wheelPaidSpinsUsed: 0,
     };
   }
 
@@ -157,7 +156,7 @@ export const useLuckStore = create<LuckStore>()(
             history: newHistory,
             wheelSpinDate: state.wheelSpinDate,
             wheelDailySpinsUsed: state.wheelDailySpinsUsed,
-            wheelBonusSpins: state.wheelBonusSpins,
+            wheelPaidSpinsUsed: state.wheelPaidSpinsUsed,
           });
         });
       },
@@ -172,7 +171,7 @@ export const useLuckStore = create<LuckStore>()(
           history: state.history,
           wheelSpinDate: state.wheelSpinDate,
           wheelDailySpinsUsed: state.wheelDailySpinsUsed,
-          wheelBonusSpins: state.wheelBonusSpins,
+          wheelPaidSpinsUsed: state.wheelPaidSpinsUsed,
         }));
       },
 
@@ -192,7 +191,7 @@ export const useLuckStore = create<LuckStore>()(
           history: state.history,
           wheelSpinDate: state.wheelSpinDate,
           wheelDailySpinsUsed: state.wheelDailySpinsUsed,
-          wheelBonusSpins: state.wheelBonusSpins,
+          wheelPaidSpinsUsed: state.wheelPaidSpinsUsed,
         }));
         return true;
       },
@@ -204,9 +203,11 @@ export const useLuckStore = create<LuckStore>()(
       consumeWheelSpin: () => {
         const state = get();
         const profile = normalizeProfile(state);
-        const dailySpinsRemaining = Math.max(0, WHEEL_FREE_DAILY_SPINS - profile.wheelDailySpinsUsed);
 
-        if (dailySpinsRemaining > 0) {
+        const hasUsedFreeSpinToday = profile.wheelDailySpinsUsed >= WHEEL_FREE_DAILY_SPINS;
+
+        // First spin of the day: FREE — no point requirement
+        if (!hasUsedFreeSpinToday) {
           set((currentState) => syncActiveProfile(currentState, {
             ...profile,
             wheelDailySpinsUsed: profile.wheelDailySpinsUsed + 1,
@@ -214,31 +215,22 @@ export const useLuckStore = create<LuckStore>()(
           return true;
         }
 
-        if (profile.wheelBonusSpins > 0) {
-          set((currentState) => syncActiveProfile(currentState, {
-            ...profile,
-            wheelBonusSpins: profile.wheelBonusSpins - 1,
-          }));
-          return true;
+        // Subsequent spins: cost 200 points each, max 5 paid per day
+        if (profile.wheelPaidSpinsUsed >= WHEEL_MAX_PAID_SPINS) {
+          // Reached daily paid spin limit
+          return false;
         }
 
-        set((currentState) => syncActiveProfile(currentState, profile));
-        return false;
-      },
-
-      buyWheelSpinPack: () => {
-        const state = get();
-        const profile = normalizeProfile(state);
-
-        if (profile.coinBalance < WHEEL_EXTRA_SPIN_PACK_COST) {
-          set((currentState) => syncActiveProfile(currentState, profile));
+        if (profile.coinBalance < WHEEL_PAID_SPIN_COST) {
+          // Not enough points for a paid spin
           return false;
         }
 
         set((currentState) => syncActiveProfile(currentState, {
           ...profile,
-          coinBalance: profile.coinBalance - WHEEL_EXTRA_SPIN_PACK_COST,
-          wheelBonusSpins: profile.wheelBonusSpins + WHEEL_EXTRA_SPIN_PACK_SIZE,
+          coinBalance: profile.coinBalance - WHEEL_PAID_SPIN_COST,
+          wheelDailySpinsUsed: profile.wheelDailySpinsUsed + 1,
+          wheelPaidSpinsUsed: profile.wheelPaidSpinsUsed + 1,
         }));
         return true;
       },
@@ -249,7 +241,7 @@ export const useLuckStore = create<LuckStore>()(
     }),
     {
       name: "lucky-vibes-store",
-      version: 3,
+      version: 5,
       migrate: (persistedState) => {
         const state = persistedState as Partial<LuckStore> | undefined;
         if (!state) {
@@ -274,6 +266,7 @@ export const useLuckStore = create<LuckStore>()(
           luckyScore: state.luckyScore ?? 50,
           coinBalance: state.coinBalance ?? STARTING_COIN_BALANCE,
           history: state.history ?? [],
+          wheelPaidSpinsUsed: 0,
         });
 
         return applyProfile(GUEST_USER_KEY, legacyProfile, {

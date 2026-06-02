@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  WHEEL_EXTRA_SPIN_PACK_COST,
-  WHEEL_EXTRA_SPIN_PACK_SIZE,
   WHEEL_FREE_DAILY_SPINS,
+  WHEEL_MAX_PAID_SPINS,
+  WHEEL_PAID_SPIN_COST,
   WHEEL_PRIZES,
   Prize,
 } from "@/lib/prizes";
@@ -43,14 +43,19 @@ export default function WheelGame() {
   const coinBalance = useLuckStore((state) => state.coinBalance);
   const currentScore = useLuckStore((state) => state.luckyScore);
   const wheelDailySpinsUsed = useLuckStore((state) => state.wheelDailySpinsUsed);
-  const wheelBonusSpins = useLuckStore((state) => state.wheelBonusSpins);
+  const wheelPaidSpinsUsed = useLuckStore((state) => state.wheelPaidSpinsUsed);
   const refreshWheelSpins = useLuckStore((state) => state.refreshWheelSpins);
   const consumeWheelSpin = useLuckStore((state) => state.consumeWheelSpin);
-  const buyWheelSpinPack = useLuckStore((state) => state.buyWheelSpinPack);
 
-  const dailySpinsRemaining = Math.max(0, WHEEL_FREE_DAILY_SPINS - wheelDailySpinsUsed);
-  const spinsAvailable = dailySpinsRemaining + wheelBonusSpins;
-  const canBuySpinPack = coinBalance >= WHEEL_EXTRA_SPIN_PACK_COST;
+  // Spin availability
+  const hasUsedFreeSpinToday = wheelDailySpinsUsed >= WHEEL_FREE_DAILY_SPINS;
+  const freeSpinAvailable = !hasUsedFreeSpinToday;
+  const paidSpinsLeft = Math.max(0, WHEEL_MAX_PAID_SPINS - wheelPaidSpinsUsed);
+  const totalSpinsLeft = (freeSpinAvailable ? 1 : 0) + paidSpinsLeft;
+  const isDailyLimitReached = totalSpinsLeft === 0;
+  const canAffordPaidSpin = coinBalance >= WHEEL_PAID_SPIN_COST;
+  // Can spin if: has free spin, OR has paid spins left and enough coins
+  const canSpin = freeSpinAvailable || (paidSpinsLeft > 0 && canAffordPaidSpin);
 
   // Redraw the canvas wheel whenever rotation changes
   const drawWheel = useCallback((currentRotation: number) => {
@@ -234,7 +239,6 @@ export default function WheelGame() {
   };
 
   const handleSpin = () => {
-    // Check if at least 2 options exist before rotating!
     if (segments.length < 2) {
       setWalletMessage("You need at least 2 sections on the wheel to spin.");
       return;
@@ -242,12 +246,19 @@ export default function WheelGame() {
 
     if (isSpinning) return;
 
+    if (isDailyLimitReached) {
+      setWalletMessage("Daily spin limit reached (1 free + 5 paid). Come back tomorrow!");
+      return;
+    }
+
+    // Paid spin check: free spin already used and no coins
+    if (hasUsedFreeSpinToday && !canAffordPaidSpin) {
+      setWalletMessage(`You need ${WHEEL_PAID_SPIN_COST} points to spin again.`);
+      return;
+    }
+
     if (!consumeWheelSpin()) {
-      setWalletMessage(
-        canBuySpinPack
-          ? `Your daily spins are used. Unlock ${WHEEL_EXTRA_SPIN_PACK_SIZE} more for ${WHEEL_EXTRA_SPIN_PACK_COST} points.`
-          : `Your daily spins are used. You need ${WHEEL_EXTRA_SPIN_PACK_COST} points to unlock ${WHEEL_EXTRA_SPIN_PACK_SIZE} more.`
-      );
+      setWalletMessage("Unable to spin. Check your points or daily limit.");
       return;
     }
 
@@ -258,34 +269,22 @@ export default function WheelGame() {
 
     const numSegments = segments.length;
     const segmentAngle = 360 / numSegments;
-
-    // Select weighted prize outcome index. The 1000-coin segment is visible,
-    // but intentionally has the lowest selection weight.
     const prizeIndex = getWeightedPrizeIndex();
     const prize = segments[prizeIndex];
-
-    // Pointer is at the TOP (270 degrees in canvas math, which is -90 degrees)
-    // To make a segment land at the top pointer, we need to calculate:
-    // targetAngle = 270 - (segmentMidpointAngle)
     const segmentCenterAngle = (prizeIndex * segmentAngle) + (segmentAngle / 2);
     const targetAngle = 270 - segmentCenterAngle;
-    
-    // Normalize target angle and calculate the delta required from current rotation
     const normalizedTarget = ((targetAngle % 360) + 360) % 360;
     const rotationDelta = ((rotation - normalizedTarget) % 360 + 360) % 360;
     const finalRotation = rotation - rotationDelta - (360 * 7);
 
     let lastTickAngle = rotation;
 
-    // Animate rotation using framer motion controls
     animate(rotation, finalRotation, {
       duration: SPIN_DURATION_SECONDS,
-      ease: [0.1, 0.8, 0.1, 1], // Perfect fast spin to deceleration curve
+      ease: [0.1, 0.8, 0.1, 1],
       onUpdate: (latest) => {
         setRotation(latest);
         drawWheel(latest);
-
-        // Sound Ticking synthesis logic
         const delta = Math.abs(latest - lastTickAngle);
         if (delta >= segmentAngle) {
           playTick();
@@ -297,7 +296,6 @@ export default function WheelGame() {
         setResult(prize);
         setShowResult(true);
         addCoins(prize.coinReward);
-        // Log result into Zustand Store
         addResult(
           "Fortune Wheel",
           prize.isWin
@@ -308,26 +306,6 @@ export default function WheelGame() {
         );
       },
     });
-  };
-
-  const handleBuySpinPack = () => {
-    if (isSpinning) return;
-
-    if (!buyWheelSpinPack()) {
-      setWalletMessage(`You need ${WHEEL_EXTRA_SPIN_PACK_COST} points to unlock ${WHEEL_EXTRA_SPIN_PACK_SIZE} more spins.`);
-      return;
-    }
-
-    setWalletMessage(`${WHEEL_EXTRA_SPIN_PACK_SIZE} more spins unlocked for today.`);
-  };
-
-  const handlePrimaryAction = () => {
-    if (spinsAvailable > 0) {
-      handleSpin();
-      return;
-    }
-
-    handleBuySpinPack();
   };
 
   return (
@@ -355,49 +333,59 @@ export default function WheelGame() {
           />
         </div>
 
+        {/* Spin status cards: free spin + paid spins */}
         <div className="relative z-[1] mt-4 w-full grid grid-cols-2 gap-2">
           <div className="rounded-xl border border-white/60 dark:border-white/10 bg-white/75 dark:bg-black/35 px-3 py-2 text-center shadow-sm">
             <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-cream-soft/45">
-              Daily Spins
+              Free Spin
             </span>
-            <span className="font-fredoka text-lg font-black text-deep-violet dark:text-cream-soft">
-              {dailySpinsRemaining}/{WHEEL_FREE_DAILY_SPINS}
+            <span className={`font-fredoka text-lg font-black ${freeSpinAvailable ? "text-emerald-500" : "text-deep-violet/40 dark:text-cream-soft/30 line-through"}`}>
+              {freeSpinAvailable ? "✓ Available" : "Used"}
             </span>
           </div>
           <div className="rounded-xl border border-white/60 dark:border-white/10 bg-white/75 dark:bg-black/35 px-3 py-2 text-center shadow-sm">
             <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-cream-soft/45">
-              Extra Spins
+              Paid Spins Left
             </span>
             <span className="font-fredoka text-lg font-black text-primary-gold">
-              {wheelBonusSpins}
+              {paidSpinsLeft}/{WHEEL_MAX_PAID_SPINS}
             </span>
           </div>
         </div>
 
         {/* Play Action button */}
         <button
-          disabled={isSpinning || (spinsAvailable === 0 && !canBuySpinPack)}
-          onClick={handlePrimaryAction}
+          disabled={isSpinning || !canSpin}
+          onClick={handleSpin}
           className={`mt-5 sm:mt-6 py-3.5 sm:py-4 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-extrabold text-base sm:text-lg select-none cursor-pointer tracking-wider shadow-lg transition-all transform active:scale-95 w-full ${
-            isSpinning || (spinsAvailable === 0 && !canBuySpinPack)
+            isSpinning || !canSpin
               ? "bg-deep-violet/30 dark:bg-white/10 text-deep-violet/50 dark:text-cream-soft/50 pointer-events-none cursor-not-allowed"
               : "bg-deep-violet hover:bg-primary-gold text-cream-soft hover:text-deep-violet dark:bg-primary-gold dark:text-deep-violet dark:hover:bg-[#E0A700] hover:shadow-xl"
           }`}
         >
           {isSpinning
             ? "Spinning..."
-            : spinsAvailable > 0
-              ? "SPIN THE WHEEL"
-              : `UNLOCK ${WHEEL_EXTRA_SPIN_PACK_SIZE} SPINS - ${WHEEL_EXTRA_SPIN_PACK_COST} POINTS`}
+            : isDailyLimitReached
+              ? "SPINS EXHAUSTED FOR TODAY"
+              : freeSpinAvailable
+                ? "SPIN THE WHEEL — FREE"
+                : canAffordPaidSpin
+                  ? `SPIN — ${WHEEL_PAID_SPIN_COST} PTS`
+                  : `NEED ${WHEEL_PAID_SPIN_COST} PTS TO SPIN`}
         </button>
         {walletMessage && (
           <p className="mt-3 text-xs font-bold text-alert-coral text-center">
             {walletMessage}
           </p>
         )}
-        {!walletMessage && spinsAvailable === 0 && !canBuySpinPack && (
+        {!walletMessage && isDailyLimitReached && (
           <p className="mt-3 text-xs font-bold text-alert-coral text-center">
-            You need {WHEEL_EXTRA_SPIN_PACK_COST} points to unlock {WHEEL_EXTRA_SPIN_PACK_SIZE} more spins.
+            Daily limit: 1 free + 5 paid spins. Come back tomorrow!
+          </p>
+        )}
+        {!walletMessage && !isDailyLimitReached && !freeSpinAvailable && !canAffordPaidSpin && (
+          <p className="mt-3 text-xs font-bold text-alert-coral text-center">
+            You need {WHEEL_PAID_SPIN_COST} points to spin again.
           </p>
         )}
       </div>

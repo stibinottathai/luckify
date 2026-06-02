@@ -13,10 +13,10 @@ const WheelGame = dynamic(() => import("@/components/games/WheelGame"), {
 
 export const metadata: Metadata = {
   title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
-  description: "Spin the Fortune Wheel of Lucky Vibes! Set spin speed timers and test your daily fortune outcomes instantly.",
+  description: "Spin the Fortune Wheel with 100 coins per play and win coin rewards from 100 to the rare 1000-coin section.",
   openGraph: {
     title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
-    description: "An interactive HTML5 Canvas prize wheel spinner. Spin the wheel to claim daily blessings and fortunes.",
+    description: "An interactive HTML5 Canvas coin reward wheel with eight sections and a 100-coin spin cost.",
     type: "website",
   },
 };
@@ -33,7 +33,7 @@ export default function WheelPage() {
       "price": "0",
       "priceCurrency": "USD"
     },
-    "description": "An interactive HTML5 Canvas spinning wheel of fortune where users spin the wheel to trigger circular physical rotations and receive daily fortunes."
+    "description": "An interactive HTML5 Canvas spinning wheel where users spend 100 coins per spin and can win coin rewards across eight visible sections."
   };
 
   const faqSchema = {
@@ -53,7 +53,7 @@ export default function WheelPage() {
         "name": "What prizes can I win on the Fortune Wheel?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The Fortune Wheel features several premium rewards, including the Big Prize, Lucky Star, Clover, Jackpot, Mystery, Hot Pick, Gem, and a Try Again segment. Each segment is color-coded and offers positive or negative score impacts based on where the wheel lands."
+          "text": "The Fortune Wheel has eight visible sections: 1000 coins, 800 coins, 700 coins, 500 coins, 300 coins, 200 coins, 100 coins, and Try Again. Each spin costs 100 coins, and the 1000-coin section is the rarest outcome."
         }
       },
       {
@@ -61,7 +61,7 @@ export default function WheelPage() {
         "name": "Are the prize wheel outcomes statistically fair?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, all stopping degrees are determined using standard secure random functions. Because each wedge occupies a perfectly equal angular width, every custom wedge has an identical statistical chance of winning for unbiased drawings."
+          "text": "The wheel displays eight equal sections, while the reward outcome uses weighted random selection so higher coin rewards are harder to achieve and the 1000-coin section is the rarest."
         }
       }
     ]
@@ -79,7 +79,7 @@ export default function WheelPage() {
       />
       <div className="flex-1 flex flex-col items-center">
         {/* Navigation and titles */}
-        <div className="w-full max-w-lg mb-6 flex flex-col items-start gap-3 select-none">
+        <div className="w-full max-w-lg mb-3 sm:mb-6 flex flex-col items-start gap-2 sm:gap-3 select-none">
           <Link
             href="/"
             className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-cream-soft/40 dark:hover:text-cream-soft transition-colors cursor-pointer group"
@@ -88,11 +88,11 @@ export default function WheelPage() {
             Back to Lobby
           </Link>
           <div>
-            <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+            <h1 className="text-2xl sm:text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
               Fortune Wheel 🎡
             </h1>
             <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
-              Give the wheel a spin and claim your daily lucky prize!
+              Spin for 100 coins and win up to the rare 1000-coin reward.
             </p>
           </div>
         </div>

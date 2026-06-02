@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { STARTING_COIN_BALANCE } from "@/lib/prizes";
 
 export interface HistoryItem {
   game: string;
@@ -13,8 +14,11 @@ interface LuckStore {
   totalPlays: number;
   winStreak: number;
   luckyScore: number; // 0-100, updates after each game
+  coinBalance: number;
   history: HistoryItem[];
   addResult: (game: string, result: string, isWin: boolean, scoreImpact?: number) => void;
+  addCoins: (amount: number) => void;
+  spendCoins: (amount: number) => boolean;
   resetToday: () => void;
 }
 
@@ -24,6 +28,7 @@ export const useLuckStore = create<LuckStore>()(
       totalPlays: 0,
       winStreak: 0,
       luckyScore: 50, // Starts at 50 (neutral luck)
+      coinBalance: STARTING_COIN_BALANCE,
       history: [],
 
       addResult: (game, result, isWin, scoreImpact) => {
@@ -67,11 +72,31 @@ export const useLuckStore = create<LuckStore>()(
         });
       },
 
+      addCoins: (amount) => {
+        if (amount <= 0) return;
+        set((state) => ({
+          coinBalance: state.coinBalance + amount,
+        }));
+      },
+
+      spendCoins: (amount) => {
+        if (amount <= 0) return true;
+
+        const { coinBalance } = get();
+        if (coinBalance < amount) {
+          return false;
+        }
+
+        set({ coinBalance: coinBalance - amount });
+        return true;
+      },
+
       resetToday: () => {
         set({
           totalPlays: 0,
           winStreak: 0,
           luckyScore: 50,
+          coinBalance: STARTING_COIN_BALANCE,
           history: [],
         });
       },

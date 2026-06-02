@@ -5,35 +5,28 @@ export interface Prize {
   color: string;
   isWin: boolean;
   scoreImpact: number;
+  coinReward: number;
+  weight: number;
 }
 
+export const WHEEL_SPIN_COST = 100;
+export const STARTING_COIN_BALANCE = 500;
+
 export const WHEEL_PRIZES: Prize[] = [
-  { id: "1", emoji: "🎁", name: "Big Prize", color: "#F5B700", isWin: true, scoreImpact: 15 },
-  { id: "2", emoji: "⭐", name: "Lucky Star", color: "#8E2DE2", isWin: true, scoreImpact: 5 },
-  { id: "3", emoji: "🍀", name: "Clover", color: "#00B4A0", isWin: true, scoreImpact: 10 },
-  { id: "4", emoji: "💫", name: "Try Again", color: "#A0AEC0", isWin: false, scoreImpact: -5 },
-  { id: "5", emoji: "🎉", name: "Jackpot!", color: "#FF6B6B", isWin: true, scoreImpact: 30 },
-  { id: "6", emoji: "🌙", name: "Mystery", color: "#4A00E0", isWin: true, scoreImpact: 8 },
-  { id: "7", emoji: "🔥", name: "Hot Pick", color: "#FF8C00", isWin: true, scoreImpact: 12 },
-  { id: "8", emoji: "💎", name: "Gem", color: "#00BFFF", isWin: true, scoreImpact: 20 },
+  { id: "1000", emoji: "🪙", name: "1000 Coins", color: "#B7791F", isWin: true, scoreImpact: 0, coinReward: 1000, weight: 1 },
+  { id: "800", emoji: "🪙", name: "800 Coins", color: "#F5B700", isWin: true, scoreImpact: 0, coinReward: 800, weight: 3 },
+  { id: "700", emoji: "🪙", name: "700 Coins", color: "#FF8C00", isWin: true, scoreImpact: 0, coinReward: 700, weight: 5 },
+  { id: "500", emoji: "🪙", name: "500 Coins", color: "#00B4A0", isWin: true, scoreImpact: 0, coinReward: 500, weight: 9 },
+  { id: "300", emoji: "🪙", name: "300 Coins", color: "#8E2DE2", isWin: true, scoreImpact: 0, coinReward: 300, weight: 14 },
+  { id: "200", emoji: "🪙", name: "200 Coins", color: "#00BFFF", isWin: true, scoreImpact: 0, coinReward: 200, weight: 18 },
+  { id: "100", emoji: "🪙", name: "100 Coins", color: "#FF6B6B", isWin: true, scoreImpact: 0, coinReward: 100, weight: 25 },
+  { id: "try-again", emoji: "↻", name: "Try Again", color: "#A0AEC0", isWin: false, scoreImpact: 0, coinReward: 0, weight: 25 },
 ];
 
 export const SCRATCH_OUTCOMES = [
   { id: "win", emoji: "🎉", name: "YOU WIN!", isWin: true, scoreImpact: 15, fortune: "Success is knocking at your door!" },
   { id: "loss", emoji: "🙁", name: "Better Luck", isWin: false, scoreImpact: -5, fortune: "Failure is just another step to greatness. Try again!" },
   { id: "bonus", emoji: "⭐", name: "BONUS SPIN", isWin: true, scoreImpact: 8, fortune: "Bonus energy is heading your way!" }
-];
-
-export const MYSTERY_PRIZES = [
-  { emoji: "🏆", name: "Trophy", isWin: true, scoreImpact: 25, isJackpot: false },
-  { emoji: "💣", name: "Dud", isWin: false, scoreImpact: -10, isJackpot: false },
-  { emoji: "🌟", name: "Star", isWin: true, scoreImpact: 5, isJackpot: false },
-  { emoji: "🎪", name: "Show", isWin: true, scoreImpact: 8, isJackpot: false },
-  { emoji: "💰", name: "Gold", isWin: true, scoreImpact: 20, isJackpot: false },
-  { emoji: "🎭", name: "Joker", isWin: false, scoreImpact: -2, isJackpot: false },
-  { emoji: "🦄", name: "Unicorn", isWin: true, scoreImpact: 30, isJackpot: true }, // Unicorn is the Jackpot!
-  { emoji: "🔑", name: "Key", isWin: true, scoreImpact: 12, isJackpot: false },
-  { emoji: "🌸", name: "Blossom", isWin: true, scoreImpact: 6, isJackpot: false },
 ];
 
 export const DICE_MEANINGS: Record<number, string> = {

@@ -5,14 +5,14 @@ import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, User, Sparkles, History, ArrowRight } from "lucide-react";
+import { LogOut, History, ArrowRight } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 
 export default function AuthButton() {
   const { user, loading } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { luckyScore, totalPlays } = useLuckStore();
+  const { luckyScore, totalPlays, coinBalance } = useLuckStore();
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -110,12 +110,20 @@ export default function AuthButton() {
               </div>
 
               {/* Personalized Luck Stats */}
-              <div className="px-4 py-3 bg-deep-violet/5 dark:bg-white/5 border-b border-deep-violet/5 dark:border-white/5 grid grid-cols-2 gap-2 text-center select-none">
+              <div className="px-4 py-3 bg-deep-violet/5 dark:bg-white/5 border-b border-deep-violet/5 dark:border-white/5 grid grid-cols-3 gap-2 text-center select-none">
+                <div className="p-2 rounded-xl bg-white/50 dark:bg-black/40 border border-deep-violet/5 dark:border-white/5">
+                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
+                    Coins
+                  </span>
+                  <span className="font-fredoka text-lg font-extrabold text-primary-gold">
+                    {coinBalance.toLocaleString()}
+                  </span>
+                </div>
                 <div className="p-2 rounded-xl bg-white/50 dark:bg-black/40 border border-deep-violet/5 dark:border-white/5">
                   <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
                     Vibe Score
                   </span>
-                  <span className="font-fredoka text-lg font-extrabold text-primary-gold">
+                  <span className="font-fredoka text-lg font-extrabold text-deep-violet dark:text-cream-soft">
                     {luckyScore}%
                   </span>
                 </div>

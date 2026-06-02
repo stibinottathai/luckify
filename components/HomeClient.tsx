@@ -40,7 +40,7 @@ const GAMES: GameCard[] = [
     id: "wheel",
     emoji: "🎡",
     title: "Fortune Wheel",
-    description: "Spin the wheel of fortune to claim your daily random blessing or hit the massive Jackpot!",
+    description: "Spend 100 coins to spin eight reward sections, from Try Again up to the rare 1000-coin prize.",
     href: "/wheel",
     badge: "Canvas Spin",
     color: "from-amber-400 to-orange-500",

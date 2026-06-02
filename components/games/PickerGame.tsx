@@ -87,7 +87,7 @@ export default function PickerGame() {
             else if (matches === 4) scoreImpact = 18;
             else if (matches === 5) scoreImpact = 30;
             else if (matches === 6) {
-              scoreImpact = 55; // 6-Number Jackpot!
+              scoreImpact = 55; // 6-number top prize
               confetti({
                 particleCount: 200,
                 spread: 120,

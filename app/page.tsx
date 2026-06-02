@@ -52,7 +52,7 @@ export default function Page() {
         "@type": "ListItem",
         "position": 1,
         "name": "Fortune Wheel",
-        "description": "Spin the wheel of fortune to claim your daily random blessing or hit the massive Jackpot!",
+        "description": "Spend 100 coins to spin eight reward sections, from Try Again up to the rare 1000-coin prize.",
         "url": "https://luckify.vercel.app/wheel"
       },
       {

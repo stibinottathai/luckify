@@ -63,6 +63,24 @@ export interface UserLuckProfile {
   extraShakesBalance?: number;
   shakeSpinDate?: string;
   collectibles?: Record<string, number>;
+
+  // Golden Dice System Fields
+  totalDiceRolls?: number;
+  totalGoldenDiceEvents?: number;
+  goldenDiceRate?: number;
+  highestRewardWon?: string;
+  highestRewardPoints?: number;
+  legendaryRewardsCount?: number;
+
+  // Dice Collection System Fields
+  equippedDice?: string;
+  diceFragments?: number;
+  collectionProgress?: number;
+  mythicDiceCount?: number;
+
+  // Daily Dice Roll Limits
+  diceRollDate?: string;
+  diceRollsUsed?: number;
 }
 
 const GUEST_USER_KEY = "guest";
@@ -97,6 +115,24 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   extraShakesBalance: 0,
   shakeSpinDate: "",
   collectibles: {},
+
+  // Golden Dice system defaults
+  totalDiceRolls: 0,
+  totalGoldenDiceEvents: 0,
+  goldenDiceRate: 0,
+  highestRewardWon: "None",
+  highestRewardPoints: 0,
+  legendaryRewardsCount: 0,
+
+  // Dice Collection system defaults
+  equippedDice: "wooden_dice",
+  diceFragments: 0,
+  collectionProgress: 1,
+  mythicDiceCount: 0,
+
+  // Daily Dice limits defaults
+  diceRollDate: getTodayKey(),
+  diceRollsUsed: 0,
 });
 
 export const createGuestProfile = (): UserLuckProfile => ({
@@ -119,13 +155,17 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
     nextProfile.coinBalance = STARTING_COIN_BALANCE;
   }
 
+  // Handle Daily Spin date resets
   if (nextProfile.wheelSpinDate !== getTodayKey()) {
-    return {
-      ...nextProfile,
-      wheelSpinDate: getTodayKey(),
-      wheelDailySpinsUsed: 0,
-      wheelPaidSpinsUsed: 0,
-    };
+    nextProfile.wheelSpinDate = getTodayKey();
+    nextProfile.wheelDailySpinsUsed = 0;
+    nextProfile.wheelPaidSpinsUsed = 0;
+  }
+
+  // Handle Daily Dice Roll date resets
+  if (nextProfile.diceRollDate !== getTodayKey()) {
+    nextProfile.diceRollDate = getTodayKey();
+    nextProfile.diceRollsUsed = 0;
   }
 
   return nextProfile;

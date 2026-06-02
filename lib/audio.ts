@@ -165,3 +165,154 @@ export function playDudSound() {
     console.warn(e);
   }
 }
+
+export function playGoldenDiceTrigger() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    
+    // Sparkly upward arpeggio sweep
+    const freqs = [349.23, 440.00, 523.25, 659.25, 880.00, 1046.50, 1318.51, 1760.00]; // F4, A4, C5, E5, A5, C6, E6, A6
+    
+    freqs.forEach((freq, idx) => {
+      const time = now + idx * 0.06;
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      osc.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, time);
+      osc.frequency.linearRampToValueAtTime(freq * 1.05, time + 0.03);
+      osc.frequency.linearRampToValueAtTime(freq, time + 0.06);
+
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(freq, time);
+
+      gainNode.gain.setValueAtTime(0, time);
+      gainNode.gain.linearRampToValueAtTime(0.08, time + 0.02);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
+
+      osc.start(time);
+      osc.stop(time + 0.45);
+    });
+
+    // Deep heavy cinematic sub-bass sweep
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.connect(subGain);
+    subGain.connect(ctx.destination);
+
+    subOsc.type = "triangle";
+    subOsc.frequency.setValueAtTime(90, now);
+    subOsc.frequency.exponentialRampToValueAtTime(35, now + 1.2);
+
+    subGain.gain.setValueAtTime(0, now);
+    subGain.gain.linearRampToValueAtTime(0.25, now + 0.1);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+
+    subOsc.start(now);
+    subOsc.stop(now + 1.5);
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export function playGoldenDiceRoll() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    // Deep resonant clatter for heavy golden dice rolling
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(140, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.18);
+
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(320, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.18);
+    filter.Q.setValueAtTime(6, ctx.currentTime);
+
+    gainNode.gain.setValueAtTime(0.20, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.2);
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+export function playLegendaryReward() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    
+    // Rich orchestral arpeggio chord progression
+    const chord = [261.63, 329.63, 392.00, 493.88, 523.25, 659.25, 783.99, 987.77, 1046.50, 1318.51]; // C4, E4, G4, B4, C5, E5, G5, B5, C6, E6
+    
+    chord.forEach((freq, idx) => {
+      const time = now + idx * 0.08;
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      osc.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      osc.type = idx % 2 === 0 ? "triangle" : "sine";
+      osc.frequency.setValueAtTime(freq, time);
+
+      filter.type = "peaking";
+      filter.frequency.setValueAtTime(freq * 1.5, time);
+      filter.Q.setValueAtTime(1.5, time);
+
+      gainNode.gain.setValueAtTime(0, time);
+      gainNode.gain.linearRampToValueAtTime(0.14, time + 0.03);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.9);
+
+      osc.start(time);
+      osc.stop(time + 1.0);
+    });
+
+    // High golden sparkle bells
+    const bellFreqs = [1567.98, 1975.53, 2093.00, 2637.02]; // G6, B6, C7, E7
+    bellFreqs.forEach((freq, idx) => {
+      const time = now + 0.6 + idx * 0.06;
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, time);
+
+      gainNode.gain.setValueAtTime(0, time);
+      gainNode.gain.linearRampToValueAtTime(0.06, time + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+
+      osc.start(time);
+      osc.stop(time + 0.6);
+    });
+  } catch (e) {
+    console.warn(e);
+  }
+}
+

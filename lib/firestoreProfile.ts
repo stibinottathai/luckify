@@ -52,6 +52,20 @@ export interface FirestoreUserProfile {
   doubleRewardsUntil?: string;
   streakShieldsCount?: number;
   vipUntil?: string;
+
+  // Golden Dice System Fields
+  totalDiceRolls?: number;
+  totalGoldenDiceEvents?: number;
+  goldenDiceRate?: number;
+  highestRewardWon?: string;
+  highestRewardPoints?: number;
+  legendaryRewardsCount?: number;
+
+  // Dice Collection System Fields
+  equippedDice?: string;
+  diceFragments?: number;
+  collectionProgress?: number;
+  mythicDiceCount?: number;
 }
 
 // ─── Leaderboard entry ────────────────────────────────────────────────────────
@@ -69,6 +83,20 @@ export interface LeaderboardEntry {
   weeklyCoins?: number;
   shakeStreakRecord?: number;
   collectedItems?: number;
+
+  // Golden Dice System Fields
+  totalDiceRolls?: number;
+  totalGoldenDiceEvents?: number;
+  goldenDiceRate?: number;
+  highestRewardWon?: string;
+  highestRewardPoints?: number;
+  legendaryRewardsCount?: number;
+
+  // Dice Collection System Fields
+  equippedDice?: string;
+  diceFragments?: number;
+  collectionProgress?: number;
+  mythicDiceCount?: number;
 }
 
 // ─── Reference helper ─────────────────────────────────────────────────────────
@@ -228,6 +256,205 @@ export function subscribeTreeLeaderboard(
     },
     (err) => {
       console.error(`[Firestore] Tree Leaderboard snapshot error for ${sortBy}:`, err);
+      onError?.();
+    }
+  );
+}
+
+// ─── Golden Dice Announcements & Leaderboard ─────────────────────────────────
+
+export interface GoldenDiceAnnouncement {
+  id: string;
+  userUid: string;
+  displayName: string;
+  rewardName: string;
+  rewardEmoji: string;
+  rewardRarity: string;
+  text: string;
+  timestamp: string;
+}
+
+export function subscribeGoldenDiceLeaderboard(
+  onChange: (entries: LeaderboardEntry[]) => void,
+  onError?: () => void
+): Unsubscribe {
+  const q = query(
+    collection(db, "users"),
+    orderBy("totalGoldenDiceEvents", "desc"),
+    limit(50)
+  );
+
+  return onSnapshot(
+    q,
+    (snap) => {
+      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+        const data = d.data() as FirestoreUserProfile;
+        return {
+          uid: d.id,
+          displayName: data.displayName || "Lucky Player",
+          photoURL: data.photoURL ?? null,
+          coinBalance: data.coinBalance ?? 0,
+          winStreak: data.winStreak ?? 0,
+          totalPlays: data.totalPlays ?? 0,
+          luckyScore: data.luckyScore ?? 50,
+          level: data.level ?? 1,
+          badges: data.badges ?? [],
+          // Golden Dice stats
+          totalDiceRolls: data.totalDiceRolls ?? 0,
+          totalGoldenDiceEvents: data.totalGoldenDiceEvents ?? 0,
+          goldenDiceRate: data.goldenDiceRate ?? 0,
+          highestRewardWon: data.highestRewardWon ?? "None",
+          highestRewardPoints: data.highestRewardPoints ?? 0,
+          legendaryRewardsCount: data.legendaryRewardsCount ?? 0,
+        };
+      });
+
+      const sortedEntries = [...entries].sort((a, b) => {
+        const eventsDiff = (b.totalGoldenDiceEvents || 0) - (a.totalGoldenDiceEvents || 0);
+        if (eventsDiff !== 0) return eventsDiff;
+        const legendaryDiff = (b.legendaryRewardsCount || 0) - (a.legendaryRewardsCount || 0);
+        if (legendaryDiff !== 0) return legendaryDiff;
+        return (b.highestRewardPoints || 0) - (a.highestRewardPoints || 0);
+      });
+
+      onChange(sortedEntries);
+    },
+    (err) => {
+      console.error("[Firestore] Golden Dice Leaderboard error:", err);
+      onError?.();
+    }
+  );
+}
+
+export function subscribeAnnouncements(
+  onChange: (announcements: GoldenDiceAnnouncement[]) => void,
+  limitCount: number = 3
+): Unsubscribe {
+  const q = query(
+    collection(db, "announcements"),
+    orderBy("timestamp", "desc"),
+    limit(limitCount)
+  );
+
+  return onSnapshot(
+    q,
+    (snap) => {
+      const announcements: GoldenDiceAnnouncement[] = snap.docs.map((d) => {
+        const data = d.data();
+        return {
+          id: d.id,
+          userUid: data.userUid || "",
+          displayName: data.displayName || "Lucky Player",
+          rewardName: data.rewardName || "",
+          rewardEmoji: data.rewardEmoji || "🎁",
+          rewardRarity: data.rewardRarity || "common",
+          text: data.text || "",
+          timestamp: data.timestamp || new Date().toISOString(),
+        };
+      });
+      onChange(announcements);
+    },
+    (err) => {
+      console.error("[Firestore] Announcements snapshot error:", err);
+    }
+  );
+}
+
+// ─── Dice Collection System Subscriptions ────────────────────────────────────
+
+export interface UnlockedDiceDoc {
+  id: string;
+  name: string;
+  rarity: string;
+  unlockedAt: string;
+}
+
+/**
+ * Subscribe to a user's unlocked dice collection subcollection.
+ */
+export function subscribeDiceCollection(
+  uid: string,
+  onChange: (diceList: UnlockedDiceDoc[]) => void,
+  onError?: () => void
+): Unsubscribe {
+  const q = query(
+    collection(db, "users", uid, "diceCollection"),
+    orderBy("unlockedAt", "desc")
+  );
+
+  return onSnapshot(
+    q,
+    (snap) => {
+      const diceList: UnlockedDiceDoc[] = snap.docs.map((d) => {
+        const data = d.data();
+        return {
+          id: d.id,
+          name: data.name || "",
+          rarity: data.rarity || "common",
+          unlockedAt: data.unlockedAt || new Date().toISOString(),
+        };
+      });
+      onChange(diceList);
+    },
+    (err) => {
+      console.error("[Firestore] Dice Collection subscription error:", err);
+      onError?.();
+    }
+  );
+}
+
+/**
+ * Subscribe to the top-50 Dice Collectors.
+ * Ordered by unique collectionProgress desc.
+ */
+export function subscribeDiceCollectorsLeaderboard(
+  onChange: (entries: LeaderboardEntry[]) => void,
+  onError?: () => void
+): Unsubscribe {
+  const q = query(
+    collection(db, "users"),
+    orderBy("collectionProgress", "desc"),
+    limit(50)
+  );
+
+  return onSnapshot(
+    q,
+    (snap) => {
+      const entries: LeaderboardEntry[] = snap.docs.map((d) => {
+        const data = d.data() as FirestoreUserProfile;
+        return {
+          uid: d.id,
+          displayName: data.displayName || "Lucky Player",
+          photoURL: data.photoURL ?? null,
+          coinBalance: data.coinBalance ?? 0,
+          winStreak: data.winStreak ?? 0,
+          totalPlays: data.totalPlays ?? 0,
+          luckyScore: data.luckyScore ?? 50,
+          level: data.level ?? 1,
+          badges: data.badges ?? [],
+          equippedDice: data.equippedDice ?? "wooden_dice",
+          diceFragments: data.diceFragments ?? 0,
+          collectionProgress: data.collectionProgress ?? 1,
+          mythicDiceCount: data.mythicDiceCount ?? 0,
+        };
+      });
+
+      // Perform in-memory sorting:
+      // 1. Total unique dice (collectionProgress)
+      // 2. Mythic dice owned (mythicDiceCount)
+      // 3. Coin balance descending
+      const sortedEntries = [...entries].sort((a, b) => {
+        const progressDiff = (b.collectionProgress || 1) - (a.collectionProgress || 1);
+        if (progressDiff !== 0) return progressDiff;
+        const mythicDiff = (b.mythicDiceCount || 0) - (a.mythicDiceCount || 0);
+        if (mythicDiff !== 0) return mythicDiff;
+        return (b.coinBalance || 0) - (a.coinBalance || 0);
+      });
+
+      onChange(sortedEntries);
+    },
+    (err) => {
+      console.error("[Firestore] Dice Collectors Leaderboard error:", err);
       onError?.();
     }
   );

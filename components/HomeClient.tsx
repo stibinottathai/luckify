@@ -58,7 +58,7 @@ const GAMES: GameCard[] = [
     id: "dice",
     emoji: "🎲",
     title: "Lucky Dice",
-    description: "Roll up to three fully interactive 3D CSS dice to find your current numbers alignment!",
+    description: "Get 1 free roll daily! Additional rolls cost 200 points (max 5/day). Win points equal to your Roll Value × 100!",
     href: "/dice",
     badge: "3D Cubes",
     color: "from-indigo-400 to-violet-500",

@@ -191,11 +191,21 @@ export const createGuestProfile = (): UserLuckProfile => ({
 
 export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckProfile => {
   const defaults = createDefaultProfile();
+  
+  const cleanProfile: any = {};
+  if (profile) {
+    for (const key of Object.keys(defaults)) {
+      if (key in profile && profile[key as keyof UserLuckProfile] !== undefined) {
+        cleanProfile[key] = profile[key as keyof UserLuckProfile];
+      }
+    }
+  }
+
   const nextProfile = {
     ...defaults,
-    ...profile,
+    ...cleanProfile,
     history: profile?.history ?? defaults.history,
-  };
+  } as UserLuckProfile;
 
   // Self-healing rule: If they are a new user (total plays is 0),
   // they must have the starting coin balance of 500!

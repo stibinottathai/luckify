@@ -25,6 +25,10 @@ export default function PendulumClient() {
 
   const addResult = useLuckStore((state) => state.addResult);
   const currentScore = useLuckStore((state) => state.luckyScore);
+  const consumePendulumQuestion = useLuckStore((state) => state.consumePendulumQuestion);
+  const activeUserKey = useLuckStore((state) => state.activeUserKey);
+  const profile = useLuckStore((state) => state.profiles[state.activeUserKey] || state);
+  const dailyQuestionsUsed = profile.pendulumDailyQuestionsUsed ?? 0;
 
   const handleSettle = (finalAnswer: "yes" | "no") => {
     // Determine score impact: Yes grants a slight positive cosmic blessing, No grants a cosmic cleansing
@@ -55,6 +59,17 @@ export default function PendulumClient() {
       alert("🔮 Please write down your query for the cosmic pendulum first!");
       return;
     }
+
+    const { success, reason } = consumePendulumQuestion();
+    if (!success) {
+      if (reason === 'limit') {
+        alert("🔮 The cosmic oracle is resting. You've reached your 5 daily questions limit!");
+      } else if (reason === 'coins') {
+        alert("💰 You need 100 coins to consult the pendulum!");
+      }
+      return;
+    }
+
     startDivination();
   };
 
@@ -221,16 +236,22 @@ export default function PendulumClient() {
             {/* Action Buttons */}
             <div className="w-full pt-2">
               {phase === "idle" && (
-                <button
-                  type="submit"
-                  disabled={!question.trim()}
-                  className={`w-full py-4 rounded-2xl font-extrabold text-sm tracking-widest text-[#2D1B69] bg-primary-gold hover:bg-[#E0A700] hover:shadow-xl active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2 uppercase select-none ${
-                    !question.trim() ? "opacity-40 cursor-not-allowed pointer-events-none" : ""
-                  }`}
-                >
-                  <Sparkles className="w-4.5 h-4.5" />
-                  Release Pendulum 🔮
-                </button>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 px-1">
+                    <span>Cost: 100 🪙</span>
+                    <span>Daily limit: {5 - dailyQuestionsUsed} left</span>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={!question.trim() || dailyQuestionsUsed >= 5}
+                    className={`w-full py-4 rounded-2xl font-extrabold text-sm tracking-widest text-[#2D1B69] bg-primary-gold hover:bg-[#E0A700] hover:shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2 uppercase select-none ${
+                      (!question.trim() || dailyQuestionsUsed >= 5) ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
+                    }`}
+                  >
+                    <Sparkles className="w-4.5 h-4.5" />
+                    {dailyQuestionsUsed >= 5 ? "Oracle is Resting" : "Release Pendulum 🔮"}
+                  </button>
+                </div>
               )}
 
               {phase === "swinging" && (

@@ -32,6 +32,7 @@ interface LuckStore {
   spendCoins: (amount: number) => boolean;
   refreshWheelSpins: () => void;
   consumeWheelSpin: () => boolean;
+  consumePendulumQuestion: () => { success: boolean; reason?: 'coins' | 'limit' };
   resetToday: () => void;
   claimScratchCard: (coinsWon: number, outcomeName: string, isWin: boolean, scoreImpact: number) => void;
 }
@@ -98,6 +99,10 @@ export interface UserLuckProfile {
   scratchDate?: string;
   scratchUsed?: boolean;
   scratchPrizeWon?: number;
+
+  // Pendulum Divination Fields
+  pendulumDailyQuestionsDate?: string;
+  pendulumDailyQuestionsUsed?: number;
 
   // Local Sync Coordinates
   localVersion?: number;
@@ -170,6 +175,10 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   scratchUsed: false,
   scratchPrizeWon: 0,
 
+  // Pendulum defaults
+  pendulumDailyQuestionsDate: getTodayKey(),
+  pendulumDailyQuestionsUsed: 0,
+
   // Local Sync Coordinates defaults
   localVersion: 0,
 });
@@ -218,6 +227,12 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
     nextProfile.scratchDate = getTodayKey();
     nextProfile.scratchUsed = false;
     nextProfile.scratchPrizeWon = 0;
+  }
+
+  // Handle Daily Pendulum resets
+  if (nextProfile.pendulumDailyQuestionsDate !== getTodayKey()) {
+    nextProfile.pendulumDailyQuestionsDate = getTodayKey();
+    nextProfile.pendulumDailyQuestionsUsed = 0;
   }
 
   return nextProfile;
@@ -387,6 +402,28 @@ export const useLuckStore = create<LuckStore>()(
           wheelPaidSpinsUsed: profile.wheelPaidSpinsUsed + 1,
         }));
         return true;
+      },
+
+      consumePendulumQuestion: () => {
+        const state = get();
+        const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+
+        if (profile.pendulumDailyQuestionsUsed! >= 5) {
+          return { success: false, reason: 'limit' };
+        }
+
+        if (profile.coinBalance < 100) {
+          return { success: false, reason: 'coins' };
+        }
+
+        const newProfile = {
+          ...profile,
+          coinBalance: profile.coinBalance - 100,
+          pendulumDailyQuestionsUsed: profile.pendulumDailyQuestionsUsed! + 1,
+        };
+
+        set((currentState) => syncActiveProfile(currentState, newProfile));
+        return { success: true };
       },
 
       resetToday: () => {

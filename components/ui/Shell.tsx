@@ -8,6 +8,9 @@ import { useLuckStore } from "@/store/luckStore";
 import ShareModal from "@/components/ui/ShareModal";
 import LegalModal from "@/components/ui/LegalModal";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { SessionProvider } from "next-auth/react";
+import AuthButton from "@/components/auth/AuthButton";
+
 
 interface ShellProps {
   children: React.ReactNode;
@@ -67,7 +70,8 @@ export default function Shell({ children }: ShellProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
+    <SessionProvider>
+      <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
       {/* Sticky top navbar */}
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-deep-violet/10 dark:border-white/10 select-none">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-4 sm:px-6">
@@ -87,11 +91,11 @@ export default function Shell({ children }: ShellProps) {
 
           {/* Right Navigation controls */}
           <div className="flex items-center gap-2 sm:gap-4">
+            {/* Google Authentication Control */}
+            <AuthButton />
 
             {/* Redesigned Premium Theme Switcher */}
             <ThemeToggle dark={dark} toggleTheme={toggleTheme} />
-
-
           </div>
         </div>
       </header>
@@ -150,6 +154,7 @@ export default function Shell({ children }: ShellProps) {
       {/* Global Modals / Drawers */}
       <ShareModal isOpen={shareOpen} onClose={() => setShareOpen(false)} score={luckyScore} />
       <LegalModal isOpen={legalOpen} onClose={() => setLegalOpen(false)} initialTab={legalTab} />
-    </div>
+      </div>
+    </SessionProvider>
   );
 }

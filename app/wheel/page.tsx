@@ -13,7 +13,7 @@ const WheelGame = dynamic(() => import("@/components/games/WheelGame"), {
 
 export const metadata: Metadata = {
   title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
-  description: "Spin the Fortune Wheel of Lucky Vibes! Customize wheel segments, add custom prize names, set spin speed timers, and test your daily fortune outcomes instantly.",
+  description: "Spin the Fortune Wheel of Lucky Vibes! Set spin speed timers and test your daily fortune outcomes instantly.",
   openGraph: {
     title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Lucky Vibes",
     description: "An interactive HTML5 Canvas prize wheel spinner. Spin the wheel to claim daily blessings and fortunes.",
@@ -33,7 +33,7 @@ export default function WheelPage() {
       "price": "0",
       "priceCurrency": "USD"
     },
-    "description": "An interactive HTML5 Canvas spinning wheel of fortune where users customize prize wedges, trigger circular physical rotations, and receive daily fortunes."
+    "description": "An interactive HTML5 Canvas spinning wheel of fortune where users spin the wheel to trigger circular physical rotations and receive daily fortunes."
   };
 
   const faqSchema = {
@@ -50,10 +50,10 @@ export default function WheelPage() {
       },
       {
         "@type": "Question",
-        "name": "Can I customize the options on the wheel?",
+        "name": "What prizes can I win on the Fortune Wheel?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, our interactive wheel game is fully customizable. You can add, edit, or delete wheel wedges directly in the side panel, changing the text values and segment colors to fit any custom decision-making or lucky sweepstakes needs."
+          "text": "The Fortune Wheel features several premium rewards, including the Big Prize, Lucky Star, Clover, Jackpot, Mystery, Hot Pick, Gem, and a Try Again segment. Each segment is color-coded and offers positive or negative score impacts based on where the wheel lands."
         }
       },
       {

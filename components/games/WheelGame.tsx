@@ -361,10 +361,10 @@ export default function WheelGame() {
         <button
           disabled={isSpinning || !canSpin}
           onClick={handleSpin}
-          className={`mt-5 sm:mt-6 py-3.5 sm:py-4 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-extrabold text-base sm:text-lg select-none cursor-pointer tracking-wider shadow-lg transition-all transform active:scale-95 w-full ${
+          className={`mt-5 sm:mt-6 py-3.5 sm:py-4 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-extrabold text-base sm:text-lg select-none cursor-pointer tracking-wider shadow-lg transition-all transform active:scale-95 w-full border ${
             isSpinning || !canSpin
-              ? "bg-deep-violet/30 dark:bg-white/10 text-deep-violet/50 dark:text-cream-soft/50 pointer-events-none cursor-not-allowed"
-              : "bg-deep-violet hover:bg-primary-gold text-cream-soft hover:text-deep-violet dark:bg-primary-gold dark:text-deep-violet dark:hover:bg-[#E0A700] hover:shadow-xl"
+              ? "bg-[#2D1B69]/10 dark:bg-white/5 text-[#2D1B69]/40 dark:text-soft-cream/30 border-[#2D1B69]/10 dark:border-white/5 pointer-events-none cursor-not-allowed"
+              : "bg-[#2D1B69] hover:bg-primary-gold text-soft-cream hover:text-[#2D1B69] border-[#2D1B69] hover:border-primary-gold dark:bg-primary-gold dark:text-[#1E1145] dark:border-primary-gold dark:hover:bg-[#E0A700] dark:hover:border-[#E0A700] hover:shadow-xl"
           }`}
         >
           {isSpinning

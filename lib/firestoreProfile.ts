@@ -82,7 +82,7 @@ export interface FirestoreUserProfile {
   coinTotalProfit?: number;
 
   // Daily Scratch Card Fields
-  scratchUsed?: boolean;
+  scratchAttemptsUsed?: number;
   scratchDate?: string;
   scratchPrizeWon?: number;
 }
@@ -132,7 +132,7 @@ export interface LeaderboardEntry {
   coinTotalProfit?: number;
 
   // Daily Scratch Card Fields
-  scratchUsed?: boolean;
+  scratchAttemptsUsed?: number;
   scratchDate?: string;
   scratchPrizeWon?: number;
 }

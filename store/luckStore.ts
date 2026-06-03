@@ -101,8 +101,8 @@ export interface UserLuckProfile {
 
   // Daily Scratch Card Fields
   scratchDate?: string;
-  scratchUsed?: boolean;
-  scratchPrizeWon?: number;
+  scratchAttemptsUsed?: number;  // 0-3 per day
+  scratchPrizeWon?: number;      // total coins won across all 3 today
 
   // Pendulum Divination Fields
   pendulumDailyQuestionsDate?: string;
@@ -187,7 +187,7 @@ export const createDefaultProfile = (): UserLuckProfile => ({
 
   // Daily Scratch defaults
   scratchDate: "",
-  scratchUsed: false,
+  scratchAttemptsUsed: 0,
   scratchPrizeWon: 0,
 
   // Pendulum defaults
@@ -258,8 +258,15 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
   // Handle Daily Scratch resets
   if (nextProfile.scratchDate !== getTodayKey()) {
     nextProfile.scratchDate = getTodayKey();
-    nextProfile.scratchUsed = false;
+    nextProfile.scratchAttemptsUsed = 0;
     nextProfile.scratchPrizeWon = 0;
+  }
+
+  // Backfill: old data used scratchUsed:boolean (1 scratch/day).
+  // If that flag is still true and attempts counter is 0, treat it as all used
+  // so players can't bypass the limit after the store migration.
+  if ((nextProfile as any).scratchUsed === true && (nextProfile.scratchAttemptsUsed ?? 0) === 0) {
+    nextProfile.scratchAttemptsUsed = 3;
   }
 
   // Handle Daily Pendulum resets
@@ -475,7 +482,7 @@ export const useLuckStore = create<LuckStore>()(
           const newTotalPlays = profile.totalPlays + 1;
           const newWinStreak = isWin ? profile.winStreak + 1 : 0;
           const newLuckyScore = Math.max(0, Math.min(100, profile.luckyScore + scoreImpact));
-          
+
           const newHistoryItem: HistoryItem = {
             game: "Scratch Card",
             result: coinsWon > 0 ? `🎉 Won ${coinsWon} coins` : `🌧️ Try Again`,
@@ -485,6 +492,8 @@ export const useLuckStore = create<LuckStore>()(
           };
           const newHistory = [newHistoryItem, ...profile.history].slice(0, 20);
 
+          const currentAttemptsUsed = profile.scratchAttemptsUsed ?? 0;
+
           const updated = {
             ...profile,
             totalPlays: newTotalPlays,
@@ -492,9 +501,9 @@ export const useLuckStore = create<LuckStore>()(
             luckyScore: newLuckyScore,
             coinBalance: profile.coinBalance + coinsWon,
             history: newHistory,
-            scratchUsed: true,
+            scratchAttemptsUsed: currentAttemptsUsed + 1,
             scratchDate: getTodayKey(),
-            scratchPrizeWon: coinsWon,
+            scratchPrizeWon: (profile.scratchPrizeWon ?? 0) + coinsWon,
           };
 
           return syncActiveProfile(state, updated);
@@ -517,7 +526,7 @@ export const useLuckStore = create<LuckStore>()(
     }),
     {
       name: "lucky-vibes-store",
-      version: 5,
+      version: 6,
       migrate: (persistedState) => {
         const state = persistedState as Partial<LuckStore> | undefined;
         if (!state) {

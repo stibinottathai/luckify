@@ -14,6 +14,106 @@ interface BoardState {
   rewards: number[] | null; // Only available if game over
 }
 
+const LOADING_MESSAGES = [
+  "Polishing the golden ribbons... 🎁",
+  "Scattering rare treasure boxes... 💎",
+  "Checking the lock integrity... 🔒",
+  "Feeding the lucky garden gnomes... 🍄",
+  "Whispering secrets to the fortune oracle... 🔮",
+  "Stashing the 5000 jackpot in a sneaky corner... 👑",
+  "Shuffling the board with extra magic... ✨"
+];
+
+function playJackpotChime() {
+  if (typeof window === "undefined") return;
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const now = ctx.currentTime;
+    
+    // Play a sequence of rising notes (a major arpeggio)
+    const freqs = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00];
+    
+    freqs.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.type = "triangle";
+      osc.frequency.value = freq;
+      
+      const start = now + idx * 0.07;
+      const duration = 0.45;
+      
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.15, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration - 0.05);
+      
+      osc.start(start);
+      osc.stop(start + duration);
+    });
+
+    // Add a sparkling high-pitched sine layer
+    const sparkles = [1046.50, 1567.98, 2093.00, 3135.96];
+    sparkles.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      
+      const start = now + 0.35 + idx * 0.05;
+      const duration = 0.3;
+      
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.08, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+      
+      osc.start(start);
+      osc.stop(start + duration);
+    });
+  } catch (err) {
+    console.warn("Failed to play synthesized jackpot sound:", err);
+  }
+}
+
+function playMediumChime() {
+  if (typeof window === "undefined") return;
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const now = ctx.currentTime;
+    
+    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      
+      const start = now + idx * 0.08;
+      const duration = 0.35;
+      
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.1, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+      
+      osc.start(start);
+      osc.stop(start + duration);
+    });
+  } catch (err) {
+    console.warn("Failed to play medium chime:", err);
+  }
+}
+
 export default function GiftHuntGame() {
   const { user } = useAuth();
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
@@ -24,6 +124,16 @@ export default function GiftHuntGame() {
   const [openingIndex, setOpeningIndex] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [justFoundReward, setJustFoundReward] = useState<{ index: number, amount: number } | null>(null);
+  const [showJackpotOverlay, setShowJackpotOverlay] = useState(false);
+  const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
+
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setLoadingMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [loading]);
 
   useEffect(() => {
     let isMounted = true;
@@ -98,15 +208,34 @@ export default function GiftHuntGame() {
       const data = await res.json();
       
       // Trigger animations
-      setJustFoundReward({ index, amount: data.reward });
-      
-      if (data.reward >= 1000) {
-        confetti({
-          particleCount: 150,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ["#F5B700", "#FFD700", "#FFFFFF"]
-        });
+      if (data.reward === 5000) {
+        setShowJackpotOverlay(true);
+        playJackpotChime();
+        // Start continuous confetti loop for 4 seconds
+        const duration = 4 * 1000;
+        const end = Date.now() + duration;
+        (function frame() {
+          confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ["#F5B700", "#FFD700", "#FFFFFF"] });
+          confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ["#F5B700", "#FFD700", "#FFFFFF"] });
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        }());
+      } else {
+        setJustFoundReward({ index, amount: data.reward });
+        if (data.reward >= 500) {
+          playMediumChime();
+        }
+        if (data.reward >= 1000) {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 },
+            colors: ["#F5B700", "#FFD700", "#FFFFFF"]
+          });
+        }
+        // Clear the popup after 2.5 seconds
+        setTimeout(() => setJustFoundReward(null), 2500);
       }
 
       // Update Zustand local store with the new balance
@@ -141,9 +270,6 @@ export default function GiftHuntGame() {
         };
       });
 
-      // Clear the popup after 2.5 seconds
-      setTimeout(() => setJustFoundReward(null), 2500);
-
     } catch (err) {
       console.error(err);
       setErrorMsg("Network error occurred.");
@@ -174,8 +300,104 @@ export default function GiftHuntGame() {
 
   if (loading || !board) {
     return (
-      <div className="w-full min-h-[400px] flex items-center justify-center">
-        <div className="animate-spin w-12 h-12 border-4 border-primary-gold border-t-transparent rounded-full" />
+      <div className="w-full min-h-[450px] flex items-center justify-center p-4">
+        <div className="w-full max-w-lg bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl flex flex-col items-center justify-center text-center gap-6 relative overflow-hidden min-h-[350px]">
+          {/* Animated decorative glows */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 via-transparent to-amber-500/10 pointer-events-none" />
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary-gold/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Orbiting element 1 */}
+          <motion.div
+            animate={{ 
+              y: [0, 12, 0],
+              x: [0, -8, 0],
+              rotate: 360 
+            }}
+            transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+            className="absolute top-12 left-16 text-3xl pointer-events-none select-none filter drop-shadow-md"
+          >
+            🪙
+          </motion.div>
+
+          {/* Orbiting element 2 */}
+          <motion.div
+            animate={{ 
+              y: [0, -12, 0],
+              x: [0, 8, 0],
+              rotate: -360 
+            }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-16 right-16 text-2xl pointer-events-none select-none filter drop-shadow-md"
+          >
+            ✨
+          </motion.div>
+
+          {/* Orbiting element 3 */}
+          <motion.div
+            animate={{ 
+              y: [0, -10, 0],
+              x: [0, -10, 0],
+            }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-28 right-20 text-3xl pointer-events-none select-none filter drop-shadow-md"
+          >
+            💎
+          </motion.div>
+
+          {/* Main animated Gift Box */}
+          <motion.div
+            animate={{ 
+              y: [0, -15, 0],
+              rotate: [0, -10, 10, -10, 0],
+              scale: [1, 1.08, 1]
+            }}
+            transition={{ 
+              duration: 2.2, 
+              repeat: Infinity,
+              ease: "easeInOut" 
+            }}
+            className="text-7xl filter drop-shadow-[0_10px_20px_rgba(245,183,0,0.5)] z-10 select-none pointer-events-none cursor-default"
+          >
+            🎁
+          </motion.div>
+
+          {/* Title */}
+          <div className="flex flex-col gap-2 z-10">
+            <h3 className="text-2xl font-black text-deep-violet dark:text-cream-soft font-fredoka">
+              Preparing Your Gifts
+            </h3>
+            <p className="text-xs font-bold text-deep-violet/40 dark:text-cream-soft/40 uppercase tracking-widest">
+              Securing daily fortune board...
+            </p>
+          </div>
+
+          {/* Shimmering Progress Bar */}
+          <div className="w-48 h-2 bg-deep-violet/10 dark:bg-white/10 rounded-full overflow-hidden relative z-10">
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: "100%" }}
+              transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+              className="w-1/2 h-full bg-gradient-to-r from-transparent via-primary-gold to-transparent rounded-full"
+            />
+          </div>
+
+          {/* Cycling Loading Messages */}
+          <div className="h-10 flex items-center justify-center z-10 px-4">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={loadingMsgIndex}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="text-sm font-bold text-deep-violet/70 dark:text-cream-soft/70"
+              >
+                {LOADING_MESSAGES[loadingMsgIndex]}
+              </motion.p>
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
     );
   }
@@ -319,6 +541,101 @@ export default function GiftHuntGame() {
               </div>
               <span className="text-lg font-bold text-amber-950/80">Coins Added to Balance!</span>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Jackpot Celebration Overlay */}
+      <AnimatePresence>
+        {showJackpotOverlay && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-2xl p-4 overflow-y-auto"
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 50, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.8, y: -50, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.6, bounce: 0.3 }}
+              className="relative max-w-lg w-full bg-gradient-to-b from-[#2E1A68] to-[#120734] border-4 border-primary-gold rounded-[3.5rem] p-8 md:p-12 shadow-[0_0_80px_rgba(245,183,0,0.4)] text-center flex flex-col items-center justify-center overflow-hidden"
+            >
+              {/* Background glows */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-primary-gold/20 via-transparent to-transparent pointer-events-none -z-10 animate-pulse" />
+              
+              <motion.div
+                initial={{ scale: 0.5, rotate: -5 }}
+                animate={{ scale: [1, 1.05, 1], rotate: [-5, 5, -5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-primary-gold to-amber-500 uppercase tracking-widest filter drop-shadow-[0_2px_15px_rgba(245,183,0,0.6)] font-fredoka"
+              >
+                🏆 JACKPOT! 🏆
+              </motion.div>
+
+              {/* Glowing, spinning crown illustration */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.2 }}
+                className="relative my-8 select-none pointer-events-none"
+              >
+                <div className="absolute inset-0 w-36 h-36 bg-primary-gold/30 rounded-full blur-3xl animate-pulse" />
+                <motion.div
+                  animate={{ y: [0, -12, 0], rotate: [0, 6, -6, 0] }}
+                  transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut" }}
+                  className="text-8xl relative z-10 filter drop-shadow-[0_10px_25px_rgba(245,183,0,0.6)]"
+                >
+                  👑
+                </motion.div>
+                <motion.div
+                  animate={{ opacity: [1, 0, 1], scale: [1, 1.3, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.8 }}
+                  className="absolute -top-4 -right-4 text-4xl"
+                >
+                  ✨
+                </motion.div>
+                <motion.div
+                  animate={{ opacity: [0, 1, 0], scale: [0.8, 1.2, 0.8] }}
+                  transition={{ repeat: Infinity, duration: 2.2, delay: 0.6 }}
+                  className="absolute -bottom-4 -left-4 text-3xl"
+                >
+                  ⭐
+                </motion.div>
+              </motion.div>
+
+              {/* Reward detail */}
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-col items-center gap-1"
+              >
+                <span className="text-[11px] font-black tracking-widest text-primary-gold/80 uppercase">
+                  You Have Grabbed The Jackpot
+                </span>
+                <span className="text-7xl font-black text-white filter drop-shadow-[0_4px_20px_rgba(245,183,0,0.5)] mt-2">
+                  5,000
+                </span>
+                <span className="text-sm font-bold text-cream-soft/60 tracking-widest uppercase mt-1">
+                  Vibe Coins
+                </span>
+              </motion.div>
+
+              <p className="text-sm md:text-base font-bold text-cream-soft/85 max-w-sm mt-6 leading-relaxed font-fredoka">
+                Incredible! You hit the highest reward on the board. The lucky garden spirits are celebrating your ultimate luck! 🎉
+              </p>
+
+              {/* Dismiss / Claim Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowJackpotOverlay(false)}
+                className="mt-8 py-4 px-10 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-deep-violet font-black text-base tracking-wider uppercase shadow-[0_0_40px_rgba(245,183,0,0.5)] hover:shadow-[0_0_50px_rgba(245,183,0,0.7)] transition-all duration-300 pointer-events-auto"
+              >
+                Claim Jackpot 🪙
+              </motion.button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

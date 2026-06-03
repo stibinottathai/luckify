@@ -25,27 +25,33 @@ const DEBOUNCE_MS = 100; // wait 100ms after last change before writing
 export function useFirestoreSync(user: User | null) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSeenVersionRef = useRef<number>(0);
+  const lastUserIdRef = useRef<string | null>(null);
 
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const profile = useLuckStore((s) => s.profiles[activeUserKey]);
 
   useEffect(() => {
     // Only sync for real (non-guest) users
-    if (!user || user.uid === "guest" || !profile) return;
+    if (!user || user.uid === "guest" || !profile) {
+      lastUserIdRef.current = null;
+      lastSeenVersionRef.current = 0;
+      return;
+    }
 
+    const uid = user.uid;
     const currentVersion = profile.localVersion ?? 0;
 
-    // Initialize version tracker on first render for this profile
-    if (lastSeenVersionRef.current === 0) {
+    // Reset tracker if user switched or version dropped (e.g. from hydration reset)
+    if (lastUserIdRef.current !== uid || currentVersion < lastSeenVersionRef.current) {
+      lastUserIdRef.current = uid;
       lastSeenVersionRef.current = currentVersion;
+      return;
     }
 
     // Only sync if client state actually incremented localVersion (local mutation)
     if (currentVersion <= lastSeenVersionRef.current) {
       return;
     }
-
-    const uid = user.uid;
 
     // Clear any pending write
     if (timerRef.current) clearTimeout(timerRef.current);

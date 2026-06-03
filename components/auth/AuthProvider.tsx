@@ -62,11 +62,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Hydrate the Zustand store with cloud data (cloud wins)
         useLuckStore.setState((state) => {
-          return {
+          const localVer = state.profiles[uid]?.localVersion ?? 0;
+          const mergedProfile = {
             ...updatedProfile,
+            localVersion: localVer,
+          };
+          return {
+            ...mergedProfile,
             profiles: {
               ...state.profiles,
-              [uid]: updatedProfile,
+              [uid]: mergedProfile,
             },
           };
         });
@@ -80,6 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         // First time this user logs in — give them starting balance
         useLuckStore.setState((state) => {
+          const localVer = state.profiles[uid]?.localVersion ?? 0;
           const freshProfile = {
             totalPlays: 0,
             winStreak: 0,
@@ -89,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             wheelSpinDate: new Date().toISOString().slice(0, 10),
             wheelDailySpinsUsed: 0,
             wheelPaidSpinsUsed: 0,
+            localVersion: localVer,
           };
           return {
             ...freshProfile,
@@ -98,8 +105,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             },
           };
         });
-
-
       }
 
       setLoading(false);

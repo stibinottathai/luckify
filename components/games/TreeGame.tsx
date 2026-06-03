@@ -310,7 +310,6 @@ export default function TreeGame() {
 
     const t = setTimeout(async () => {
       clearInterval(soundInterval);
-      if (!isMounted.current) return;
       setShaking(false);
       setSuspensePhase(true); // initiate suspense countdown
 
@@ -357,7 +356,6 @@ export default function TreeGame() {
         if (!shakeRes.ok) {
           const errData = await shakeRes.json();
           alert(`Shake failed: ${errData.error}`);
-          if (!isMounted.current) return;
           setSuspensePhase(false);
           setHasShaken(false);
           setFallingItems([]);
@@ -365,7 +363,6 @@ export default function TreeGame() {
         }
 
         const data = await shakeRes.json();
-        if (!isMounted.current) return;
         
         // Setup local rewards details
         setEarnedReward(data.reward);
@@ -412,22 +409,21 @@ export default function TreeGame() {
           
           if (eType === "lucky_bird") {
             setEventBirdTrigger(true);
-            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundChirp(), 1500));
+            timeoutsRef.current.push(setTimeout(() => playSoundChirp(), 1500));
           } else if (eType === "hidden_nest") {
             setEventNestTrigger(true);
-            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundMagic(), 1200));
+            timeoutsRef.current.push(setTimeout(() => playSoundMagic(), 1200));
           } else if (eType === "golden_fruit") {
             setEventGoldenAppleTrigger(true);
-            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundMagic(), 800));
+            timeoutsRef.current.push(setTimeout(() => playSoundMagic(), 800));
           } else if (eType === "tree_spirit") {
             setEventSpiritTrigger(true);
-            timeoutsRef.current.push(setTimeout(() => isMounted.current && playSoundMagic(), 500));
+            timeoutsRef.current.push(setTimeout(() => playSoundMagic(), 500));
           }
         }
 
         // ─── Suspense phase ending, display outcome ──────────────────────
         timeoutsRef.current.push(setTimeout(() => {
-          if (!isMounted.current) return;
           setSuspensePhase(false);
           setShowResultCard(true);
 
@@ -441,18 +437,17 @@ export default function TreeGame() {
             playWinChime();
           } else if (rarity === "epic") {
             setEpicGlowTrigger(true);
-            timeoutsRef.current.push(setTimeout(() => isMounted.current && setEpicGlowTrigger(false), 2500));
+            timeoutsRef.current.push(setTimeout(() => setEpicGlowTrigger(false), 2500));
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
             playWinChime();
           } else if (rarity === "legendary") {
             setLegendaryBeamTrigger(true);
-            timeoutsRef.current.push(setTimeout(() => isMounted.current && setLegendaryBeamTrigger(false), 4500));
+            timeoutsRef.current.push(setTimeout(() => setLegendaryBeamTrigger(false), 4500));
             playWinChime();
             // massive multi confetti blast
             let duration = 3 * 1000;
             let end = Date.now() + duration;
             (function frame() {
-              if (!isMounted.current) return;
               confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
               confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
               if (Date.now() < end) requestAnimationFrame(frame);
@@ -466,7 +461,6 @@ export default function TreeGame() {
       } catch (err) {
         console.error(err);
         alert("Network error occurred while shaking the tree!");
-        if (!isMounted.current) return;
         setSuspensePhase(false);
         setHasShaken(false);
         setFallingItems([]);
@@ -1050,65 +1044,7 @@ export default function TreeGame() {
       {/* ── Column 3: The Gamified Sideboard Panels ── */}
       <div className="flex flex-col gap-6">
         
-        {/* ── 1. Daily Streak Tracker Checklist ── */}
-        <div className="w-full bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/5 rounded-3xl p-5 shadow-lg flex flex-col gap-3 font-fredoka">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/35 dark:text-cream-soft/35 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-primary-gold" /> Daily Streak
-            </span>
-            <span className="text-xs font-black text-primary-gold">
-              🔥 {currentProfile.shakeStreak ?? 0} Days
-            </span>
-          </div>
 
-          <h3 className="text-base font-black text-deep-violet dark:text-cream-soft leading-tight">
-            Daily Visit Reward Tracker
-          </h3>
-          <p className="text-[10px] font-bold text-deep-violet/50 dark:text-cream-soft/40 leading-snug">
-            Visit daily and claim epic rewards. Day 7 grants a Mystery Gift Chest, Day 30 unlocks a GUARANTEED Legendary collectible!
-          </p>
-
-          {/* Visual Streak Calendar Circles Row */}
-          <div className="grid grid-cols-7 gap-1 mt-1">
-            {Array.from({ length: 7 }).map((_, i) => {
-              const dayNum = i + 1;
-              const isClaimed = (currentProfile.shakeStreak ?? 0) >= dayNum;
-              const isCurrent = (currentProfile.shakeStreak ?? 0) === dayNum;
-              
-              // Define calendar icons
-              let inner = <span>{dayNum}</span>;
-              if (dayNum === 3) inner = <span>🍃</span>;
-              else if (dayNum === 5) inner = <span>🦋</span>;
-              else if (dayNum === 7) inner = <span>🎁</span>;
-
-              return (
-                <div
-                  key={i}
-                  className={`relative aspect-square rounded-xl flex flex-col items-center justify-center font-black text-xs transition-all duration-300 border ${
-                    isClaimed
-                      ? "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white border-emerald-600 shadow-[0_0_12px_rgba(16,185,129,0.3)]"
-                      : isCurrent
-                      ? "bg-primary-gold/15 border-primary-gold text-primary-gold animate-pulse"
-                      : "bg-deep-violet/5 dark:bg-white/[0.02] border-deep-violet/10 dark:border-white/10 text-deep-violet/30 dark:text-cream-soft/20"
-                  }`}
-                >
-                  <span className="text-[8px] font-black opacity-45 uppercase tracking-wider mb-0.5">D{dayNum}</span>
-                  <span className="text-[10px]">{inner}</span>
-                  {isClaimed && (
-                    <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 border border-white flex items-center justify-center text-[7px] text-white">✓</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex items-center justify-between text-[9px] font-black uppercase text-deep-violet/40 dark:text-cream-soft/40 border-t border-deep-violet/5 dark:border-white/5 pt-2.5 mt-1">
-            <span>Max Record: {currentProfile.shakeStreakRecord ?? 0} days</span>
-            <span className="flex items-center gap-0.5 text-emerald-500">
-              🛡️ {currentProfile.streakShieldsCount ?? 0} Shields Active
-            </span>
-          </div>
-        </div>
 
         {/* ── 2. Player Level & XP Titles Progression ── */}
         <div className="w-full bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/5 rounded-3xl p-5 shadow-lg flex flex-col gap-3 font-fredoka">

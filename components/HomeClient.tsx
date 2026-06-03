@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
+import { useLuckStore } from "@/store/luckStore";
+import { playWinChime, playLegendaryReward } from "@/lib/audio";
+import confetti from "canvas-confetti";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface GameCard {
   id: string;
@@ -97,6 +101,88 @@ const PARTICLE_EMOJIS = ["⭐", "🍀", "💫", "🎁", "🍎", "🍊", "💎", 
 
 export default function HomeClient() {
   const [particles, setParticles] = useState<{ id: number; emoji: string; x: number; delay: number; duration: number }[]>([]);
+  const [streakClaimPopup, setStreakClaimPopup] = useState<{ amount: number; day: number } | null>(null);
+  
+  const { loading } = useAuth();
+  const activeUserKey = useLuckStore((s) => s.activeUserKey);
+  const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+    const lastVisit = currentProfile?.lastVisitDate || "";
+    if (lastVisit === todayStr) {
+      return;
+    }
+
+    let newStreak = 1;
+    if (lastVisit === yesterdayStr) {
+      newStreak = (currentProfile?.visitStreak || 0) + 1;
+    } else {
+      newStreak = 1;
+    }
+
+    const nextRecord = Math.max(currentProfile?.visitStreakRecord || 0, newStreak);
+
+    // Determine reward amount
+    const rewardAmount = (newStreak % 7 === 0 && newStreak > 0) ? 5000 : 500;
+
+    // Show popup
+    setStreakClaimPopup({ amount: rewardAmount, day: newStreak });
+
+    // Play sound & Confetti
+    if (rewardAmount === 5000) {
+      playLegendaryReward();
+      const duration = 3.5 * 1000;
+      const end = Date.now() + duration;
+      (function frame() {
+        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ["#F5B700", "#FFD700", "#FFFFFF"] });
+        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ["#F5B700", "#FFD700", "#FFFFFF"] });
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    } else {
+      playWinChime();
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: ["#F5B700", "#FFD700", "#FFFFFF"] });
+    }
+
+    // Save to store
+    useLuckStore.setState((state) => {
+      const p = state.profiles[activeUserKey] || {
+        totalPlays: 0,
+        winStreak: 0,
+        luckyScore: 50,
+        coinBalance: 500,
+        history: [],
+        wheelSpinDate: todayStr,
+        wheelDailySpinsUsed: 0,
+        wheelPaidSpinsUsed: 0,
+        lastVisitDate: todayStr,
+        visitStreak: newStreak,
+        visitStreakRecord: nextRecord,
+      };
+      const updated = {
+        ...p,
+        coinBalance: p.coinBalance + rewardAmount,
+        lastVisitDate: todayStr,
+        visitStreak: newStreak,
+        visitStreakRecord: nextRecord,
+      };
+      return {
+        profiles: {
+          ...state.profiles,
+          [activeUserKey]: updated,
+        },
+        ...updated,
+      };
+    });
+  }, [activeUserKey, currentProfile?.lastVisitDate, loading]);
 
   useEffect(() => {
     // Generate floating background particles safely
@@ -164,6 +250,75 @@ export default function HomeClient() {
 
         </div>
       </section>
+
+      {/* Daily Visit Streak Widget */}
+      {loading ? (
+        <section className="relative w-full max-w-4xl mb-6 bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2rem] p-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden z-10 animate-pulse">
+          <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left w-full md:w-auto">
+            <div className="w-14 h-14 bg-deep-violet/10 dark:bg-white/10 rounded-2xl" />
+            <div className="space-y-2">
+              <div className="h-5 w-36 bg-deep-violet/10 dark:bg-white/10 rounded-lg" />
+              <div className="h-3.5 w-56 bg-deep-violet/10 dark:bg-white/10 rounded-md" />
+            </div>
+          </div>
+          <div className="flex flex-col items-center md:items-end gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-1.5">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="w-9 h-9 bg-deep-violet/10 dark:bg-white/10 rounded-xl" />
+              ))}
+            </div>
+            <div className="h-3.5 w-24 bg-deep-violet/10 dark:bg-white/10 rounded-md" />
+          </div>
+        </section>
+      ) : (
+        <section className="relative w-full max-w-4xl mb-6 bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2rem] p-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden z-10 font-fredoka">
+          <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 via-transparent to-transparent pointer-events-none" />
+          
+          <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+            <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-3xl shadow-md border border-white/20 select-none animate-pulse">
+              🔥
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-deep-violet dark:text-cream-soft leading-none">
+                Daily Visit Streak
+              </h3>
+              <p className="text-xs font-bold text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+                Visit every day to keep your lucky streak alive! Max record: <span className="text-primary-gold font-bold">{currentProfile?.visitStreakRecord || 0} days</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center md:items-end gap-2">
+            <div className="flex items-center gap-1.5">
+              {Array.from({ length: 7 }).map((_, i) => {
+                const dayNum = i + 1;
+                const currentStreak = currentProfile?.visitStreak || 0;
+                const isClaimed = (currentStreak % 7 === 0 && currentStreak > 0) ? true : (currentStreak % 7 >= dayNum);
+                const isCurrent = (currentStreak % 7 === dayNum - 1);
+                
+                return (
+                  <div
+                    key={i}
+                    className={`w-9 h-9 rounded-xl flex flex-col items-center justify-center font-black text-[10px] border transition-all duration-300 ${
+                      isClaimed
+                        ? "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white border-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                        : isCurrent
+                        ? "bg-primary-gold/15 border-primary-gold text-primary-gold animate-pulse"
+                        : "bg-deep-violet/5 dark:bg-white/[0.02] border-deep-violet/10 dark:border-white/10 text-deep-violet/30 dark:text-cream-soft/20"
+                    }`}
+                  >
+                    <span className="text-[7px] opacity-40 uppercase">D{dayNum}</span>
+                    <span>{isClaimed ? "✓" : dayNum}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <span className="text-xs font-extrabold text-primary-gold uppercase tracking-wider">
+              Current Streak: {currentProfile?.visitStreak || 0} Days
+            </span>
+          </div>
+        </section>
+      )}
 
       {/* Interactive Lobby Games Grid */}
       <section className="w-full max-w-4xl z-10 select-none">
@@ -257,6 +412,60 @@ export default function HomeClient() {
           </Link>
         </div>
       </div>
+      {/* Daily Visit Streak Celebration Overlay */}
+      <AnimatePresence>
+        {streakClaimPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 50, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.8, y: -50, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.5, bounce: 0.25 }}
+              className="relative max-w-sm w-full bg-gradient-to-b from-[#2E1A68] to-[#120734] border-4 border-primary-gold rounded-[2.5rem] p-8 shadow-2xl text-center flex flex-col items-center justify-center overflow-hidden font-fredoka"
+            >
+              {/* Background glows */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-primary-gold/15 via-transparent to-transparent pointer-events-none -z-10 animate-pulse" />
+              
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary-gold/80 px-4 py-1.5 bg-white/5 rounded-full border border-white/5">
+                {streakClaimPopup.day % 7 === 0 ? "🏆 Mega Streak Bonus 🏆" : "📅 Daily Visit Bonus"}
+              </span>
+
+              <motion.div
+                animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
+                transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                className="text-7xl my-6 filter drop-shadow-[0_8px_16px_rgba(245,183,0,0.5)] select-none pointer-events-none"
+              >
+                {streakClaimPopup.day % 7 === 0 ? "👑" : "🎁"}
+              </motion.div>
+
+              <h3 className="text-5xl font-black text-white filter drop-shadow-[0_4px_15px_rgba(255,255,255,0.25)]">
+                +{streakClaimPopup.amount.toLocaleString()}
+              </h3>
+              <span className="text-xs font-bold text-cream-soft/60 uppercase tracking-widest mt-1">
+                Vibe Coins Claimed
+              </span>
+
+              <p className="text-sm font-bold text-cream-soft/85 mt-4 leading-relaxed px-2">
+                {streakClaimPopup.day % 7 === 0
+                  ? `Outstanding! You successfully completed a ${streakClaimPopup.day} day daily visit streak! Claim your mega reward!`
+                  : `Day ${streakClaimPopup.day} visit claimed! Keep visiting everyday to secure the 5,000 coin jackpot on Day 7.`}
+              </p>
+
+              <button
+                onClick={() => setStreakClaimPopup(null)}
+                className="mt-6 py-3.5 px-8 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-deep-violet font-black text-sm tracking-wider uppercase shadow-[0_0_20px_rgba(245,183,0,0.3)] transition-all cursor-pointer pointer-events-auto"
+              >
+                Awesome! 🪙
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

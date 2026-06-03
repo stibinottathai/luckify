@@ -56,6 +56,9 @@ export interface UserLuckProfile {
   weeklyCoins?: number;
   weeklyCoinsLastUpdated?: string;
   collectedItems?: number;
+  lastVisitDate?: string;
+  visitStreak?: number;
+  visitStreakRecord?: number;
   mysteryBoxesCount?: number;
   badges?: string[];
   doubleRewardsUntil?: string;
@@ -139,6 +142,9 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   weeklyCoins: 0,
   weeklyCoinsLastUpdated: new Date().toISOString(),
   collectedItems: 0,
+  lastVisitDate: "",
+  visitStreak: 0,
+  visitStreakRecord: 0,
   mysteryBoxesCount: 0,
   badges: [],
   doubleRewardsUntil: "",

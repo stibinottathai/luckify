@@ -103,13 +103,14 @@ export default function HomeClient() {
   const [particles, setParticles] = useState<{ id: number; emoji: string; x: number; delay: number; duration: number }[]>([]);
   const [streakClaimPopup, setStreakClaimPopup] = useState<{ amount: number; day: number } | null>(null);
   
-  const { loading } = useAuth();
+  const { user, loading } = useAuth();
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   const claimDailyVisit = useLuckStore((s) => s.claimDailyVisit);
 
   useEffect(() => {
-    if (loading) return;
+    // Only claim daily visit when logged in to make it user-based and avoid guest popups on logouts
+    if (loading || !user || activeUserKey === "guest") return;
 
     const todayStr = new Date().toISOString().slice(0, 10);
     const yesterday = new Date();
@@ -155,7 +156,7 @@ export default function HomeClient() {
 
     // Save to store
     claimDailyVisit(todayStr, newStreak, nextRecord, rewardAmount);
-  }, [activeUserKey, currentProfile?.lastVisitDate, loading]);
+  }, [activeUserKey, currentProfile?.lastVisitDate, loading, user]);
 
   useEffect(() => {
     // Generate floating background particles safely

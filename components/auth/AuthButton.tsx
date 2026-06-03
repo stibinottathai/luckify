@@ -5,7 +5,7 @@ import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, History, ArrowRight } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 
 export default function AuthButton() {
@@ -135,28 +135,6 @@ export default function AuthButton() {
                     {totalPlays}
                   </span>
                 </div>
-              </div>
-
-              {/* Action Links */}
-              <div className="p-2">
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    const historySection = document.getElementById("history-section");
-                    if (historySection) {
-                      historySection.scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      window.location.href = "/#history-section";
-                    }
-                  }}
-                  className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-deep-violet/5 dark:hover:bg-white/5 text-deep-violet dark:text-cream-soft text-xs font-bold transition-colors cursor-pointer text-left"
-                >
-                  <span className="flex items-center gap-2">
-                    <History className="w-4 h-4 text-primary-gold" />
-                    My Vibes History
-                  </span>
-                  <ArrowRight className="w-3.5 h-3.5 opacity-60" />
-                </button>
               </div>
 
               {/* Footer / Sign Out */}

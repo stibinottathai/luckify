@@ -12,16 +12,22 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase App for client-side use
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+let app: any = null;
+let auth: any = null;
+let googleProvider: any = null;
+let db: any = null;
 
-// Initialize Firebase Auth
-const auth = getAuth(app);
+const isValidApiKey = firebaseConfig.apiKey && firebaseConfig.apiKey !== "undefined" && firebaseConfig.apiKey !== "";
 
-// Google Auth Provider
-const googleProvider = new GoogleAuthProvider();
-
-// Initialize Firestore
-const db = getFirestore(app);
+if (isValidApiKey) {
+  try {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+    googleProvider = new GoogleAuthProvider();
+    db = getFirestore(app);
+  } catch (error) {
+    console.error("Failed to initialize Firebase:", error);
+  }
+}
 
 export { app, auth, googleProvider, db };

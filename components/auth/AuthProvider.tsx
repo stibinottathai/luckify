@@ -38,6 +38,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setActiveUser = useLuckStore((state) => state.setActiveUser);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
     const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       setLoading(true);
       setUser(firebaseUser);

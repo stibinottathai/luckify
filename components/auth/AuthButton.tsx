@@ -10,6 +10,10 @@ import { useLuckStore } from "@/store/luckStore";
 
 export default function AuthButton() {
   const { user, loading } = useAuth();
+
+  if (!auth) {
+    return null;
+  }
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { luckyScore, totalPlays, coinBalance } = useLuckStore();

@@ -27,7 +27,7 @@ const LOBBY_FAQS = [
   },
   {
     question: "How is the vibes score and history calculated?",
-    answer: "Your vibes score acts as an aggregate rating of your current luck session. Wins on the scratch card, correct predictions on the coin toss, and positive 8-ball draws increment your score. Daily red envelopes and marine scroll bottle mail also boost your luck score. All stats are tracked locally in a client-side Zustand store.",
+    answer: "Your vibes score acts as an aggregate rating of your current luck session. Correct predictions on the coin toss and positive 8-ball draws increment your score. Daily red envelopes and marine scroll bottle mail also boost your luck score. All stats are tracked locally in a client-side Zustand store.",
   },
   {
     question: "Are the game randomizers fair?",
@@ -67,15 +67,7 @@ const GAMES: GameCard[] = [
     badge: "3D Spin",
     color: "from-amber-400 to-yellow-500",
   },
-  {
-    id: "scratch",
-    emoji: "🎟️",
-    title: "Scratch Card",
-    description: "Rub off the silver glitter layer with your cursor to reveal hidden fortunes and wins!",
-    href: "/scratch",
-    badge: "Tactile Canvas",
-    color: "from-gray-300 to-slate-400",
-  },
+
   {
     id: "pendulum",
     emoji: "🔮",
@@ -201,7 +193,7 @@ export default function HomeClient() {
             Lucky Vibes ✨ Virtual Garden of Luck & Fortunes
           </h1>
           <p className="text-xs sm:text-sm font-semibold text-cream-soft/80 max-w-xl">
-            Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, scratch card covers, and test your vibes score today.
+            Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, flip cosmic golden coins, and test your vibes score today.
           </p>
 
           {/* Core Call to Actions (CTAs) above the fold */}

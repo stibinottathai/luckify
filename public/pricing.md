@@ -8,9 +8,9 @@ Lucky Vibes is a completely free, open-source platform. There are no registratio
 - **Price**: $0 / month (Free Forever)
 - **Limits**: Unlimited plays, no daily cooling cycles, no caps.
 - **Includes**:
-  - Full access to all 11 active games (Wheel, Tree, Dice, Coin, Scratch, Picker, Pendulum, Envelope, Origami, 8-Ball, Bottle).
+  - Full access to all 10 active games (Wheel, Tree, Dice, Coin, Picker, Pendulum, Envelope, Origami, 8-Ball, Bottle).
   - Customizable widgets (Fortune Wheel editing, custom tree name lists).
-  - Tactile Canvas physics simulations (Scratch card rubbing, dowsing pendulum wire release).
+  - Tactile Canvas physics simulations (dowsing pendulum wire release).
   - 3D CSS rendering and high-quality sound effects.
   - Complete history logging and vibes statistics tracker.
   - Shareable scorecards.

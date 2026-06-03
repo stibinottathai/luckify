@@ -17,6 +17,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
   const [cookiesAllowed, setCookiesAllowed] = useState({
     performance: true,
     aesthetic: true,
+    advertising: true,
   });
   
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -32,6 +33,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
           setCookiesAllowed({
             performance: parsed.performance ?? true,
             aesthetic: parsed.aesthetic ?? true,
+            advertising: parsed.advertising ?? true,
           });
         } catch (e) {
           console.warn("Failed parsing cookie consent", e);
@@ -45,6 +47,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
       essential: true,
       performance: cookiesAllowed.performance,
       aesthetic: cookiesAllowed.aesthetic,
+      advertising: cookiesAllowed.advertising,
     };
     localStorage.setItem("luckify_cookie_consent", JSON.stringify(consent));
     
@@ -56,7 +59,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
     }, 1200);
   };
 
-  const toggleCookie = (type: "performance" | "aesthetic") => {
+  const toggleCookie = (type: "performance" | "aesthetic" | "advertising") => {
     setCookiesAllowed((prev) => ({
       ...prev,
       [type]: !prev[type],
@@ -166,33 +169,34 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                     </div>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">🌳</span> 1. Game Mechanics & Spirit
+                      <span className="text-base sm:text-lg">🎡</span> 1. Game Mechanics & Spirit
                     </h4>
                     <p>
-                      All games on Lucky Vibes (including Shaking Tree, Fortune Wheel, Flip a Coin, and Number Picker) are designed strictly for entertainment, visualization, and cosmic amusement.
+                      All games on Lucky Vibes (including Fortune Wheel, Pendulum Divination, and Lucky Gift Hunt) are designed strictly for entertainment, visualization, and cosmic amusement.
                     </p>
                     <p>
-                      No real currency, digital assets, or real-world stakes are wagered or generated here. Your winnings are magical numbers, points, and digital tokens residing solely in your heart and your local browser storage.
+                      Vibe Coins and points currently reside solely as digital tokens within your local browser storage or your synced account. In the future, we plan to convert these points into real-world gifts and physical rewards. No real currency, digital assets, or real-world stakes are wagered or generated here.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">✨</span> 2. Local Aura & Storage
+                      <span className="text-base sm:text-lg">✨</span> 2. Local Storage & Account Sync
                     </h4>
                     <p>
-                      Your stats, high scores, play counts, and win streaks are saved using standard browser Web Storage API (`localStorage`). 
-                    </p>
-                    <p>
-                      These values are subject to clearing if you reset your browser cache or perform a site data wipe. We do not maintain offsite backups of your personal fortune milestones.
+                      Your stats, Vibe Coins balance, and high scores are saved locally using standard browser storage (`localStorage`). If you choose to sign in (optional), we synchronize these states with a secure cloud database to preserve your progress across devices. We do not maintain offsite backups of your personal milestones for guest users.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">⚖️</span> 3. Cosmic Disclaimers
+                      <span className="text-base sm:text-lg">📢</span> 3. Ads & Monetization
                     </h4>
                     <p>
-                      While rolling triple-sixes or pulling a perfect jackpot unicorn feels sensational, our algorithms are based on pseudo-random generators. They do not predict real-world outcomes, stock market movements, real lottery alignments, or actual physical weather events. 
+                      To keep the site running and free for everyone, Lucky Vibes will soon be introducing third-party advertisements (applying for monetization). By accessing the website, you agree to the display of advertisements.
                     </p>
+
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                      <span className="text-base sm:text-lg">⚖️</span> 4. Cosmic Disclaimers
+                    </h4>
                     <p>
-                      Enjoy the thrills as standard whimsical animations. Play thoughtfully and keep your vibes positively grounded.
+                      While winning jackpots feels sensational, our algorithms are based on client-side and cloud pseudo-random generators. They do not predict real-world outcomes, stock market movements, real lottery alignments, or actual physical events. Play thoughtfully and keep your vibes positively grounded.
                     </p>
                   </motion.div>
                 )}
@@ -214,27 +218,24 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                     </div>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">🛡️</span> 1. Zero Database Collection
+                      <span className="text-base sm:text-lg">🛡️</span> 1. Optional Database Sync & Auth
                     </h4>
                     <p>
-                      Lucky Vibes runs almost entirely client-side. We do not require account registration, passwords, email log-ins, phone numbers, or credit card inputs. 
-                    </p>
-                    <p>
-                      Your personal data does not land on our servers because we don't have user database trackers. Everything is stored cleanly on your own device.
+                      Lucky Vibes offers optional sign-in via Google Authentication to synchronize your progress, Vibe Coins, and leaderboard scores. If signed in, we store this information securely in a Cloud Firestore database. If you choose not to sign in, all data remains strictly local to your device's browser storage.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">💾</span> 2. Local Device Sandbox
+                      <span className="text-base sm:text-lg">💾</span> 2. Local Storage Sandbox
                     </h4>
                     <p>
-                      We read and write your statistics and lucky streaks directly to your browser's safe local sandboxed database (`localStorage`). This data never leaves your device and is not sold, distributed, or aggregated for target marketing campaigns.
+                      Your stats and lucky configurations are written locally to your browser's sandboxed storage. We do not sell or distribute your game history to target marketing lists.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">🌐</span> 3. Third-Party Integrations
+                      <span className="text-base sm:text-lg">📢</span> 3. Third-Party Ads & Cookies
                     </h4>
                     <p>
-                      We use static assets and standard font integrations from reputable content networks (like Google Fonts). No malicious tracking pixels, fingerprinting technologies, or advertising pixels exist inside our code.
+                      We are currently applying for monetization and will soon serve advertisements through third-party partners (such as Google AdSense). These advertising partners may collect anonymous identifiers and use cookies or tracking tags to deliver relevant advertisements. You can configure advertising preferences under the Cookies tab.
                     </p>
                   </motion.div>
                 )}
@@ -308,6 +309,26 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                         >
                           <div className={`w-11 h-6 rounded-full transition-colors ${cookiesAllowed.aesthetic ? "bg-accent-teal" : "bg-deep-violet/20 dark:bg-white/10"}`} />
                           <div className={`absolute w-4 h-4 bg-white dark:bg-card rounded-full shadow-md transition-all ${cookiesAllowed.aesthetic ? "left-6" : "left-1"}`} />
+                        </button>
+                      </div>
+
+                      {/* Advertising & Monetization Cookie row */}
+                      <div className="flex items-start justify-between gap-4 p-3 bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-2xl hover:border-primary-gold/30 transition-colors">
+                        <div className="flex-1">
+                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-cream-soft flex items-center gap-1.5">
+                            Advertising & Personalization
+                          </h5>
+                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+                            Enables our advertising partners to serve relevant, personalized advertisements based on your interests and analyze ad campaign performance.
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => toggleCookie("advertising")}
+                          className="relative flex items-center justify-center h-6 w-11 mt-1 transition-transform active:scale-95 cursor-pointer bg-transparent border-none"
+                          aria-label="Toggle Advertising cookies"
+                        >
+                          <div className={`w-11 h-6 rounded-full transition-colors ${cookiesAllowed.advertising ? "bg-accent-teal" : "bg-deep-violet/20 dark:bg-white/10"}`} />
+                          <div className={`absolute w-4 h-4 bg-white dark:bg-card rounded-full shadow-md transition-all ${cookiesAllowed.advertising ? "left-6" : "left-1"}`} />
                         </button>
                       </div>
                     </div>

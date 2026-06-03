@@ -23,11 +23,15 @@ interface GameCard {
 const LOBBY_FAQS = [
   {
     question: "What is Lucky Vibes?",
-    answer: "Lucky Vibes is an interactive digital playground compiling premium, high-fidelity simulations of classic fortune-telling games, random decision makers, and luck test widgets. It features tactile physical animations, Canvas sand particle physics, and 3D CSS rendering.",
+    answer: "Lucky Vibes is an interactive digital playground compiling premium, high-fidelity simulations of classic fortune-telling games, random decision makers, and luck test widgets. It features custom physics animations, HTML5 Canvas drawings, and reactive user interfaces.",
+  },
+  {
+    question: "What games are currently available to play?",
+    answer: "You can currently play the Fortune Wheel to spin for prizes, use Pendulum Divination to get answers to your queries with real physics simulations, and participate in the daily Lucky Gift Hunt to unlock mystery treasure rewards.",
   },
   {
     question: "How is the vibes score and history calculated?",
-    answer: "Your vibes score acts as an aggregate rating of your current luck session. Positive 8-ball draws increment your score. Daily red envelopes and marine scroll bottle mail also boost your luck score. All stats are tracked locally in a client-side Zustand store.",
+    answer: "Your vibes score acts as an aggregate rating of your current luck session. It starts at 50 points and changes dynamically based on the outcomes of your games. You can earn or spend Vibe Coins to unlock extra features or spins, and all your statistics are tracked locally in a client-side Zustand store. In the future, you will also be able to convert your accumulated Vibe Coins into real-world gifts and physical rewards!",
   },
   {
     question: "Are the game randomizers fair?",
@@ -35,7 +39,7 @@ const LOBBY_FAQS = [
   },
   {
     question: "Is Lucky Vibes free to use?",
-    answer: "Yes, Lucky Vibes is 100% free and open-source. There are no registration barriers, token ceilings, advertisement interruptions, cookie popups, or hidden transaction prompts. You are welcome to play as many times as you like.",
+    answer: "Yes, Lucky Vibes is free to play and open-source. To support operations and keep the platform free for everyone, we will soon be integrating advertisements (applying for monetization). There are no registration barriers, and you are welcome to play as many times as you like.",
   },
 ];
 

@@ -106,6 +106,7 @@ export default function HomeClient() {
   const { loading } = useAuth();
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
+  const claimDailyVisit = useLuckStore((s) => s.claimDailyVisit);
 
   useEffect(() => {
     if (loading) return;
@@ -153,35 +154,7 @@ export default function HomeClient() {
     }
 
     // Save to store
-    useLuckStore.setState((state) => {
-      const p = state.profiles[activeUserKey] || {
-        totalPlays: 0,
-        winStreak: 0,
-        luckyScore: 50,
-        coinBalance: 500,
-        history: [],
-        wheelSpinDate: todayStr,
-        wheelDailySpinsUsed: 0,
-        wheelPaidSpinsUsed: 0,
-        lastVisitDate: todayStr,
-        visitStreak: newStreak,
-        visitStreakRecord: nextRecord,
-      };
-      const updated = {
-        ...p,
-        coinBalance: p.coinBalance + rewardAmount,
-        lastVisitDate: todayStr,
-        visitStreak: newStreak,
-        visitStreakRecord: nextRecord,
-      };
-      return {
-        profiles: {
-          ...state.profiles,
-          [activeUserKey]: updated,
-        },
-        ...updated,
-      };
-    });
+    claimDailyVisit(todayStr, newStreak, nextRecord, rewardAmount);
   }, [activeUserKey, currentProfile?.lastVisitDate, loading]);
 
   useEffect(() => {

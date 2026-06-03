@@ -52,6 +52,9 @@ export interface FirestoreUserProfile {
   doubleRewardsUntil?: string;
   streakShieldsCount?: number;
   vipUntil?: string;
+  lastVisitDate?: string;
+  visitStreak?: number;
+  visitStreakRecord?: number;
 
   // Golden Dice System Fields
   totalDiceRolls?: number;
@@ -99,6 +102,9 @@ export interface LeaderboardEntry {
   weeklyCoins?: number;
   shakeStreakRecord?: number;
   collectedItems?: number;
+  lastVisitDate?: string;
+  visitStreak?: number;
+  visitStreakRecord?: number;
 
   // Golden Dice System Fields
   totalDiceRolls?: number;

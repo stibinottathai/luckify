@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLuckStore } from "@/store/luckStore";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { fetchTreeLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
 import { playWinChime, playDudSound } from "@/lib/audio";
@@ -18,7 +17,6 @@ import {
   Trash2,
   Lock,
   ChevronRight,
-  TrendingUp,
   Volume2,
 } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -220,36 +218,9 @@ export default function TreeGame() {
   const [boxLootOutcome, setBoxLootOutcome] = useState<any>(null);
   const [showBoxLootModal, setShowBoxLootModal] = useState(false);
 
-  // Leaderboard sub-panels tab
-  const [activeLeaderboardTab, setActiveLeaderboardTab] = useState<"global" | "weekly" | "streak" | "collection">("global");
-  const [leaderboardEntries, setLeaderboardEntries] = useState<LeaderboardEntry[]>([]);
-  const [leaderboardLoading, setLeaderboardLoading] = useState(true);
-
   // Hydrate local Zustand store profile parameters
   const currentProfile = useLuckStore((s) => s.profiles[s.activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
-  
-  // One-time fetch updates
-  useEffect(() => {
-    setLeaderboardLoading(true);
-    let isMounted = true;
-
-    fetchTreeLeaderboard(activeLeaderboardTab)
-      .then((data) => {
-        if (!isMounted) return;
-        setLeaderboardEntries(data);
-        setLeaderboardLoading(false);
-      })
-      .catch((err) => {
-        if (!isMounted) return;
-        console.error(err);
-        setLeaderboardLoading(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeLeaderboardTab]);
 
   const levelInfo = getLevelProgress(currentProfile.xp ?? 0);
 
@@ -1174,104 +1145,7 @@ export default function TreeGame() {
           </div>
         </div>
 
-        {/* ── 4. Shaking Tree Live Leaderboard sub-panels ── */}
-        <div className="w-full bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/5 rounded-3xl p-5 shadow-lg flex flex-col gap-3 font-fredoka max-h-[380px] overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/35 dark:text-cream-soft/35 flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5 text-primary-gold" /> Shaking Tree Rankings
-            </span>
-          </div>
 
-          {/* Tabs row */}
-          <div className="flex bg-deep-violet/5 dark:bg-white/[0.04] rounded-xl p-0.5 border border-deep-violet/5 dark:border-white/5">
-            {(["global", "weekly", "streak", "collection"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveLeaderboardTab(tab)}
-                className={`flex-1 py-1 text-[9px] font-black uppercase tracking-wider rounded-lg transition-all ${
-                  activeLeaderboardTab === tab
-                    ? "bg-[#FFF8E7] dark:bg-[#1B103E] text-primary-gold shadow-md"
-                    : "text-deep-violet/40 hover:text-deep-violet dark:text-cream-soft/40 dark:hover:text-cream-soft"
-                }`}
-              >
-                {tab === "global" ? "Global" : tab === "weekly" ? "Weekly" : tab === "streak" ? "Streak" : "Vault"}
-              </button>
-            ))}
-          </div>
-
-          {/* Leaders list container */}
-          <div className="flex-1 overflow-y-auto space-y-1.5 pr-1 max-h-[200px]">
-            {leaderboardLoading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-xl bg-deep-violet/5 dark:bg-white/[0.01] animate-pulse">
-                  <div className="w-4 h-4 bg-deep-violet/15 dark:bg-white/10 rounded" />
-                  <div className="w-6 h-6 bg-deep-violet/15 dark:bg-white/10 rounded-full" />
-                  <div className="flex-1 h-3 bg-deep-violet/15 dark:bg-white/10 rounded" />
-                  <div className="w-8 h-3 bg-deep-violet/15 dark:bg-white/10 rounded" />
-                </div>
-              ))
-            ) : leaderboardEntries.length === 0 ? (
-              <p className="text-[10px] font-semibold text-center text-deep-violet/35 dark:text-cream-soft/30 italic py-6">
-                Be the first to shake and top this leaderboard! 🌳
-              </p>
-            ) : (
-              leaderboardEntries.map((entry, idx) => {
-                const rank = idx + 1;
-                const isSelf = entry.uid === activeUserKey;
-                
-                // Read exact sort detail
-                let valDisplay = `${entry.coinBalance.toLocaleString()} pts`;
-                if (activeLeaderboardTab === "weekly") valDisplay = `${(entry.weeklyCoins ?? 0).toLocaleString()} pts`;
-                else if (activeLeaderboardTab === "streak") valDisplay = `🔥 ${entry.shakeStreakRecord ?? 0} days`;
-                else if (activeLeaderboardTab === "collection") valDisplay = `📦 ${entry.collectedItems ?? 0}/8`;
-
-                // Badge award colors
-                const rankColors = ["text-[#F5B700]", "text-[#94A3B8]", "text-[#CD7F32]"];
-
-                return (
-                  <div
-                    key={entry.uid}
-                    className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl border transition-all ${
-                      isSelf
-                        ? "bg-accent-teal/15 border-accent-teal/30 shadow-sm"
-                        : "bg-deep-violet/5 dark:bg-white/[0.01] border-deep-violet/5 dark:border-white/5 hover:border-primary-gold/30"
-                    }`}
-                  >
-                    <span className={`w-4 text-center text-[10px] font-black font-mono ${rank <= 3 ? rankColors[rank - 1] : "text-deep-violet/30"}`}>
-                      {rank}
-                    </span>
-
-                    {/* Avatar initials fallback */}
-                    <div className="w-6 h-6 rounded-full bg-deep-violet/25 flex items-center justify-center text-[8px] font-black text-white overflow-hidden flex-shrink-0">
-                      {entry.photoURL ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={entry.photoURL} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        entry.displayName.slice(0, 2).toUpperCase()
-                      )}
-                    </div>
-
-                    <div className="flex-1 min-w-0 leading-tight">
-                      <p className="text-[10px] font-black text-deep-violet dark:text-cream-soft truncate flex items-center gap-1.5">
-                        {entry.displayName}
-                        {isSelf && (
-                          <span className="text-[8px] font-black text-accent-teal tracking-wider uppercase bg-accent-teal/15 px-1 py-0.2 rounded">you</span>
-                        )}
-                      </p>
-                      <p className="text-[8px] font-black text-deep-violet/40 dark:text-cream-soft/40 mt-0.5">
-                        Lvl {entry.level ?? 1}
-                      </p>
-                    </div>
-
-                    <span className="text-[10px] font-black text-[#5D4037] dark:text-[#FFF8E7] font-mono">
-                      {valDisplay}
-                    </span>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
 
       </div>
 

@@ -35,6 +35,7 @@ interface LuckStore {
   consumePendulumQuestion: () => { success: boolean; reason?: 'coins' | 'limit' };
   resetToday: () => void;
   claimScratchCard: (coinsWon: number, outcomeName: string, isWin: boolean, scoreImpact: number) => void;
+  claimDailyVisit: (todayStr: string, streak: number, record: number, reward: number) => void;
 }
 
 export interface UserLuckProfile {
@@ -496,6 +497,20 @@ export const useLuckStore = create<LuckStore>()(
             scratchPrizeWon: coinsWon,
           };
 
+          return syncActiveProfile(state, updated);
+        });
+      },
+
+      claimDailyVisit: (todayStr, streak, record, reward) => {
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          const updated = {
+            ...profile,
+            coinBalance: profile.coinBalance + reward,
+            lastVisitDate: todayStr,
+            visitStreak: streak,
+            visitStreakRecord: record,
+          };
           return syncActiveProfile(state, updated);
         });
       },

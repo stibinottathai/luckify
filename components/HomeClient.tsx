@@ -27,7 +27,7 @@ const LOBBY_FAQS = [
   },
   {
     question: "How is the vibes score and history calculated?",
-    answer: "Your vibes score acts as an aggregate rating of your current luck session. Correct predictions on the coin toss and positive 8-ball draws increment your score. Daily red envelopes and marine scroll bottle mail also boost your luck score. All stats are tracked locally in a client-side Zustand store.",
+    answer: "Your vibes score acts as an aggregate rating of your current luck session. Positive 8-ball draws increment your score. Daily red envelopes and marine scroll bottle mail also boost your luck score. All stats are tracked locally in a client-side Zustand store.",
   },
   {
     question: "Are the game randomizers fair?",
@@ -49,24 +49,7 @@ const GAMES: GameCard[] = [
     badge: "Canvas Spin",
     color: "from-amber-400 to-orange-500",
   },
-  {
-    id: "tree",
-    emoji: "🌳",
-    title: "Shaking Tree",
-    description: "Shake the magical SVG forest tree and catch whichever glowing fruit falls to earth!",
-    href: "/tree",
-    badge: "SVG Physics",
-    color: "from-green-400 to-emerald-500",
-  },
-  {
-    id: "coin",
-    emoji: "🪙",
-    title: "Flip a Coin",
-    description: "Toss a beautiful golden cosmic coin to decide your path: Heads or Tails!",
-    href: "/coin",
-    badge: "3D Spin",
-    color: "from-amber-400 to-yellow-500",
-  },
+
 
   {
     id: "pendulum",

@@ -104,7 +104,7 @@ export default function Shell({ children }: ShellProps) {
       <header className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-deep-violet/10 dark:border-white/10 select-none">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between px-4 sm:px-6">
           {/* Logo Brand */}
-          <Link href="/" className="flex items-center gap-2 group min-w-0">
+          <Link href="/" className="flex items-center gap-2 group min-w-0 flex-shrink-0">
             <motion.span
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
@@ -121,7 +121,7 @@ export default function Shell({ children }: ShellProps) {
             <Link
               href="/"
               aria-label="Back to Lobby"
-              className="ml-2 mr-auto h-9 px-2 sm:px-3 rounded-full border border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group"
+              className="ml-3 sm:ml-5 h-9 px-2 sm:px-3 rounded-full border border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group flex-shrink-0"
             >
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
               <span className="hidden min-[460px]:inline">Lobby</span>
@@ -132,20 +132,23 @@ export default function Shell({ children }: ShellProps) {
           <Link
             href="/leaderboard"
             aria-label="Leaderboard"
-            className={`${
-              showLobbyLink ? "ml-2" : "ml-auto"
-            } h-9 px-2 sm:px-3 rounded-full border flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group ${
+            className={`h-9 px-2 sm:px-3 rounded-full border flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group flex-shrink-0 ${
+              showLobbyLink ? "ml-2" : "ml-3 sm:ml-5"
+            } ${
               pathname === "/leaderboard"
                 ? "bg-primary-gold border-primary-gold text-deep-violet"
                 : "border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75"
-            } ${showLobbyLink ? "" : "mr-auto"}`}
+            }`}
           >
             <Trophy className="w-3.5 h-3.5" />
             <span className="hidden min-[520px]:inline">Leaderboard</span>
           </Link>
 
+          {/* Spacer to push controls to the right */}
+          <div className="flex-grow" />
+
           {/* Right Navigation controls */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             <PointsHeaderDisplay />
 
             {/* Google Authentication Control */}

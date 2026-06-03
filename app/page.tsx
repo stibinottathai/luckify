@@ -3,10 +3,10 @@ import HomeClient from "@/components/HomeClient";
 
 export const metadata: Metadata = {
   title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
-  description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, shake the SVG tree, flip cosmic golden coins, and check your vibes score today.",
+  description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, and check your vibes score today.",
   openGraph: {
     title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
-    description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, shake the SVG tree, and test your vibes score today.",
+    description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, and test your vibes score today.",
     url: "https://luckify.vercel.app",
     siteName: "Lucky Vibes",
     images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
-    description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, shake the SVG tree, flip cosmic golden coins, and check your vibes score today.",
+    description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, and check your vibes score today.",
     images: ["/og-image.png"],
   },
 };
@@ -46,7 +46,7 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "Lucky Vibes Interactive Fortune & Luck Games",
-    "numberOfItems": 5,
+    "numberOfItems": 3,
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -58,27 +58,13 @@ export default function Page() {
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "Shaking Tree",
-        "description": "Shake the magical SVG forest tree and catch whichever glowing fruit falls to earth!",
-        "url": "https://luckify.vercel.app/tree"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Flip a Coin",
-        "description": "Toss a beautiful golden cosmic coin to decide your path: Heads or Tails!",
-        "url": "https://luckify.vercel.app/coin"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
         "name": "Pendulum Divination",
         "description": "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
         "url": "https://luckify.vercel.app/pendulum"
       },
       {
         "@type": "ListItem",
-        "position": 5,
+        "position": 3,
         "name": "Lucky Gift Hunt",
         "description": "Pick 3 mystery gift boxes every day! Will you find the legendary 5000 coin jackpot?",
         "url": "https://luckify.vercel.app/gift-hunt"

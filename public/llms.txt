@@ -6,8 +6,8 @@ It is 100% free, open-source, requires no user registration, no advertisements, 
 
 ## Core Capabilities
 
-- **Decision Making**: Custom segment prize wheels, physical name-dropping trees, and yes-or-no dowsing pendulums.
-- **Classic Simulators**: 3D dice rollers, parabolic 3D coin tossing, lottery ball drawer stats.
+- **Decision Making**: Custom segment prize wheels and yes-or-no dowsing pendulums.
+- **Classic Simulators**: 3D dice rollers and lottery ball drawer stats.
 - **Divination & Blessings**: Traditional Chinese Hongbao envelopes, 3D paper cootie catchers, Magic 8-Ball spheres, and bottled ocean messages.
 
 ---
@@ -22,38 +22,30 @@ It is 100% free, open-source, requires no user registration, no advertisements, 
 - **Description**: Customizable prize wheel spinner using Canvas. Edit wedges, segment titles, and colors.
 - **URL**: `https://luckify.vercel.app/wheel`
 
-### 3. [Shaking Tree](https://luckify.vercel.app/tree)
-- **Description**: SVG vector tree picker. Add options, shake the branches with realistic wobble animations, and catch the fruit that drops.
-- **URL**: `https://luckify.vercel.app/tree`
-
-### 4. [Lucky Dice](https://luckify.vercel.app/dice)
+### 3. [Lucky Dice](https://luckify.vercel.app/dice)
 - **Description**: Interactive 3D CSS dice rolling arena. Roll up to 3 dice with custom scoring targets and clattering audio.
 - **URL**: `https://luckify.vercel.app/dice`
 
-### 5. [Flip a Coin](https://luckify.vercel.app/coin)
-- **Description**: Parabolic 3D tumbling cosmic coin flip simulator. Select Heads or Tails and toss.
-- **URL**: `https://luckify.vercel.app/coin`
-
-### 6. [Number Picker](https://luckify.vercel.app/picker)
+### 4. [Number Picker](https://luckify.vercel.app/picker)
 - **Description**: Staggered Powerball lottery ball drawer drawing 6 numbers out of 49. Builds a dynamic SVG draw frequency chart.
 - **URL**: `https://luckify.vercel.app/picker`
 
-### 7. [Pendulum Divination](https://luckify.vercel.app/pendulum)
+### 5. [Pendulum Divination](https://luckify.vercel.app/pendulum)
 - **Description**: HTML5 Canvas physics-based dowsing pendulum oracle. Input a yes/no query and release the silver bob wire.
 - **URL**: `https://luckify.vercel.app/pendulum`
 
-### 8. [Lucky Envelope](https://luckify.vercel.app/lucky-envelope)
+### 6. [Lucky Envelope](https://luckify.vercel.app/lucky-envelope)
 - **Description**: Chinese red packet (Hongbao) simulation featuring pure CSS 3D envelope unfolding. Reveals a positive cultural blessing and lucky number.
 - **URL**: `https://luckify.vercel.app/lucky-envelope`
 
-### 9. [Origami Fortune](https://luckify.vercel.app/fortune-teller)
+### 7. [Origami Fortune](https://luckify.vercel.app/fortune-teller)
 - **Description**: Interactive 3D paper cootie catcher game. Choose colors and numbers, and watch the folding pinching transitions before lifting a flap.
 - **URL**: `https://luckify.vercel.app/fortune-teller`
 
-### 10. [Magic 8-Ball](https://luckify.vercel.app/magic-8-ball)
+### 8. [Magic 8-Ball](https://luckify.vercel.app/magic-8-ball)
 - **Description**: 3D shaking gloss-black Magic 8-Ball oracle. Ask any query and reveal floating triangular replies.
 - **URL**: `https://luckify.vercel.app/magic-8-ball`
 
-### 11. [Message in a Bottle](https://luckify.vercel.app/message-in-bottle)
+### 9. [Message in a Bottle](https://luckify.vercel.app/message-in-bottle)
 - **Description**: Ocean bottle mail simulator. Retrieve a bobbing glass bottle from parallax sea waves, pop the cork, and unfurl scroll affirmations.
 - **URL**: `https://luckify.vercel.app/message-in-bottle`

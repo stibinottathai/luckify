@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -87,19 +87,53 @@ export default function HomeClient() {
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   const claimDailyVisit = useLuckStore((s) => s.claimDailyVisit);
 
+  // Track whether the Firestore profile has fully loaded.
+  // We only attempt to claim after loading transitions false (Firestore data is hydrated).
+  const profileReadyRef = useRef(false);
+  // Prevent claiming more than once per browser session/mount for the same user.
+  const claimedForUserRef = useRef<string | null>(null);
+
+  // Latch profileReady the first time loading flips to false for a real user
   useEffect(() => {
-    // Only claim daily visit when logged in to make it user-based and avoid guest popups on logouts
+    if (!loading && user && activeUserKey !== "guest") {
+      profileReadyRef.current = true;
+    }
+    // Reset when user changes or logs out
+    if (!user || activeUserKey === "guest") {
+      profileReadyRef.current = false;
+      claimedForUserRef.current = null;
+    }
+  }, [loading, user, activeUserKey]);
+
+  useEffect(() => {
+    // Only claim daily visit when:
+    // 1. The auth/firestore loading is complete (profile is hydrated from server)
+    // 2. A real user is logged in
+    // 3. profileReadyRef has latched (loading->false transition happened)
     if (loading || !user || activeUserKey === "guest") return;
+    if (!profileReadyRef.current) return;
 
     const todayStr = new Date().toISOString().slice(0, 10);
+
+    const lastVisit = currentProfile?.lastVisitDate || "";
+
+    // Already claimed today — do nothing
+    if (lastVisit === todayStr) {
+      // Update the session claim ref so future re-renders don't re-trigger
+      claimedForUserRef.current = activeUserKey;
+      return;
+    }
+
+    // Already claimed in this session for this user — do nothing
+    // (guards against re-render loops from profile state changes)
+    if (claimedForUserRef.current === activeUserKey) return;
+
+    // Mark as claimed for this session immediately to prevent double-fire
+    claimedForUserRef.current = activeUserKey;
+
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().slice(0, 10);
-
-    const lastVisit = currentProfile?.lastVisitDate || "";
-    if (lastVisit === todayStr) {
-      return;
-    }
 
     let newStreak = 1;
     if (lastVisit === yesterdayStr) {

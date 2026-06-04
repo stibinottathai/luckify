@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -82,54 +82,24 @@ export default function HomeClient() {
   const [particles, setParticles] = useState<{ id: number; emoji: string; x: number; delay: number; duration: number }[]>([]);
   const [streakClaimPopup, setStreakClaimPopup] = useState<{ amount: number; day: number } | null>(null);
   
-  const { user, loading } = useAuth();
+  const { user, loading, profileLoaded } = useAuth();
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   const claimDailyVisit = useLuckStore((s) => s.claimDailyVisit);
 
-  // Track whether the Firestore profile has fully loaded.
-  // We only attempt to claim after loading transitions false (Firestore data is hydrated).
-  const profileReadyRef = useRef(false);
-  // Prevent claiming more than once per browser session/mount for the same user.
-  const claimedForUserRef = useRef<string | null>(null);
-
-  // Latch profileReady the first time loading flips to false for a real user
   useEffect(() => {
-    if (!loading && user && activeUserKey !== "guest") {
-      profileReadyRef.current = true;
-    }
-    // Reset when user changes or logs out
-    if (!user || activeUserKey === "guest") {
-      profileReadyRef.current = false;
-      claimedForUserRef.current = null;
-    }
-  }, [loading, user, activeUserKey]);
-
-  useEffect(() => {
-    // Only claim daily visit when:
-    // 1. The auth/firestore loading is complete (profile is hydrated from server)
-    // 2. A real user is logged in
-    // 3. profileReadyRef has latched (loading->false transition happened)
+    // Gate 1: Only run for real logged-in users
     if (loading || !user || activeUserKey === "guest") return;
-    if (!profileReadyRef.current) return;
+    // Gate 2: Only run after Firestore data has been fully loaded into the store.
+    // This prevents claiming against stale empty-string lastVisitDate values
+    // that exist before the Firestore fetch completes.
+    if (!profileLoaded) return;
 
     const todayStr = new Date().toISOString().slice(0, 10);
-
     const lastVisit = currentProfile?.lastVisitDate || "";
 
-    // Already claimed today — do nothing
-    if (lastVisit === todayStr) {
-      // Update the session claim ref so future re-renders don't re-trigger
-      claimedForUserRef.current = activeUserKey;
-      return;
-    }
-
-    // Already claimed in this session for this user — do nothing
-    // (guards against re-render loops from profile state changes)
-    if (claimedForUserRef.current === activeUserKey) return;
-
-    // Mark as claimed for this session immediately to prevent double-fire
-    claimedForUserRef.current = activeUserKey;
+    // Already claimed today — nothing to do
+    if (lastVisit === todayStr) return;
 
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -167,9 +137,9 @@ export default function HomeClient() {
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: ["#F5B700", "#FFD700", "#FFFFFF"] });
     }
 
-    // Save to store
+    // Persist claim to store (writes lastVisitDate = today, preventing re-fire)
     claimDailyVisit(todayStr, newStreak, nextRecord, rewardAmount);
-  }, [activeUserKey, currentProfile?.lastVisitDate, loading, user]);
+  }, [profileLoaded, activeUserKey, currentProfile?.lastVisitDate, loading, user]);
 
   useEffect(() => {
     // Generate floating background particles safely

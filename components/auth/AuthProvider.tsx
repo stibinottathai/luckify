@@ -15,11 +15,14 @@ import { STARTING_COIN_BALANCE } from "@/lib/prizes";
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  /** True only after Firestore profile has been fully loaded and hydrated into the store. */
+  profileLoaded: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  profileLoaded: false,
 });
 
 // ─── Inner component that can safely call hooks ─────────────────────────────────────────────────────
@@ -34,6 +37,9 @@ function FirestoreSyncLayer({ user }: { user: User | null }) {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  // Separate from `loading`: only true after Firestore data has been
+  // fetched and merged into the Zustand store for the current user.
+  const [profileLoaded, setProfileLoaded] = useState(false);
 
   const setActiveUser = useLuckStore((state) => state.setActiveUser);
 
@@ -44,6 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       setLoading(true);
+      setProfileLoaded(false);
       setUser(firebaseUser);
 
       if (!firebaseUser) {
@@ -111,6 +118,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       }
 
+      // Mark profile as fully loaded — store now contains real Firestore data.
+      // HomeClient waits for this before running the daily visit claim.
+      setProfileLoaded(true);
       setLoading(false);
     });
 
@@ -151,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, profileLoaded }}>
       {/* Mount the debounced sync layer for the active user */}
       <FirestoreSyncLayer user={user} />
       {children}

@@ -13,6 +13,9 @@ const LuckyEnvelopeClient = dynamic(() => import("./LuckyEnvelopeClient"), {
 export const metadata: Metadata = {
   title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Lucky Vibes",
   description: "Receive a traditional lucky red envelope, fold away its 3D golden seal, and reveal your daily blessing of prosperity, wealth, luck, and happiness.",
+  alternates: {
+    canonical: "https://luckify.vercel.app/lucky-envelope",
+  },
   openGraph: {
     title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Lucky Vibes",
     description: "An elegant virtual Hongbao simulation. Open your red packet to reveal mystical fortunes and daily luck blessings.",

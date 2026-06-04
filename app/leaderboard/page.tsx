@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   title: "Leaderboard – Top Lucky Players | Lucky Vibes",
   description:
     "See the top 100 Lucky Vibes players ranked by total Lucky Points. Can you make it to the top?",
+  alternates: {
+    canonical: "https://luckify.vercel.app/leaderboard",
+  },
   openGraph: {
     title: "Leaderboard – Top Lucky Players | Lucky Vibes",
     description:

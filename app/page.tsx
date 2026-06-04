@@ -4,6 +4,9 @@ import HomeClient from "@/components/HomeClient";
 export const metadata: Metadata = {
   title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
   description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, and check your vibes score today.",
+  alternates: {
+    canonical: "https://luckify.vercel.app/",
+  },
   openGraph: {
     title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
     description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, and test your vibes score today.",

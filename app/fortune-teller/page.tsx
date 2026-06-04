@@ -13,6 +13,9 @@ const FortuneTellerClient = dynamic(() => import("./FortuneTellerClient"), {
 export const metadata: Metadata = {
   title: "Origami Fortune Teller - Play Virtual Cootie Catcher | Lucky Vibes",
   description: "Select colors and pick numbers to unfold the 3D digital paper cootie catcher and reveal your hidden daily fortune and cosmic fate.",
+  alternates: {
+    canonical: "https://luckify.vercel.app/fortune-teller",
+  },
   openGraph: {
     title: "Origami Fortune Teller - Play Virtual Cootie Catcher | Lucky Vibes",
     description: "Fold your destiny! An interactive 3D cootie catcher paper game packed with mystical fortune-telling answers.",

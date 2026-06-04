@@ -322,6 +322,8 @@ export const useLuckStore = create<LuckStore>()(
           let profile = normalizeProfile(rawProfile);
           if (isGuestKey) {
             profile.coinBalance = 0;
+            profile.visitStreak = 0;
+            profile.visitStreakRecord = 0;
           }
 
           return applyProfile(nextUserKey, profile, {

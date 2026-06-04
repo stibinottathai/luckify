@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, Coins, Sparkles, Trophy } from "lucide-react";
+import { Coins, Sparkles, Trophy } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 import ShareModal from "@/components/ui/ShareModal";
 import LegalModal from "@/components/ui/LegalModal";
@@ -55,7 +55,7 @@ export default function Shell({ children }: ShellProps) {
     setLegalTab(tab);
     setLegalOpen(true);
   };
-  const showLobbyLink = pathname !== "/";
+
 
   // Hydration safety guard
   useEffect(() => {
@@ -117,24 +117,11 @@ export default function Shell({ children }: ShellProps) {
             </span>
           </Link>
 
-          {showLobbyLink && (
-            <Link
-              href="/"
-              aria-label="Back to Lobby"
-              className="ml-3 sm:ml-5 h-9 px-2 sm:px-3 rounded-full border border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group flex-shrink-0"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-              <span className="hidden min-[460px]:inline">Lobby</span>
-            </Link>
-          )}
-
           {/* Leaderboard nav link */}
           <Link
             href="/leaderboard"
             aria-label="Leaderboard"
-            className={`h-9 px-2 sm:px-3 rounded-full border flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group flex-shrink-0 ${
-              showLobbyLink ? "ml-2" : "ml-3 sm:ml-5"
-            } ${
+            className={`ml-3 sm:ml-5 h-9 px-2 sm:px-3 rounded-full border flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group flex-shrink-0 ${
               pathname === "/leaderboard"
                 ? "bg-primary-gold border-primary-gold text-deep-violet"
                 : "border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75"

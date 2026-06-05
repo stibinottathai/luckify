@@ -36,6 +36,8 @@ interface LuckStore {
   resetToday: () => void;
   claimScratchCard: (coinsWon: number, outcomeName: string, isWin: boolean, scoreImpact: number) => void;
   claimDailyVisit: (todayStr: string, streak: number, record: number, reward: number) => void;
+  setZodiacSign: (sign: string) => void;
+  claimAstroBonus: (todayStr: string, reward: number) => void;
 }
 
 export interface UserLuckProfile {
@@ -118,6 +120,10 @@ export interface UserLuckProfile {
 
   // Local Sync Coordinates
   localVersion?: number;
+
+  // Astro Vibes Fields
+  zodiacSign?: string;
+  lastAstroClaimDate?: string;
 }
 
 const GUEST_USER_KEY = "guest";
@@ -204,6 +210,10 @@ export const createDefaultProfile = (): UserLuckProfile => ({
 
   // Local Sync Coordinates defaults
   localVersion: 0,
+
+  // Astro Vibes Defaults
+  zodiacSign: "",
+  lastAstroClaimDate: "",
 });
 
 export const createGuestProfile = (): UserLuckProfile => ({
@@ -513,6 +523,29 @@ export const useLuckStore = create<LuckStore>()(
             lastVisitDate: todayStr,
             visitStreak: streak,
             visitStreakRecord: record,
+          };
+          return syncActiveProfile(state, updated);
+        });
+      },
+
+      setZodiacSign: (sign) => {
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          const updated = {
+            ...profile,
+            zodiacSign: sign,
+          };
+          return syncActiveProfile(state, updated);
+        });
+      },
+
+      claimAstroBonus: (todayStr, reward) => {
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          const updated = {
+            ...profile,
+            coinBalance: profile.coinBalance + reward,
+            lastAstroClaimDate: todayStr,
           };
           return syncActiveProfile(state, updated);
         });

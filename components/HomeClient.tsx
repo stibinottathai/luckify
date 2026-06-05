@@ -73,6 +73,15 @@ const GAMES: GameCard[] = [
     badge: "Daily Board",
     color: "from-pink-500 to-rose-600",
   },
+  {
+    id: "astro-vibes",
+    emoji: "🌌",
+    title: "Astro-Vibes Alignment",
+    description: "Align your zodiac sign, reveal daily cosmic forecasts, and claim daily coin rewards!",
+    href: "/astro-vibes",
+    badge: "Daily Horoscope",
+    color: "from-indigo-600 to-violet-800",
+  },
 ];
 
 // Emojis pool for floating backgrounds

@@ -87,12 +87,13 @@ service cloud.firestore {
           )
         )
       );
-      allow delete: if false;
+      allow delete: if request.auth != null && request.auth.uid == uid;
 
       match /goldenDiceEvents/{eventId} {
         allow read: if request.auth != null;
         allow create: if request.auth != null && request.auth.uid == uid;
-        allow update, delete: if false;
+        allow update: if false;
+        allow delete: if request.auth != null && request.auth.uid == uid;
       }
 
       // ─── Collectible Dice Collection subcollection ────────────────────────
@@ -104,7 +105,7 @@ service cloud.firestore {
                               && request.resource.data.name is string
                               && request.resource.data.rarity is string
                               && request.resource.data.unlockedAt is string;
-        allow delete: if false;
+        allow delete: if request.auth != null && request.auth.uid == uid;
       }
 
       // ─── Time Capsules subcollection ─────────────────────────────────────
@@ -128,7 +129,7 @@ service cloud.firestore {
                       && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isOpened'])
                       && resource.data.isOpened == false
                       && request.resource.data.isOpened == true;
-        allow delete: if false;
+        allow delete: if request.auth != null && request.auth.uid == uid;
       }
     }
 

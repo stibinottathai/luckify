@@ -11,13 +11,13 @@ const LuckyEnvelopeClient = dynamic(() => import("./LuckyEnvelopeClient"), {
 });
 
 export const metadata: Metadata = {
-  title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Lucky Vibes",
+  title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Luckify",
   description: "Receive a traditional lucky red envelope, fold away its 3D golden seal, and reveal your daily blessing of prosperity, wealth, luck, and happiness.",
   alternates: {
     canonical: "https://luckify.vercel.app/lucky-envelope",
   },
   openGraph: {
-    title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Lucky Vibes",
+    title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Luckify",
     description: "An elegant virtual Hongbao simulation. Open your red packet to reveal mystical fortunes and daily luck blessings.",
     type: "website",
   },
@@ -30,11 +30,11 @@ const ENVELOPE_FAQS = [
   },
   {
     question: "How does the virtual Lucky Envelope work?",
-    answer: "In the Lucky Vibes virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
+    answer: "In the Luckify virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
   },
   {
     question: "Is the digital red packet simulator free to use?",
-    answer: "Yes, the Lucky Envelope simulation on Lucky Vibes is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
+    answer: "Yes, the Lucky Envelope simulation on Luckify is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
   }
 ];
 
@@ -70,7 +70,7 @@ export default function Page() {
         "name": "How does the virtual Lucky Envelope work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In the Lucky Vibes virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
+          "text": "In the Luckify virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
         }
       },
       {
@@ -78,7 +78,7 @@ export default function Page() {
         "name": "Is the digital red packet simulator free to use?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, the Lucky Envelope simulation on Lucky Vibes is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
+          "text": "Yes, the Lucky Envelope simulation on Luckify is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
         }
       }
     ]

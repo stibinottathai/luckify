@@ -11,13 +11,13 @@ const TimeCapsuleClient = dynamic(() => import("./TimeCapsuleClient"), {
 });
 
 export const metadata: Metadata = {
-  title: "Time Capsule of Hope - Lock & Yield Cosmic Interest | Lucky Vibes",
+  title: "Time Capsule of Hope - Lock & Yield Cosmic Interest | Luckify",
   description: "Bury a message to your future self in our digital time capsule. Lock a custom amount of Vibe Coins along with your words and collect them back with high-yield cosmic interest once it unlocks!",
   alternates: {
     canonical: "https://luckify.vercel.app/time-capsule",
   },
   openGraph: {
-    title: "Time Capsule of Hope - Lock & Yield Cosmic Interest | Lucky Vibes",
+    title: "Time Capsule of Hope - Lock & Yield Cosmic Interest | Luckify",
     description: "Write messages to your future self, lock Vibe Coins, and reap time-locked coin rewards in our space-themed digital capsule simulator.",
     type: "website",
   },

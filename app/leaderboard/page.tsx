@@ -18,16 +18,16 @@ const LeaderboardClient = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Leaderboard – Top Lucky Players | Lucky Vibes",
+  title: "Leaderboard – Top Lucky Players | Luckify",
   description:
-    "See the top 100 Lucky Vibes players ranked by total Lucky Points. Can you make it to the top?",
+    "See the top 100 Luckify players ranked by total Lucky Points. Can you make it to the top?",
   alternates: {
     canonical: "https://luckify.vercel.app/leaderboard",
   },
   openGraph: {
-    title: "Leaderboard – Top Lucky Players | Lucky Vibes",
+    title: "Leaderboard – Top Lucky Players | Luckify",
     description:
-      "Live rankings of the luckiest players on Lucky Vibes. Compete for the top spot!",
+      "Live rankings of the luckiest players on Luckify. Compete for the top spot!",
     type: "website",
   },
 };

@@ -11,13 +11,13 @@ const Magic8BallClient = dynamic(() => import("./Magic8BallClient"), {
 });
 
 export const metadata: Metadata = {
-  title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Lucky Vibes",
+  title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luckify",
   description: "Ask any yes or no question, shake the realistic 3D gloss-black sphere, and reveal the cosmic oracle's mysterious floating wisdom answers.",
   alternates: {
     canonical: "https://luckify.vercel.app/magic-8-ball",
   },
   openGraph: {
-    title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Lucky Vibes",
+    title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luckify",
     description: "Seek instant cosmic validation! Ask your question and shake the 3D Magic 8-Ball oracle online.",
     type: "website",
   },

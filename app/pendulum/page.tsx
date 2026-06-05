@@ -11,13 +11,13 @@ const PendulumClient = dynamic(() => import("./PendulumClient"), {
 });
 
 export const metadata: Metadata = {
-  title: "Pendulum Divination - Virtual Dowsing Pendulum | Lucky Vibes",
+  title: "Pendulum Divination - Virtual Dowsing Pendulum | Luckify",
   description: "Focus your energy and query on the digital canvas, release the cosmic silver pendulum bob on its string, and let physical gravity simulate the oracle's answer.",
   alternates: {
     canonical: "https://luckify.vercel.app/pendulum",
   },
   openGraph: {
-    title: "Pendulum Divination - Virtual Dowsing Pendulum | Lucky Vibes",
+    title: "Pendulum Divination - Virtual Dowsing Pendulum | Luckify",
     description: "Type your query, release the silver pendulum, and let physical forces guide your cosmic yes or no decision.",
     type: "website",
   },
@@ -30,7 +30,7 @@ const PENDULUM_FAQS = [
   },
   {
     question: "How does the virtual pendulum physics simulation work?",
-    answer: "The Lucky Vibes simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
+    answer: "The Luckify simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
   },
   {
     question: "How do you ask the virtual dowsing pendulum a question?",
@@ -70,7 +70,7 @@ export default function Page() {
         "name": "How does the virtual pendulum physics simulation work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The Lucky Vibes simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
+          "text": "The Luckify simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
         }
       },
       {

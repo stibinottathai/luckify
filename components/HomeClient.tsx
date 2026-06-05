@@ -22,8 +22,8 @@ interface GameCard {
 
 const LOBBY_FAQS = [
   {
-    question: "What is Lucky Vibes?",
-    answer: "Lucky Vibes is an interactive digital playground compiling premium, high-fidelity simulations of classic fortune-telling games, random decision makers, and luck test widgets. It features custom physics animations, HTML5 Canvas drawings, and reactive user interfaces.",
+    question: "What is Luckify?",
+    answer: "Luckify is an interactive digital playground compiling premium, high-fidelity simulations of classic fortune-telling games, random decision makers, and luck test widgets. It features custom physics animations, HTML5 Canvas drawings, and reactive user interfaces.",
   },
   {
     question: "What games are currently available to play?",
@@ -38,8 +38,8 @@ const LOBBY_FAQS = [
     answer: "Yes. All games use standard secure client-side pseudorandom generation. Physical simulations (like the pendulum or custom wheel) map stopping degrees perfectly equally, guaranteeing that all wedges or outcomes carry authentic statistical distributions with zero bias.",
   },
   {
-    question: "Is Lucky Vibes free to use?",
-    answer: "Yes, Lucky Vibes is free to play and open-source. To support operations and keep the platform free for everyone, we will soon be integrating advertisements (applying for monetization). There are no registration barriers, and you are welcome to play as many times as you like.",
+    question: "Is Luckify free to use?",
+    answer: "Yes, Luckify is free to play and open-source. To support operations and keep the platform free for everyone, we will soon be integrating advertisements (applying for monetization). There are no registration barriers, and you are welcome to play as many times as you like.",
   },
 ];
 
@@ -206,7 +206,7 @@ export default function HomeClient() {
 
         <div className="flex-1 text-center md:text-left space-y-2.5 z-10">
           <h1 className="text-2xl sm:text-3xl font-black font-fredoka leading-none tracking-tight text-primary-gold drop-shadow-md">
-            Lucky Vibes ✨ Virtual Garden of Luck & Fortunes
+            Luckify ✨ Virtual Garden of Luck & Fortunes
           </h1>
           <p className="text-xs sm:text-sm font-semibold text-soft-cream/80 max-w-xl">
             Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, flip cosmic golden coins, and test your vibes score today.
@@ -385,7 +385,7 @@ export default function HomeClient() {
           </span>
           <span className="hidden sm:inline">•</span>
           <span>
-            Verified by: <span className="font-bold text-deep-violet/60 dark:text-soft-cream/60">Lucky Vibes Editorial Board</span>
+            Verified by: <span className="font-bold text-deep-violet/60 dark:text-soft-cream/60">Luckify Editorial Board</span>
           </span>
         </div>
         <div className="flex items-center justify-center gap-4">

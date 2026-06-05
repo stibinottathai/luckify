@@ -165,14 +165,14 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       <p className="font-extrabold text-primary-gold flex items-center gap-1.5 text-sm font-fredoka mb-1">
                         🌟 Welcome to the Garden of Fortunes!
                       </p>
-                      Please review these playful guidelines. By accessing Lucky Vibes, you align your karma and agree to ride these digital frequencies with joy.
+                      Please review these playful guidelines. By accessing Luckify, you align your karma and agree to ride these digital frequencies with joy.
                     </div>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">🎡</span> 1. Game Mechanics & Spirit
                     </h4>
                     <p>
-                      All games on Lucky Vibes (including Fortune Wheel, Pendulum Divination, and Lucky Gift Hunt) are designed strictly for entertainment, visualization, and cosmic amusement.
+                      All games on Luckify (including Fortune Wheel, Pendulum Divination, and Lucky Gift Hunt) are designed strictly for entertainment, visualization, and cosmic amusement.
                     </p>
                     <p>
                       Vibe Coins and points currently reside solely as digital tokens within your local browser storage or your synced account. In the future, we plan to convert these points into real-world gifts and physical rewards. No real currency, digital assets, or real-world stakes are wagered or generated here.
@@ -189,7 +189,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       <span className="text-base sm:text-lg">📢</span> 3. Ads & Monetization
                     </h4>
                     <p>
-                      To keep the site running and free for everyone, Lucky Vibes will soon be introducing third-party advertisements (applying for monetization). By accessing the website, you agree to the display of advertisements.
+                      To keep the site running and free for everyone, Luckify will soon be introducing third-party advertisements (applying for monetization). By accessing the website, you agree to the display of advertisements.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
@@ -221,7 +221,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       <span className="text-base sm:text-lg">🛡️</span> 1. Optional Database Sync & Auth
                     </h4>
                     <p>
-                      Lucky Vibes offers optional sign-in via Google Authentication to synchronize your progress, Vibe Coins, and leaderboard scores. If signed in, we store this information securely in a Cloud Firestore database. If you choose not to sign in, all data remains strictly local to your device's browser storage.
+                      Luckify offers optional sign-in via Google Authentication to synchronize your progress, Vibe Coins, and leaderboard scores. If signed in, we store this information securely in a Cloud Firestore database. If you choose not to sign in, all data remains strictly local to your device's browser storage.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">

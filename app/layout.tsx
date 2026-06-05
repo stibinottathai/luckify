@@ -21,20 +21,20 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
+  title: "Luckify | Try Your Luck. Find Your Fortune.",
   description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
   metadataBase: new URL("https://luckify.vercel.app"),
   openGraph: {
-    title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
+    title: "Luckify | Try Your Luck. Find Your Fortune.",
     description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
     url: "https://luckify.vercel.app",
-    siteName: "Lucky Vibes",
+    siteName: "Luckify",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Lucky Vibes - Virtual Lucky Garden and Fortune Oracle",
+        alt: "Luckify - Virtual Lucky Garden and Fortune Oracle",
       },
     ],
     locale: "en_US",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lucky Vibes | Try Your Luck. Find Your Fortune.",
+    title: "Luckify | Try Your Luck. Find Your Fortune.",
     description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
     images: ["/og-image.png"],
   },

@@ -12,13 +12,13 @@ const PickerGame = dynamic(() => import("@/components/games/PickerGame"), {
 });
 
 export const metadata: Metadata = {
-  title: "Lottery Number Picker Online - Free Lotto Ball Generator | Lucky Vibes",
+  title: "Lottery Number Picker Online - Free Lotto Ball Generator | Luckify",
   description: "Pick 6 lucky lottery numbers, run the dynamic staggered ball drop machine, and chart your session draws frequencies in a detailed custom inline SVG graph.",
   alternates: {
     canonical: "https://luckify.vercel.app/picker",
   },
   openGraph: {
-    title: "Lottery Number Picker Online - Free Lotto Ball Generator | Lucky Vibes",
+    title: "Lottery Number Picker Online - Free Lotto Ball Generator | Luckify",
     description: "An interactive lottery number generator. Select 6 balls, trigger the drop machine, and review matching statistics.",
     type: "website",
   },

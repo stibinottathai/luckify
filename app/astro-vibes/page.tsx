@@ -11,13 +11,13 @@ const AstroVibesClient = dynamic(() => import("./AstroVibesClient"), {
 });
 
 export const metadata: Metadata = {
-  title: "Astro-Vibes Alignment - Daily Horoscopes & Zodiac Luck | Lucky Vibes",
+  title: "Astro-Vibes Alignment - Daily Horoscopes & Zodiac Luck | Luckify",
   description: "Align your zodiac sign, reveal daily cosmic forecasts for Luck, Love, and Career, and claim your daily cosmic coin alignment bonus!",
   alternates: {
     canonical: "https://luckify.vercel.app/astro-vibes",
   },
   openGraph: {
-    title: "Astro-Vibes Alignment - Daily Horoscopes & Zodiac Luck | Lucky Vibes",
+    title: "Astro-Vibes Alignment - Daily Horoscopes & Zodiac Luck | Luckify",
     description: "Align your zodiac sign, reveal daily cosmic forecasts for Luck, Love, and Career, and claim your daily cosmic coin alignment bonus!",
     type: "website",
   },

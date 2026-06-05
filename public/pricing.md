@@ -1,6 +1,6 @@
-# Pricing & Subscription Plans — Lucky Vibes
+# Pricing & Subscription Plans — Luckify
 
-Lucky Vibes is a completely free, open-source platform. There are no registration barriers, no premium plans, no token limitations, and no advertisements.
+Luckify is a completely free, open-source platform. There are no registration barriers, no premium plans, no token limitations, and no advertisements.
 
 ## Standard Tiers
 

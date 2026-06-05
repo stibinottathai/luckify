@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
+import AstroVibesClient from "./AstroVibesClient";
 import Link from "next/link";
-
-const AstroVibesClient = dynamic(() => import("./AstroVibesClient"), {
-  loading: () => (
-    <div className="w-full max-w-2xl mx-auto h-[500px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-soft-cream/30 font-fredoka font-black">
-      <span>Aligning daily horoscope signals... 🌌</span>
-    </div>
-  ),
-});
 
 export const metadata: Metadata = {
   title: "Astro-Vibes Alignment - Daily Horoscopes & Zodiac Luck | Luckify",

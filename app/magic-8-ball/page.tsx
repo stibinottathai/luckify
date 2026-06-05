@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
-import dynamic from "next/dynamic";
-
-const Magic8BallClient = dynamic(() => import("./Magic8BallClient"), {
-  loading: () => (
-    <div className="w-full max-w-sm h-[420px] bg-slate-900/20 border-2 border-slate-900/30 rounded-[2.5rem] animate-pulse flex flex-col items-center justify-center gap-3 text-slate-500/30 font-fredoka font-black mx-auto">
-      <span>Gazing into Sphere... 🔮</span>
-    </div>
-  ),
-});
+import Magic8BallClient from "./Magic8BallClient";
 
 export const metadata: Metadata = {
   title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luckify",

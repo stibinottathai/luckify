@@ -85,18 +85,6 @@ export default function Shell({ children }: ShellProps) {
     }
   };
 
-  if (!mounted) {
-    // Elegant clean skeleton before hydration
-    return (
-      <div className="min-h-screen flex flex-col bg-soft-cream text-deep-violet">
-        <header className="sticky top-0 z-40 bg-soft-cream/80 backdrop-blur-md border-b border-deep-violet/10 h-16 flex items-center justify-between px-6" />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="w-10 h-10 border-4 border-primary-gold border-t-transparent rounded-full animate-spin" />
-        </main>
-      </div>
-    );
-  }
-
   return (
     <AuthProvider>
       <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
@@ -136,13 +124,13 @@ export default function Shell({ children }: ShellProps) {
 
           {/* Right Navigation controls */}
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <PointsHeaderDisplay />
+            {mounted && <PointsHeaderDisplay />}
 
             {/* Google Authentication Control */}
-            <AuthButton />
+            {mounted && <AuthButton />}
 
             {/* Redesigned Premium Theme Switcher */}
-            <ThemeToggle dark={dark} toggleTheme={toggleTheme} />
+            {mounted && <ThemeToggle dark={dark} toggleTheme={toggleTheme} />}
           </div>
         </div>
       </header>

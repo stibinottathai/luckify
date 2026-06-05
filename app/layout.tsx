@@ -58,6 +58,7 @@ export default function RootLayout({
       lang="en"
       className={`${fredoka.variable} ${nunito.variable} h-full antialiased`}
       style={{ colorScheme: "light" }}
+      suppressHydrationWarning
     >
       <head>
         <link rel="preconnect" href="https://www.affirmations.dev" />

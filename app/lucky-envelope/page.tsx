@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
-import dynamic from "next/dynamic";
-
-const LuckyEnvelopeClient = dynamic(() => import("./LuckyEnvelopeClient"), {
-  loading: () => (
-    <div className="w-full max-w-sm h-[420px] bg-red-950/20 border-2 border-amber-950/30 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-amber-500/30 font-cinzel font-black mx-auto">
-      <span>Unfolding Envelope... 🧧</span>
-    </div>
-  ),
-});
+import LuckyEnvelopeClient from "./LuckyEnvelopeClient";
 
 export const metadata: Metadata = {
   title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Luckify",

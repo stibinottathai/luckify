@@ -1,21 +1,5 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
-
-const LeaderboardClient = dynamic(
-  () => import("@/components/games/LeaderboardClient"),
-  {
-    loading: () => (
-      <div className="w-full max-w-2xl mx-auto space-y-3">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-16 rounded-2xl bg-deep-violet/5 dark:bg-white/5 animate-pulse"
-          />
-        ))}
-      </div>
-    ),
-  }
-);
+import LeaderboardClient from "@/components/games/LeaderboardClient";
 
 export const metadata: Metadata = {
   title: "Leaderboard – Top Lucky Players | Luckify",

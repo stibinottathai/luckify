@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
-import dynamic from "next/dynamic";
-
-const FortuneTellerClient = dynamic(() => import("./FortuneTellerClient"), {
-  loading: () => (
-    <div className="w-full max-w-md h-[450px] bg-amber-500/5 border-2 border-amber-500/10 rounded-[2.5rem] animate-pulse flex flex-col items-center justify-center gap-3 text-amber-500/30 font-fredoka font-black mx-auto">
-      <span>Folding Paper... 🔮</span>
-    </div>
-  ),
-});
+import FortuneTellerClient from "./FortuneTellerClient";
 
 export const metadata: Metadata = {
   title: "Origami Fortune Teller - Play Virtual Cootie Catcher | Luckify",

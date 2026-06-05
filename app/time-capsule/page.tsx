@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
-import dynamic from "next/dynamic";
-
-const TimeCapsuleClient = dynamic(() => import("./TimeCapsuleClient"), {
-  loading: () => (
-    <div className="w-full max-w-lg h-[450px] bg-white/70 dark:bg-[#1B103E]/70 border border-white/20 dark:border-white/5 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-soft-cream/30 font-fredoka font-black mx-auto">
-      <span>Entering the Capsule Vault... 🕰️</span>
-    </div>
-  ),
-});
+import TimeCapsuleClient from "./TimeCapsuleClient";
 
 export const metadata: Metadata = {
   title: "Time Capsule of Hope - Lock & Yield Cosmic Interest | Luckify",

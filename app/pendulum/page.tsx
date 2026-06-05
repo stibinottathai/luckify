@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import AeoFaqSection from "@/components/ui/AeoFaqSection";
-import dynamic from "next/dynamic";
-
-const PendulumClient = dynamic(() => import("./PendulumClient"), {
-  loading: () => (
-    <div className="w-full max-w-sm h-[420px] bg-purple-500/5 border-2 border-purple-500/10 rounded-[2.5rem] animate-pulse flex flex-col items-center justify-center gap-3 text-purple-500/30 font-fredoka font-black mx-auto">
-      <span>Suspending Pendulum... 🔮</span>
-    </div>
-  ),
-});
+import PendulumClient from "./PendulumClient";
 
 export const metadata: Metadata = {
   title: "Pendulum Divination - Virtual Dowsing Pendulum | Luckify",

@@ -209,3 +209,44 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: none !important;
   }
 }
+
+/* Custom Glittering & Shimmering Animations */
+@keyframes glitter-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(245, 183, 0, 0.3), inset 0 0 8px rgba(245, 183, 0, 0.1);
+    border-color: rgba(245, 183, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(245, 183, 0, 0.7), inset 0 0 12px rgba(245, 183, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-glitter {
+  animation: glitter-glow 3s infinite ease-in-out;
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #ffe27d 0%,
+    #ffc837 25%,
+    #ffffff 50%,
+    #ffc837 75%,
+    #ffe27d 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: text-shimmer 2.5s linear infinite;
+}

@@ -187,6 +187,18 @@ export default function HomeClient() {
             Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, flip cosmic golden coins, and test your vibes score today.
           </p>
 
+          {/* Glittering Giveaway Teaser Box */}
+          <div className="animate-glitter border border-primary-gold/45 bg-white/5 backdrop-blur-md rounded-2xl p-3.5 my-3.5 space-y-1 max-w-2xl select-none">
+            <div className="flex items-center gap-2 justify-center md:justify-start text-xs font-black uppercase tracking-wider">
+              <span className="text-base">🎁</span>
+              <span className="shimmer-text font-fredoka text-sm">Future Giveaways & Gifts!</span>
+              <span className="bg-primary-gold/25 border border-primary-gold/30 text-primary-gold text-[9px] px-1.5 py-0.5 rounded font-fredoka animate-pulse">Coming Soon</span>
+            </div>
+            <p className="text-[11px] sm:text-xs font-bold text-cream-soft/90 leading-relaxed text-center md:text-left">
+              Stay tuned! We are planning daily, weekly, and monthly gifts for the top coin collectors. Accumulate as many Vibe Coins as you can to climb the ranks and win real rewards!
+            </p>
+          </div>
+
           {/* Core Call to Actions (CTAs) above the fold */}
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1.5 pb-2">
             <Link

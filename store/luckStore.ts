@@ -335,15 +335,16 @@ export const useLuckStore = create<LuckStore>()(
 
       addResult: (game, result, isWin, scoreImpact) => {
         set((state) => {
-          const newTotalPlays = state.totalPlays + 1;
-          const newWinStreak = isWin ? state.winStreak + 1 : 0;
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          const newTotalPlays = profile.totalPlays + 1;
+          const newWinStreak = isWin ? profile.winStreak + 1 : 0;
           
           // Calculate score impact if not explicitly provided
           let impact = scoreImpact;
           if (impact === undefined) {
             if (isWin) {
               // Wins give +5 to +15, slightly boosted by current streak
-              impact = Math.floor(Math.random() * 11) + 5 + Math.min(state.winStreak, 5);
+              impact = Math.floor(Math.random() * 11) + 5 + Math.min(profile.winStreak, 5);
             } else {
               // Losses subtract -4 to -10
               impact = -(Math.floor(Math.random() * 7) + 4);
@@ -351,7 +352,7 @@ export const useLuckStore = create<LuckStore>()(
           }
 
           // Compute new score constrained between 0 and 100
-          const newLuckyScore = Math.max(0, Math.min(100, state.luckyScore + impact));
+          const newLuckyScore = Math.max(0, Math.min(100, profile.luckyScore + impact));
 
           // Create new history item
           const newHistoryItem: HistoryItem = {
@@ -363,33 +364,27 @@ export const useLuckStore = create<LuckStore>()(
           };
 
           // Limit history to last 20 elements
-          const newHistory = [newHistoryItem, ...state.history].slice(0, 20);
+          const newHistory = [newHistoryItem, ...profile.history].slice(0, 20);
 
           return syncActiveProfile(state, {
+            ...profile,
             totalPlays: newTotalPlays,
             winStreak: newWinStreak,
             luckyScore: newLuckyScore,
-            coinBalance: state.coinBalance,
             history: newHistory,
-            wheelSpinDate: state.wheelSpinDate,
-            wheelDailySpinsUsed: state.wheelDailySpinsUsed,
-            wheelPaidSpinsUsed: state.wheelPaidSpinsUsed,
           });
         });
       },
 
       addCoins: (amount) => {
         if (amount <= 0) return;
-        set((state) => syncActiveProfile(state, {
-          totalPlays: state.totalPlays,
-          winStreak: state.winStreak,
-          luckyScore: state.luckyScore,
-          coinBalance: state.coinBalance + amount,
-          history: state.history,
-          wheelSpinDate: state.wheelSpinDate,
-          wheelDailySpinsUsed: state.wheelDailySpinsUsed,
-          wheelPaidSpinsUsed: state.wheelPaidSpinsUsed,
-        }));
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          return syncActiveProfile(state, {
+            ...profile,
+            coinBalance: profile.coinBalance + amount,
+          });
+        });
       },
 
       spendCoins: (amount) => {
@@ -400,16 +395,13 @@ export const useLuckStore = create<LuckStore>()(
           return false;
         }
 
-        set((state) => syncActiveProfile(state, {
-          totalPlays: state.totalPlays,
-          winStreak: state.winStreak,
-          luckyScore: state.luckyScore,
-          coinBalance: coinBalance - amount,
-          history: state.history,
-          wheelSpinDate: state.wheelSpinDate,
-          wheelDailySpinsUsed: state.wheelDailySpinsUsed,
-          wheelPaidSpinsUsed: state.wheelPaidSpinsUsed,
-        }));
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          return syncActiveProfile(state, {
+            ...profile,
+            coinBalance: profile.coinBalance - amount,
+          });
+        });
         return true;
       },
 

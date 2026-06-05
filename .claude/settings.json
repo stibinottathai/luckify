@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "everything-claude-code": {
+      "type": "http",
+      "url": "https://mcp.skillsovermcp.com/mcp/affaan-m/everything-claude-code"
+    }
+  }
+}

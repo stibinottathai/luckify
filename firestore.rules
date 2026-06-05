@@ -5,7 +5,27 @@ service cloud.firestore {
     match /users/{uid} {
 
       function isValidProfile(data) {
-        return data.coinBalance is int
+        let allowedKeys = [
+          'coinBalance', 'luckyScore', 'totalPlays', 'winStreak', 'history',
+          'wheelSpinDate', 'wheelDailySpinsUsed', 'wheelPaidSpinsUsed',
+          'displayName', 'photoURL', 'updatedAt',
+          'xp', 'level', 'shakeStreak', 'shakeStreakLastClaimed', 'shakeStreakRecord',
+          'weeklyCoins', 'weeklyCoinsLastUpdated', 'collectedItems', 'mysteryBoxesCount',
+          'badges', 'doubleRewardsUntil', 'streakShieldsCount', 'vipUntil',
+          'lastVisitDate', 'visitStreak', 'visitStreakRecord', 'zodiacSign',
+          'lastAstroClaimDate', 'lastWishDate', 'lastTimeCapsuleDate',
+          'totalDiceRolls', 'totalGoldenDiceEvents', 'goldenDiceRate',
+          'highestRewardWon', 'highestRewardPoints', 'legendaryRewardsCount',
+          'equippedDice', 'diceFragments', 'collectionProgress', 'mythicDiceCount',
+          'coinDailyAttempts', 'coinDailyAttemptsDate', 'coinTotalWins', 'coinTotalLosses',
+          'coinTotalPredictions', 'coinWinStreak', 'coinBestStreak', 'coinLargestWin',
+          'coinTotalProfit', 'scratchAttemptsUsed', 'scratchDate', 'scratchPrizeWon',
+          'giftHuntBoard', 'giftHuntTotalOpened', 'giftHuntHighestGift', 'giftHuntTimes1000',
+          'giftHuntTimes5000'
+        ];
+        
+        return data.keys().hasOnly(allowedKeys)
+            && data.coinBalance is int
             && data.coinBalance >= 0
             && data.luckyScore is int
             && data.luckyScore >= 0
@@ -25,6 +45,10 @@ service cloud.firestore {
             && data.history is list
             && data.history.size() <= 20
             
+            // ✅ Optional Identity Fields
+            && (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 50))
+            && (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 2083))
+            
             // ✅ Golden Dice profile statistics
             && (!('totalDiceRolls' in data) || (data.totalDiceRolls is int && data.totalDiceRolls >= 0))
             && (!('totalGoldenDiceEvents' in data) || (data.totalGoldenDiceEvents is int && data.totalGoldenDiceEvents >= 0))
@@ -43,8 +67,9 @@ service cloud.firestore {
       allow read: if request.auth != null;
       allow create: if request.auth != null && request.auth.uid == uid && isValidProfile(request.resource.data);
       
-      // Owners can update their whole profile.
-      // Non-owners (upvoters) can only update the luckyScore field, keeping all other fields unchanged.
+      // Owners can update their profile.
+      // Non-owners (when voting on wishes) can only update the luckyScore field, keeping all other fields unchanged.
+      // We limit the non-owner change strictly to +/- 3 luckyScore to prevent arbitrary score manipulation.
       allow update: if request.auth != null && (
         (request.auth.uid == uid && isValidProfile(request.resource.data))
         || (
@@ -52,6 +77,7 @@ service cloud.firestore {
           && request.resource.data.luckyScore is int
           && request.resource.data.luckyScore >= 0
           && request.resource.data.luckyScore <= 100
+          && (request.resource.data.luckyScore - resource.data.luckyScore == 3 || request.resource.data.luckyScore - resource.data.luckyScore == -3)
         )
       );
       allow delete: if false;
@@ -76,13 +102,39 @@ service cloud.firestore {
 
       // ─── Time Capsules subcollection ─────────────────────────────────────
       match /timeCapsules/{capsuleId} {
-        allow read, write: if request.auth != null && request.auth.uid == uid;
+        allow read: if request.auth != null && request.auth.uid == uid;
+        // Principal must be positive, multiplier within valid bounds, initialized to isOpened == false
+        allow create: if request.auth != null 
+                      && request.auth.uid == uid
+                      && request.resource.data.userId == uid
+                      && request.resource.data.coinsLocked is int
+                      && request.resource.data.coinsLocked >= 10
+                      && request.resource.data.multiplier is float
+                      && request.resource.data.multiplier >= 1.0
+                      && request.resource.data.multiplier <= 2.5
+                      && request.resource.data.messageText is string
+                      && request.resource.data.messageText.size() <= 500
+                      && request.resource.data.isOpened == false;
+        // Players cannot modify text, coins, or multiplier after creation. Only toggle isOpened from false -> true.
+        allow update: if request.auth != null
+                      && request.auth.uid == uid
+                      && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isOpened'])
+                      && resource.data.isOpened == false
+                      && request.resource.data.isOpened == true;
+        allow delete: if false;
       }
     }
 
     match /announcements/{announcementId} {
       allow read: if true;
-      allow create: if request.auth != null && request.resource.data.userUid == request.auth.uid;
+      allow create: if request.auth != null 
+                    && request.resource.data.userUid == request.auth.uid
+                    && request.resource.data.rewardName is string
+                    && request.resource.data.rewardName.size() <= 100
+                    && request.resource.data.rewardEmoji is string
+                    && request.resource.data.rewardEmoji.size() <= 10
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() <= 200;
       allow update, delete: if false;
     }
 
@@ -100,24 +152,31 @@ service cloud.firestore {
       
       allow update: if request.auth != null 
                     && (
-                      // Allow anyone to toggle their upvote (send positive vibes) without changing static content
+                      // 1. Upvote / Downvote flow: Only affect vibes fields.
                       (
                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['vibesUsers', 'vibesCount'])
                         && (
-                          // 1. Upvoting: increment count, append voter's uid
+                          // Upvoting: increment count by 1, append voter's uid
                           (request.resource.data.vibesCount == resource.data.vibesCount + 1 
                            && request.resource.data.vibesUsers.size() == resource.data.vibesUsers.size() + 1
                            && request.resource.data.vibesUsers.hasAll([request.auth.uid])
                            && !resource.data.vibesUsers.hasAny([request.auth.uid]))
                           ||
-                          // 2. Downvoting/Undoing: decrement count, remove voter's uid
+                          // Downvoting/Undoing: decrement count by 1, remove voter's uid
                           (request.resource.data.vibesCount == resource.data.vibesCount - 1 
                            && request.resource.data.vibesUsers.size() == resource.data.vibesUsers.size() - 1
                            && !request.resource.data.vibesUsers.hasAny([request.auth.uid])
                            && resource.data.vibesUsers.hasAny([request.auth.uid]))
                         )
                       )
-                      || (resource.data.userId == request.auth.uid)
+                      // 2. Owner edits: Owner can only edit wish text and anonymity, not vote tallies.
+                      || (
+                        resource.data.userId == request.auth.uid
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['wishText', 'isAnonymous'])
+                        && request.resource.data.wishText is string
+                        && request.resource.data.wishText.size() <= 120
+                        && request.resource.data.isAnonymous is bool
+                      )
                     );
       
       allow delete: if request.auth != null && (

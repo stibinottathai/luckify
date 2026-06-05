@@ -88,7 +88,7 @@ export async function POST(req: Request) {
   try {
     const { boxIndex } = await req.json();
 
-    if (typeof boxIndex !== "number" || boxIndex < 0 || boxIndex >= 20) {
+    if (typeof boxIndex !== "number" || !Number.isInteger(boxIndex) || boxIndex < 0 || boxIndex >= 20) {
       return NextResponse.json({ error: "Invalid box index" }, { status: 400 });
     }
 

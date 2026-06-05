@@ -78,21 +78,21 @@ export default function ShareModal({
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-cream-soft/5 text-deep-violet/40 dark:text-cream-soft/40 hover:text-deep-violet dark:hover:text-cream-soft transition-colors cursor-pointer"
+              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-soft-cream/5 text-deep-violet/40 dark:text-soft-cream/40 hover:text-deep-violet dark:hover:text-soft-cream transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Header */}
-            <h3 className="text-xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft mb-2 mt-2">
+            <h3 className="text-xl font-extrabold font-fredoka text-deep-violet dark:text-soft-cream mb-2 mt-2">
               Share Your Fortune! ✨
             </h3>
-            <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mb-5">
+            <p className="text-xs font-semibold text-deep-violet/50 dark:text-soft-cream/50 mb-5">
               Let the world know how lucky you are today.
             </p>
 
             {/* Preview Area */}
-            <div className="bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-2xl p-4 text-left mb-6 text-sm font-bold text-deep-violet/80 dark:text-cream-soft/80 leading-relaxed break-words whitespace-pre-wrap font-sans">
+            <div className="bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-2xl p-4 text-left mb-6 text-sm font-bold text-deep-violet/80 dark:text-soft-cream/80 leading-relaxed break-words whitespace-pre-wrap font-sans">
               {shareText}
               <span className="block text-primary-gold hover:underline mt-1 font-semibold">
                 {shareUrl}
@@ -112,7 +112,7 @@ export default function ShareModal({
               )}
               <button
                 onClick={handleCopy}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-deep-violet/5 hover:bg-deep-violet/10 dark:bg-white/5 dark:hover:bg-white/10 text-deep-violet dark:text-cream-soft border border-deep-violet/10 dark:border-white/10 transition-all active:scale-95 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-deep-violet/5 hover:bg-deep-violet/10 dark:bg-white/5 dark:hover:bg-white/10 text-deep-violet dark:text-soft-cream border border-deep-violet/10 dark:border-white/10 transition-all active:scale-95 cursor-pointer"
               >
                 {copied ? (
                   <>

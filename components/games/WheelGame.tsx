@@ -322,7 +322,7 @@ export default function WheelGame() {
         
         {/* Top gold needle pointer */}
         <div className="absolute top-5 sm:top-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center drop-shadow-lg">
-          <div className="w-9 h-9 rounded-full bg-deep-violet dark:bg-cream-soft border-[5px] border-primary-gold" />
+          <div className="w-9 h-9 rounded-full bg-deep-violet dark:bg-soft-cream border-[5px] border-primary-gold" />
           <div className="-mt-2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[34px] border-t-primary-gold" />
         </div>
 
@@ -340,15 +340,15 @@ export default function WheelGame() {
         {/* Spin status cards: free spin + paid spins */}
         <div className="relative z-[1] mt-4 w-full grid grid-cols-2 gap-2">
           <div className="rounded-xl border border-white/60 dark:border-white/10 bg-white/75 dark:bg-black/35 px-3 py-2 text-center shadow-sm">
-            <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-cream-soft/45">
+            <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-soft-cream/45">
               Free Spin
             </span>
-            <span className={`font-fredoka text-lg font-black ${freeSpinAvailable ? "text-emerald-500" : "text-deep-violet/40 dark:text-cream-soft/30 line-through"}`}>
+            <span className={`font-fredoka text-lg font-black ${freeSpinAvailable ? "text-emerald-500" : "text-deep-violet/40 dark:text-soft-cream/30 line-through"}`}>
               {freeSpinAvailable ? "✓ Available" : "Used"}
             </span>
           </div>
           <div className="rounded-xl border border-white/60 dark:border-white/10 bg-white/75 dark:bg-black/35 px-3 py-2 text-center shadow-sm">
-            <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-cream-soft/45">
+            <span className="block text-[9px] font-black uppercase tracking-widest text-deep-violet/45 dark:text-soft-cream/45">
               Paid Spins Left
             </span>
             <span className="font-fredoka text-lg font-black text-primary-gold">

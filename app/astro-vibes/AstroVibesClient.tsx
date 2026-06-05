@@ -173,7 +173,7 @@ export default function AstroVibesClient() {
 
   if (loading) {
     return (
-      <div className="w-full max-w-2xl mx-auto h-[450px] bg-white/70 dark:bg-[#1B103E]/70 border border-white/20 dark:border-white/5 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black">
+      <div className="w-full max-w-2xl mx-auto h-[450px] bg-white/70 dark:bg-[#1B103E]/70 border border-white/20 dark:border-white/5 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-soft-cream/30 font-fredoka font-black">
         <span>Aligning daily horoscope signals... 🌌</span>
       </div>
     );
@@ -192,10 +192,10 @@ export default function AstroVibesClient() {
           >
             <div className="text-center space-y-2 max-w-md">
               <Compass className="w-10 h-10 text-primary-gold mx-auto animate-spin" style={{ animationDuration: "10s" }} />
-              <h2 className="text-2xl font-black text-deep-violet dark:text-cream-soft uppercase tracking-wider">
+              <h2 className="text-2xl font-black text-deep-violet dark:text-soft-cream uppercase tracking-wider">
                 Select Your Zodiac Sign
               </h2>
-              <p className="text-xs font-semibold text-deep-violet/60 dark:text-cream-soft/60">
+              <p className="text-xs font-semibold text-deep-violet/60 dark:text-soft-cream/60">
                 To align your celestial energy, pick your horoscope sign. This locks in your daily forecast and unlocks a +200 coin alignment reward.
               </p>
             </div>
@@ -219,13 +219,13 @@ export default function AstroVibesClient() {
                     <span className="text-3xl filter drop-shadow-sm select-none pointer-events-none mb-1">
                       {sign.emoji}
                     </span>
-                    <span className="text-xs font-black text-deep-violet dark:text-cream-soft select-none pointer-events-none truncate max-w-full">
+                    <span className="text-xs font-black text-deep-violet dark:text-soft-cream select-none pointer-events-none truncate max-w-full">
                       {sign.name}
                     </span>
-                    <span className="text-[7px] text-deep-violet/40 dark:text-cream-soft/40 uppercase tracking-widest font-black mt-1 select-none pointer-events-none">
+                    <span className="text-[7px] text-deep-violet/40 dark:text-soft-cream/40 uppercase tracking-widest font-black mt-1 select-none pointer-events-none">
                       {sign.symbol}
                     </span>
-                    <span className="text-[7px] font-bold text-deep-violet/50 dark:text-cream-soft/50 mt-1 select-none pointer-events-none whitespace-nowrap">
+                    <span className="text-[7px] font-bold text-deep-violet/50 dark:text-soft-cream/50 mt-1 select-none pointer-events-none whitespace-nowrap">
                       {sign.dateRange.split(" - ").map(d => d.slice(0, 3)).join("-")}
                     </span>
                   </button>
@@ -267,10 +267,10 @@ export default function AstroVibesClient() {
                       {currentZodiac.element}
                     </span>
                   </div>
-                  <p className="text-[10px] text-cream-soft/60 uppercase tracking-widest font-black">
+                  <p className="text-[10px] text-soft-cream/60 uppercase tracking-widest font-black">
                     Date range: {currentZodiac.dateRange}
                   </p>
-                  <p className="text-xs text-cream-soft/80 max-w-md">
+                  <p className="text-xs text-soft-cream/80 max-w-md">
                     {currentZodiac.description}
                   </p>
                 </div>
@@ -288,27 +288,27 @@ export default function AstroVibesClient() {
                 {/* Forecast Readings & Recommended Game */}
                 <div className="bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-lg space-y-4 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <h3 className="text-base font-black text-deep-violet dark:text-cream-soft uppercase tracking-wider flex items-center gap-1.5">
+                    <h3 className="text-base font-black text-deep-violet dark:text-soft-cream uppercase tracking-wider flex items-center gap-1.5">
                       <Sparkles className="w-4.5 h-4.5 text-primary-gold animate-pulse" />
                       Daily Cosmic Forecast
                     </h3>
-                    <p className="text-xs sm:text-[13px] text-deep-violet/70 dark:text-cream-soft/75 leading-relaxed font-semibold">
+                    <p className="text-xs sm:text-[13px] text-deep-violet/70 dark:text-soft-cream/75 leading-relaxed font-semibold">
                       {getOracleReading(currentZodiac.id)}
                     </p>
                   </div>
 
                   <div className="border-t border-deep-violet/10 dark:border-white/10 pt-4 space-y-3">
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/45">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-soft-cream/45">
                         Zodiac Game Recommendation
                       </span>
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">{getRecommendedGame(currentZodiac.id).emoji}</span>
                         <div className="flex-1">
-                          <span className="text-xs font-black text-deep-violet dark:text-cream-soft">
+                          <span className="text-xs font-black text-deep-violet dark:text-soft-cream">
                             {getRecommendedGame(currentZodiac.id).name}
                           </span>
-                          <p className="text-[10px] text-deep-violet/50 dark:text-cream-soft/50">
+                          <p className="text-[10px] text-deep-violet/50 dark:text-soft-cream/50">
                             Aligned with your celestial energy today!
                           </p>
                         </div>
@@ -327,7 +327,7 @@ export default function AstroVibesClient() {
                 {/* Ratings & Alignment Bonus */}
                 <div className="bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-lg flex flex-col justify-between gap-6">
                   <div className="space-y-4">
-                    <h3 className="text-base font-black text-deep-violet dark:text-cream-soft uppercase tracking-wider flex items-center gap-1.5">
+                    <h3 className="text-base font-black text-deep-violet dark:text-soft-cream uppercase tracking-wider flex items-center gap-1.5">
                       <TrendingUp className="w-4.5 h-4.5 text-primary-gold" />
                       Celestial Vibe Ratings
                     </h3>
@@ -343,7 +343,7 @@ export default function AstroVibesClient() {
 
                       return (
                         <div key={metric.key} className="space-y-1">
-                          <div className="flex items-center justify-between text-xs font-black text-deep-violet dark:text-cream-soft">
+                          <div className="flex items-center justify-between text-xs font-black text-deep-violet dark:text-soft-cream">
                             <span className="flex items-center gap-1">
                               <IconComponent className="w-3.5 h-3.5 opacity-60" />
                               {metric.name}
@@ -367,16 +367,16 @@ export default function AstroVibesClient() {
                   {/* Alignment Bonus Block */}
                   <div className="border-t border-deep-violet/10 dark:border-white/10 pt-4 flex flex-col items-center text-center gap-3">
                     <div className="flex flex-col items-center">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/45">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-soft-cream/45">
                         Celestial Alignment Reward
                       </span>
-                      <p className="text-[11px] font-semibold text-deep-violet/60 dark:text-cream-soft/60 mt-1 max-w-[220px]">
+                      <p className="text-[11px] font-semibold text-deep-violet/60 dark:text-soft-cream/60 mt-1 max-w-[220px]">
                         Align your celestial charts daily to secure your bonus coins.
                       </p>
                     </div>
 
                     {!user ? (
-                      <div className="py-2.5 px-4 rounded-xl bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 flex items-center justify-center gap-2 w-full text-xs font-bold text-deep-violet/60 dark:text-cream-soft/60">
+                      <div className="py-2.5 px-4 rounded-xl bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 flex items-center justify-center gap-2 w-full text-xs font-bold text-deep-violet/60 dark:text-soft-cream/60">
                         <Lock className="w-3.5 h-3.5 text-primary-gold" />
                         <span>Sign in above to claim +200 Vibe Coins!</span>
                       </div>

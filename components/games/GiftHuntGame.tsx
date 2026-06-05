@@ -282,10 +282,10 @@ export default function GiftHuntGame() {
     return (
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[400px] text-center p-8 bg-white/5 dark:bg-black/20 rounded-3xl backdrop-blur-md border border-white/10">
         <Lock className="w-16 h-16 text-primary-gold mb-6 opacity-80" />
-        <h2 className="text-3xl font-black font-fredoka text-deep-violet dark:text-cream-soft mb-4">
+        <h2 className="text-3xl font-black font-fredoka text-deep-violet dark:text-soft-cream mb-4">
           Login Required
         </h2>
-        <p className="text-deep-violet/70 dark:text-cream-soft/70 max-w-md mb-8">
+        <p className="text-deep-violet/70 dark:text-soft-cream/70 max-w-md mb-8">
           The Lucky Gift Hunt generates a unique cryptographic board just for you every day. Please log in to secure your daily rewards!
         </p>
         <Link
@@ -364,10 +364,10 @@ export default function GiftHuntGame() {
 
           {/* Title */}
           <div className="flex flex-col gap-2 z-10">
-            <h3 className="text-2xl font-black text-deep-violet dark:text-cream-soft font-fredoka">
+            <h3 className="text-2xl font-black text-deep-violet dark:text-soft-cream font-fredoka">
               Preparing Your Gifts
             </h3>
-            <p className="text-xs font-bold text-deep-violet/40 dark:text-cream-soft/40 uppercase tracking-widest">
+            <p className="text-xs font-bold text-deep-violet/40 dark:text-soft-cream/40 uppercase tracking-widest">
               Securing daily fortune board...
             </p>
           </div>
@@ -391,7 +391,7 @@ export default function GiftHuntGame() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
-                className="text-sm font-bold text-deep-violet/70 dark:text-cream-soft/70"
+                className="text-sm font-bold text-deep-violet/70 dark:text-soft-cream/70"
               >
                 {LOADING_MESSAGES[loadingMsgIndex]}
               </motion.p>
@@ -411,16 +411,16 @@ export default function GiftHuntGame() {
       {/* Header and Stats */}
       <div className="w-full flex flex-col md:flex-row items-center justify-between bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-3xl p-6 shadow-xl gap-6">
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <h1 className="text-3xl font-black text-deep-violet dark:text-cream-soft flex items-center gap-3">
+          <h1 className="text-3xl font-black text-deep-violet dark:text-soft-cream flex items-center gap-3">
             Lucky Gift Hunt <Gift className="text-primary-gold" />
           </h1>
-          <p className="text-sm font-bold text-deep-violet/60 dark:text-cream-soft/60 mt-2">
+          <p className="text-sm font-bold text-deep-violet/60 dark:text-soft-cream/60 mt-2">
             Pick 3 mystery boxes. Find up to <span className="text-primary-gold">5000</span> coins!
           </p>
         </div>
 
         <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-deep-violet/5 dark:bg-black/20 border border-deep-violet/10 dark:border-white/5 min-w-[200px]">
-          <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/50 dark:text-cream-soft/50 mb-1">
+          <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/50 dark:text-soft-cream/50 mb-1">
             Daily Opens Remaining
           </span>
           {isGameOver ? (
@@ -443,10 +443,10 @@ export default function GiftHuntGame() {
 
       {isGameOver && (
         <div className="text-center animate-fade-in-up">
-          <p className="text-xl font-black text-deep-violet dark:text-cream-soft">
+          <p className="text-xl font-black text-deep-violet dark:text-soft-cream">
             Come Back Tomorrow!
           </p>
-          <p className="text-sm font-bold text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+          <p className="text-sm font-bold text-deep-violet/60 dark:text-soft-cream/60 mt-1">
             Here's what you won vs what you missed...
           </p>
         </div>
@@ -505,7 +505,7 @@ export default function GiftHuntGame() {
                     {isLegendary ? "👑" : isEpic ? "💎" : isRare ? "💰" : "🪙"}
                   </span>
                   <span className={`text-sm sm:text-lg md:text-xl font-black ${
-                    isOpened ? "text-deep-violet dark:text-cream-soft" : "text-deep-violet/70 dark:text-cream-soft/70"
+                    isOpened ? "text-deep-violet dark:text-soft-cream" : "text-deep-violet/70 dark:text-soft-cream/70"
                   }`}>
                     {rewardValue}
                   </span>
@@ -617,12 +617,12 @@ export default function GiftHuntGame() {
                 <span className="text-7xl font-black text-white filter drop-shadow-[0_4px_20px_rgba(245,183,0,0.5)] mt-2">
                   5,000
                 </span>
-                <span className="text-sm font-bold text-cream-soft/60 tracking-widest uppercase mt-1">
+                <span className="text-sm font-bold text-soft-cream/60 tracking-widest uppercase mt-1">
                   Vibe Coins
                 </span>
               </motion.div>
 
-              <p className="text-sm md:text-base font-bold text-cream-soft/85 max-w-sm mt-6 leading-relaxed font-fredoka">
+              <p className="text-sm md:text-base font-bold text-soft-cream/85 max-w-sm mt-6 leading-relaxed font-fredoka">
                 Incredible! You hit the highest reward on the board. The lucky garden spirits are celebrating your ultimate luck! 🎉
               </p>
 

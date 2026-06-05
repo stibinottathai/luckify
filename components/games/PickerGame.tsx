@@ -201,7 +201,7 @@ export default function PickerGame() {
         {/* Left Side: Number Selection Grid */}
         <div className="bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4 border-b border-deep-violet/10 dark:border-white/10 pb-3">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-soft-cream/40">
               Picked:{" "}
               <span className="text-primary-gold font-mono text-sm font-black">
                 {selectedNumbers.length} / 6
@@ -232,7 +232,7 @@ export default function PickerGame() {
                       ? "bg-accent-teal border-accent-teal text-white ring-4 ring-accent-teal/20 scale-105"
                       : isSelected
                       ? "bg-primary-gold border-primary-gold text-deep-violet shadow-xs font-black"
-                      : "bg-deep-violet/5 hover:bg-deep-violet/10 border-transparent text-deep-violet/80 dark:bg-white/5 dark:hover:bg-white/10 dark:text-cream-soft/80"
+                      : "bg-deep-violet/5 hover:bg-deep-violet/10 border-transparent text-deep-violet/80 dark:bg-white/5 dark:hover:bg-white/10 dark:text-soft-cream/80"
                   }`}
                 >
                   {num}
@@ -247,7 +247,7 @@ export default function PickerGame() {
             onClick={handleDraw}
             className={`w-full mt-5 py-3.5 rounded-2xl font-extrabold text-sm select-none cursor-pointer tracking-wider shadow-md transition-all active:scale-95 ${
               selectedNumbers.length < 6 || isDrawing
-                ? "bg-deep-violet/30 dark:bg-white/10 text-deep-violet/50 dark:text-cream-soft/50 pointer-events-none cursor-not-allowed border border-transparent"
+                ? "bg-deep-violet/30 dark:bg-white/10 text-deep-violet/50 dark:text-soft-cream/50 pointer-events-none cursor-not-allowed border border-transparent"
                 : "bg-primary-gold hover:bg-[#E0A700] text-deep-violet shadow-lg"
             }`}
           >
@@ -257,7 +257,7 @@ export default function PickerGame() {
 
         {/* Right Side: Frequency SVG Bar Chart */}
         <div className="bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl p-5 shadow-sm flex flex-col h-full">
-          <h4 className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40 border-b border-deep-violet/10 dark:border-white/10 pb-3 mb-4">
+          <h4 className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-soft-cream/40 border-b border-deep-violet/10 dark:border-white/10 pb-3 mb-4">
             Session Draw Frequencies 📊
           </h4>
 
@@ -307,7 +307,7 @@ export default function PickerGame() {
                         x={x + colWidth / 2}
                         y={135}
                         textAnchor="middle"
-                        className="font-mono text-[9px] font-bold fill-deep-violet/30 dark:fill-cream-soft/30"
+                        className="font-mono text-[9px] font-bold fill-deep-violet/30 dark:fill-soft-cream/30"
                       >
                         {num}
                       </text>
@@ -316,7 +316,7 @@ export default function PickerGame() {
                 );
               })}
             </svg>
-            <span className="text-[10px] text-center font-bold text-deep-violet/30 dark:text-cream-soft/30 mt-3 font-mono">
+            <span className="text-[10px] text-center font-bold text-deep-violet/30 dark:text-soft-cream/30 mt-3 font-mono">
               Numbers 1 - 49 (Frequency Bar Heights scale dynamically)
             </span>
           </div>

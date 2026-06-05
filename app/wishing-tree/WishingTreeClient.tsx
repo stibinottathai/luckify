@@ -354,10 +354,10 @@ export default function WishingTreeClient() {
             🎋
           </div>
           <div>
-            <h3 className="text-base font-black text-deep-violet dark:text-cream-soft leading-none">
+            <h3 className="text-base font-black text-deep-violet dark:text-soft-cream leading-none">
               Celestial Wishing Tree
             </h3>
-            <p className="text-[10px] font-bold text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+            <p className="text-[10px] font-bold text-deep-violet/60 dark:text-soft-cream/60 mt-1">
               Spend 200 coins to write a wish. Upvote others to grant them +3 luckyScore!
             </p>
           </div>
@@ -379,7 +379,7 @@ export default function WishingTreeClient() {
               </button>
             )
           ) : (
-            <div className="py-2.5 px-4 rounded-xl bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 flex items-center gap-2 text-[10px] font-bold text-deep-violet/60 dark:text-cream-soft/60">
+            <div className="py-2.5 px-4 rounded-xl bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 flex items-center gap-2 text-[10px] font-bold text-deep-violet/60 dark:text-soft-cream/60">
               <Lock className="w-3.5 h-3.5 text-primary-gold" />
               <span>Sign in above to write wishes</span>
             </div>
@@ -460,7 +460,7 @@ export default function WishingTreeClient() {
             <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : hangingWishes.length === 0 ? (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-xs font-semibold text-cream-soft/40 z-20 space-y-1">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-xs font-semibold text-soft-cream/40 z-20 space-y-1">
             <p className="text-xl">🎋</p>
             <p>No wishes hanging on the branches yet.</p>
             <p>Be the first to hang a wish!</p>
@@ -513,9 +513,9 @@ export default function WishingTreeClient() {
       {/* Wishes Browser Feed */}
       <div className="w-full z-10">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 border-b border-deep-violet/10 dark:border-white/10 pb-4">
-          <h2 className="text-lg font-black text-deep-violet dark:text-cream-soft uppercase tracking-wider flex items-center gap-2">
+          <h2 className="text-lg font-black text-deep-violet dark:text-soft-cream uppercase tracking-wider flex items-center gap-2">
             <span>Wishing Garden Feed</span>
-            <span className="text-xs bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 text-deep-violet/60 dark:text-cream-soft/60 px-2 py-0.5 rounded-full font-bold normal-case">
+            <span className="text-xs bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 text-deep-violet/60 dark:text-soft-cream/60 px-2 py-0.5 rounded-full font-bold normal-case">
               {wishes.length} wishes
             </span>
           </h2>
@@ -525,8 +525,8 @@ export default function WishingTreeClient() {
               onClick={() => { playTick(); setSortBy("recent"); }}
               className={`py-1.5 px-3 rounded-lg font-black text-xs uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
                 sortBy === "recent"
-                  ? "bg-white dark:bg-[#1B103E] text-deep-violet dark:text-cream-soft shadow-sm"
-                  : "text-deep-violet/40 dark:text-cream-soft/40 hover:text-deep-violet dark:hover:text-cream-soft"
+                  ? "bg-white dark:bg-[#1B103E] text-deep-violet dark:text-soft-cream shadow-sm"
+                  : "text-deep-violet/40 dark:text-soft-cream/40 hover:text-deep-violet dark:hover:text-soft-cream"
               }`}
             >
               <Clock className="w-3.5 h-3.5" />
@@ -536,8 +536,8 @@ export default function WishingTreeClient() {
               onClick={() => { playTick(); setSortBy("trending"); }}
               className={`py-1.5 px-3 rounded-lg font-black text-xs uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
                 sortBy === "trending"
-                  ? "bg-white dark:bg-[#1B103E] text-deep-violet dark:text-cream-soft shadow-sm"
-                  : "text-deep-violet/40 dark:text-cream-soft/40 hover:text-deep-violet dark:hover:text-cream-soft"
+                  ? "bg-white dark:bg-[#1B103E] text-deep-violet dark:text-soft-cream shadow-sm"
+                  : "text-deep-violet/40 dark:text-soft-cream/40 hover:text-deep-violet dark:hover:text-soft-cream"
               }`}
             >
               <TrendingUp className="w-3.5 h-3.5" />
@@ -554,7 +554,7 @@ export default function WishingTreeClient() {
             ))}
           </div>
         ) : wishes.length === 0 ? (
-          <div className="bg-white/40 dark:bg-[#1B103E]/40 border border-dashed border-deep-violet/10 dark:border-white/10 rounded-3xl p-12 text-center text-xs font-semibold text-deep-violet/40 dark:text-cream-soft/40 space-y-1">
+          <div className="bg-white/40 dark:bg-[#1B103E]/40 border border-dashed border-deep-violet/10 dark:border-white/10 rounded-3xl p-12 text-center text-xs font-semibold text-deep-violet/40 dark:text-soft-cream/40 space-y-1">
             <p className="text-3xl">📭</p>
             <p>The garden feed is empty.</p>
             <p>Hang your wish above to start the collection!</p>
@@ -570,7 +570,7 @@ export default function WishingTreeClient() {
                   className="bg-white/60 dark:bg-[#1B103E]/60 backdrop-blur-md border border-deep-violet/10 dark:border-white/10 hover:border-amber-500/40 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4 cursor-pointer"
                   onClick={() => { playTick(); setActiveWish(wish); }}
                 >
-                  <p className="text-xs font-medium text-deep-violet/85 dark:text-cream-soft/90 leading-relaxed italic line-clamp-3">
+                  <p className="text-xs font-medium text-deep-violet/85 dark:text-soft-cream/90 leading-relaxed italic line-clamp-3">
                     "{wish.wishText}"
                   </p>
 
@@ -583,7 +583,7 @@ export default function WishingTreeClient() {
                           <img src={wish.photoURL} alt={wish.displayName} className="w-full h-full object-cover" />
                         )}
                       </div>
-                      <span className="text-[10px] font-black text-deep-violet/60 dark:text-cream-soft/60">
+                      <span className="text-[10px] font-black text-deep-violet/60 dark:text-soft-cream/60">
                         {wish.isAnonymous ? "Anonymous" : wish.displayName.split(" ")[0]}
                       </span>
                     </div>
@@ -596,7 +596,7 @@ export default function WishingTreeClient() {
                       className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-wider py-1 px-2.5 rounded-full border transition-all cursor-pointer ${
                         hasVibed
                           ? "bg-gradient-to-br from-amber-400 to-amber-500 text-deep-violet border-yellow-300 shadow-[0_0_8px_rgba(245,183,0,0.3)]"
-                          : "bg-deep-violet/5 dark:bg-white/5 border-deep-violet/10 dark:border-white/10 hover:border-amber-500/35 text-deep-violet/60 dark:text-cream-soft/60"
+                          : "bg-deep-violet/5 dark:bg-white/5 border-deep-violet/10 dark:border-white/10 hover:border-amber-500/35 text-deep-violet/60 dark:text-soft-cream/60"
                       }`}
                     >
                       <Heart className={`w-3 h-3 ${hasVibed ? "fill-deep-violet text-deep-violet" : "text-amber-500"}`} />
@@ -651,7 +651,7 @@ export default function WishingTreeClient() {
                 )}
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black uppercase tracking-wider text-cream-soft/60">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-soft-cream/60">
                     Your Deepest Wish ({120 - wishText.length} characters left)
                   </label>
                   <textarea
@@ -673,7 +673,7 @@ export default function WishingTreeClient() {
                     onChange={(e) => setIsAnonymous(e.target.checked)}
                     className="w-4 h-4 accent-emerald-500 cursor-pointer"
                   />
-                  <label htmlFor="anonymous" className="text-xs font-bold text-cream-soft/80 cursor-pointer">
+                  <label htmlFor="anonymous" className="text-xs font-bold text-soft-cream/80 cursor-pointer">
                     Hang anonymously (hides your photo & name)
                   </label>
                 </div>
@@ -742,17 +742,17 @@ export default function WishingTreeClient() {
               <h4 className="text-base font-black text-white leading-none">
                 {activeWish.displayName}
               </h4>
-              <span className="text-[9px] font-bold text-cream-soft/40 uppercase tracking-widest mt-1 block">
+              <span className="text-[9px] font-bold text-soft-cream/40 uppercase tracking-widest mt-1 block">
                 Hanged {new Date(activeWish.timestamp).toLocaleDateString()} at {new Date(activeWish.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
 
               {/* Text */}
-              <p className="text-sm font-bold text-cream-soft/95 mt-5 leading-relaxed px-2 border-y border-white/5 py-4 italic">
+              <p className="text-sm font-bold text-soft-cream/95 mt-5 leading-relaxed px-2 border-y border-white/5 py-4 italic">
                 "{activeWish.wishText}"
               </p>
 
               {/* Vibes count info */}
-              <div className="flex items-center gap-1.5 mt-5 text-xs text-cream-soft/70">
+              <div className="flex items-center gap-1.5 mt-5 text-xs text-soft-cream/70">
                 <MessageCircle className="w-4 h-4 text-emerald-400" />
                 <span>Currently has <b>{activeWish.vibesCount}</b> positive vibes</span>
               </div>
@@ -771,7 +771,7 @@ export default function WishingTreeClient() {
                   <span>{activeWish.vibesUsers.includes(user.uid) ? "VIBES SENT ✓" : "SEND POSITIVE VIBES"}</span>
                 </button>
               ) : (
-                <div className="mt-6 py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold text-cream-soft/50 w-full flex items-center justify-center gap-2">
+                <div className="mt-6 py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold text-soft-cream/50 w-full flex items-center justify-center gap-2">
                   <Lock className="w-3.5 h-3.5 text-primary-gold" />
                   <span>Sign in above to send positive vibes</span>
                 </div>

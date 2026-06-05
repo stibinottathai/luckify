@@ -23,12 +23,12 @@ export default function ErrorBoundary({ error, reset }: ErrorProps) {
       </div>
 
       {/* Styled Branded Header */}
-      <h2 className="text-3xl font-black font-fredoka text-deep-violet dark:text-cream-soft uppercase tracking-wide leading-tight mb-3">
+      <h2 className="text-3xl font-black font-fredoka text-deep-violet dark:text-soft-cream uppercase tracking-wide leading-tight mb-3">
         Destiny Misaligned... 🌀
       </h2>
       
       {/* Informational Subtext */}
-      <p className="text-sm font-semibold text-deep-violet/60 dark:text-cream-soft/60 max-w-md leading-relaxed mb-8">
+      <p className="text-sm font-semibold text-deep-violet/60 dark:text-soft-cream/60 max-w-md leading-relaxed mb-8">
         An unexpected cosmic alignment error occurred while rendering this game. This might be due to temporary browser constraints, WebAudio limits, or canvas errors.
       </p>
 
@@ -46,7 +46,7 @@ export default function ErrorBoundary({ error, reset }: ErrorProps) {
         {/* Home Lobby Link */}
         <Link
           href="/"
-          className="w-full py-3.5 px-6 rounded-2xl font-black text-sm select-none cursor-pointer tracking-wider border border-deep-violet/10 dark:border-white/10 hover:bg-deep-violet/5 dark:hover:bg-white/5 text-deep-violet dark:text-cream-soft active:scale-95 transition-all flex items-center justify-center gap-2 font-fredoka uppercase"
+          className="w-full py-3.5 px-6 rounded-2xl font-black text-sm select-none cursor-pointer tracking-wider border border-deep-violet/10 dark:border-white/10 hover:bg-deep-violet/5 dark:hover:bg-white/5 text-deep-violet dark:text-soft-cream active:scale-95 transition-all flex items-center justify-center gap-2 font-fredoka uppercase"
         >
           <Home className="w-4 h-4" />
           Back to Lobby
@@ -55,7 +55,7 @@ export default function ErrorBoundary({ error, reset }: ErrorProps) {
 
       {/* Error Digest (Debug info shown only in non-production or discrete footer) */}
       {error.digest && (
-        <span className="text-[10px] font-mono text-deep-violet/30 dark:text-cream-soft/30 mt-8 tracking-widest uppercase">
+        <span className="text-[10px] font-mono text-deep-violet/30 dark:text-soft-cream/30 mt-8 tracking-widest uppercase">
           Error Signature: {error.digest}
         </span>
       )}

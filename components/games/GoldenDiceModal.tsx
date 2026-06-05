@@ -80,7 +80,7 @@ export default function GoldenDiceModal({ isOpen, onClose, reward, onShare }: Go
             🎉 LEGENDARY REWARD!
           </motion.h2>
           
-          <p className="text-xs font-bold text-cream-soft/60 uppercase tracking-widest mb-6">
+          <p className="text-xs font-bold text-soft-cream/60 uppercase tracking-widest mb-6">
             You triggered the Golden Dice!
           </p>
 

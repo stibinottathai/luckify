@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const WheelGame = dynamic(() => import("@/components/games/WheelGame"), {
   loading: () => (
-    <div className="w-full max-w-lg h-[500px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black">
+    <div className="w-full max-w-lg h-[500px] bg-white dark:bg-card border-2 border-deep-violet/10 dark:border-white/10 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-soft-cream/30 font-fredoka font-black">
       <span>Calibrating Fortune Wheel... 🎡</span>
     </div>
   ),
@@ -84,7 +84,7 @@ export default function WheelPage() {
         <div className="w-full max-w-lg mb-3 sm:mb-6 flex flex-col items-start gap-2.5 select-none">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-cream-soft/40 dark:hover:text-cream-soft transition-colors cursor-pointer group"
+            className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-soft-cream/40 dark:hover:text-soft-cream transition-colors cursor-pointer group"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -104,10 +104,10 @@ export default function WheelPage() {
             Back to Lobby
           </Link>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+            <h1 className="text-2xl sm:text-3xl font-extrabold font-fredoka text-deep-violet dark:text-soft-cream leading-none">
               Fortune Wheel 🎡
             </h1>
-            <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
+            <p className="text-xs font-semibold text-deep-violet/50 dark:text-soft-cream/50 mt-1">
               Use 3 daily spins, unlock extra spins with points, and chase the rare 1000-point reward.
             </p>
           </div>

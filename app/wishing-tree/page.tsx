@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 const WishingTreeClient = dynamic(() => import("./WishingTreeClient"), {
   loading: () => (
-    <div className="w-full max-w-lg h-[450px] bg-white/70 dark:bg-[#1B103E]/70 border border-white/20 dark:border-white/5 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-cream-soft/30 font-fredoka font-black mx-auto">
+    <div className="w-full max-w-lg h-[450px] bg-white/70 dark:bg-[#1B103E]/70 border border-white/20 dark:border-white/5 rounded-3xl animate-pulse flex flex-col items-center justify-center gap-3 text-deep-violet/30 dark:text-soft-cream/30 font-fredoka font-black mx-auto">
       <span>Tending the Wishing Tree... 🎋</span>
     </div>
   ),

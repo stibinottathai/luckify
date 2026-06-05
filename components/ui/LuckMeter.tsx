@@ -80,11 +80,11 @@ export default function LuckMeter({ score, size = 180 }: LuckMeterProps) {
             key={score}
             initial={{ scale: 0.7, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl font-extrabold font-fredoka tracking-tight text-deep-violet dark:text-cream-soft"
+            className="text-4xl font-extrabold font-fredoka tracking-tight text-deep-violet dark:text-soft-cream"
           >
             {displayScore}%
           </motion.span>
-          <span className="text-xs uppercase tracking-widest font-semibold text-deep-violet/40 dark:text-cream-soft/40 mt-0.5">
+          <span className="text-xs uppercase tracking-widest font-semibold text-deep-violet/40 dark:text-soft-cream/40 mt-0.5">
             Luck Score
           </span>
         </div>

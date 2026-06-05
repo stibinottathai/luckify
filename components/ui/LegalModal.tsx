@@ -85,7 +85,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 15 }}
             transition={{ type: "spring", damping: 25, stiffness: 250 }}
-            className="relative w-full max-w-2xl bg-white dark:bg-card border-4 border-primary-gold rounded-3xl p-5 sm:p-7 shadow-2xl z-50 flex flex-col pointer-events-auto overflow-hidden text-deep-violet dark:text-cream-soft"
+            className="relative w-full max-w-2xl bg-white dark:bg-card border-4 border-primary-gold rounded-3xl p-5 sm:p-7 shadow-2xl z-50 flex flex-col pointer-events-auto overflow-hidden text-deep-violet dark:text-soft-cream"
           >
             {/* Ambient gold glow in top right */}
             <div className="absolute top-0 right-0 w-36 h-36 bg-primary-gold/10 rounded-full blur-2xl pointer-events-none" />
@@ -98,14 +98,14 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                   <h3 className="text-xl sm:text-2xl font-black font-fredoka leading-none text-primary-gold">
                     Legal & Aura Settings
                   </h3>
-                  <p className="text-[10px] sm:text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
+                  <p className="text-[10px] sm:text-xs font-semibold text-deep-violet/50 dark:text-soft-cream/50 mt-1">
                     Play responsibly, protect your vibe state.
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-cream-soft/5 text-deep-violet/40 dark:text-cream-soft/40 hover:text-deep-violet dark:hover:text-cream-soft transition-colors cursor-pointer"
+                className="p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-soft-cream/5 text-deep-violet/40 dark:text-soft-cream/40 hover:text-deep-violet dark:hover:text-soft-cream transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
@@ -119,7 +119,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-1 sm:px-3 rounded-xl text-xs font-bold font-fredoka transition-all cursor-pointer ${
                   activeTab === "terms"
                     ? "bg-white dark:bg-card text-primary-gold shadow-md scale-102 border-2 border-primary-gold/20"
-                    : "text-deep-violet/60 dark:text-cream-soft/60 hover:text-deep-violet dark:hover:text-cream-soft hover:bg-white/40 dark:hover:bg-white/5"
+                    : "text-deep-violet/60 dark:text-soft-cream/60 hover:text-deep-violet dark:hover:text-soft-cream hover:bg-white/40 dark:hover:bg-white/5"
                 }`}
               >
                 <FileText className="w-3.5 h-3.5 hidden xs:inline" />
@@ -130,7 +130,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-1 sm:px-3 rounded-xl text-xs font-bold font-fredoka transition-all cursor-pointer ${
                   activeTab === "privacy"
                     ? "bg-white dark:bg-card text-primary-gold shadow-md scale-102 border-2 border-primary-gold/20"
-                    : "text-deep-violet/60 dark:text-cream-soft/60 hover:text-deep-violet dark:hover:text-cream-soft hover:bg-white/40 dark:hover:bg-white/5"
+                    : "text-deep-violet/60 dark:text-soft-cream/60 hover:text-deep-violet dark:hover:text-soft-cream hover:bg-white/40 dark:hover:bg-white/5"
                 }`}
               >
                 <Shield className="w-3.5 h-3.5 hidden xs:inline" />
@@ -141,7 +141,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-1 sm:px-3 rounded-xl text-xs font-bold font-fredoka transition-all cursor-pointer ${
                   activeTab === "cookies"
                     ? "bg-white dark:bg-card text-primary-gold shadow-md scale-102 border-2 border-primary-gold/20"
-                    : "text-deep-violet/60 dark:text-cream-soft/60 hover:text-deep-violet dark:hover:text-cream-soft hover:bg-white/40 dark:hover:bg-white/5"
+                    : "text-deep-violet/60 dark:text-soft-cream/60 hover:text-deep-violet dark:hover:text-soft-cream hover:bg-white/40 dark:hover:bg-white/5"
                 }`}
               >
                 <Cookie className="w-3.5 h-3.5 hidden xs:inline" />
@@ -150,7 +150,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
             </div>
 
             {/* Scrollable Document Pane */}
-            <div className="flex-1 overflow-y-auto max-h-[50vh] min-h-[30vh] pr-2.5 text-xs sm:text-sm font-semibold text-deep-violet/80 dark:text-cream-soft/80 leading-relaxed font-sans scroll-smooth">
+            <div className="flex-1 overflow-y-auto max-h-[50vh] min-h-[30vh] pr-2.5 text-xs sm:text-sm font-semibold text-deep-violet/80 dark:text-soft-cream/80 leading-relaxed font-sans scroll-smooth">
               <AnimatePresence mode="wait">
                 {activeTab === "terms" && (
                   <motion.div
@@ -168,7 +168,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       Please review these playful guidelines. By accessing Lucky Vibes, you align your karma and agree to ride these digital frequencies with joy.
                     </div>
 
-                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">🎡</span> 1. Game Mechanics & Spirit
                     </h4>
                     <p>
@@ -178,21 +178,21 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       Vibe Coins and points currently reside solely as digital tokens within your local browser storage or your synced account. In the future, we plan to convert these points into real-world gifts and physical rewards. No real currency, digital assets, or real-world stakes are wagered or generated here.
                     </p>
 
-                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">✨</span> 2. Local Storage & Account Sync
                     </h4>
                     <p>
                       Your stats, Vibe Coins balance, and high scores are saved locally using standard browser storage (`localStorage`). If you choose to sign in (optional), we synchronize these states with a secure cloud database to preserve your progress across devices. We do not maintain offsite backups of your personal milestones for guest users.
                     </p>
 
-                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">📢</span> 3. Ads & Monetization
                     </h4>
                     <p>
                       To keep the site running and free for everyone, Lucky Vibes will soon be introducing third-party advertisements (applying for monetization). By accessing the website, you agree to the display of advertisements.
                     </p>
 
-                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">⚖️</span> 4. Cosmic Disclaimers
                     </h4>
                     <p>
@@ -217,21 +217,21 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       We believe privacy is the ultimate luck enhancer. Here is how we safeguard your digital soul:
                     </div>
 
-                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">🛡️</span> 1. Optional Database Sync & Auth
                     </h4>
                     <p>
                       Lucky Vibes offers optional sign-in via Google Authentication to synchronize your progress, Vibe Coins, and leaderboard scores. If signed in, we store this information securely in a Cloud Firestore database. If you choose not to sign in, all data remains strictly local to your device's browser storage.
                     </p>
 
-                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">💾</span> 2. Local Storage Sandbox
                     </h4>
                     <p>
                       Your stats and lucky configurations are written locally to your browser's sandboxed storage. We do not sell or distribute your game history to target marketing lists.
                     </p>
 
-                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-cream-soft flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
+                    <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
                       <span className="text-base sm:text-lg">📢</span> 3. Third-Party Ads & Cookies
                     </h4>
                     <p>
@@ -249,7 +249,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                     transition={{ duration: 0.15 }}
                     className="space-y-5"
                   >
-                    <p className="text-xs sm:text-sm text-deep-violet/70 dark:text-cream-soft/70">
+                    <p className="text-xs sm:text-sm text-deep-violet/70 dark:text-soft-cream/70">
                       Customize how cookies and local storage state shape your lucky experiences. Adjust toggles to filter active vibe enhancements:
                     </p>
 
@@ -258,11 +258,11 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       {/* Essential Cookie row */}
                       <div className="flex items-start justify-between gap-4 p-3 bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-2xl">
                         <div className="flex-1">
-                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-cream-soft flex items-center gap-1.5">
+                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-soft-cream flex items-center gap-1.5">
                             Essential Preferences
                             <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary-gold/20 text-primary-gold border border-primary-gold/10 font-bold uppercase tracking-wider">Required</span>
                           </h5>
-                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-soft-cream/60 mt-1">
                             Saves basic elements like your light/dark mode preference, core game state variables, and saves cookie toggle states locally.
                           </p>
                         </div>
@@ -275,10 +275,10 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       {/* Performance Cookie row */}
                       <div className="flex items-start justify-between gap-4 p-3 bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-2xl hover:border-primary-gold/30 transition-colors">
                         <div className="flex-1">
-                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-cream-soft flex items-center gap-1.5">
+                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-soft-cream flex items-center gap-1.5">
                             Performance & Insights
                           </h5>
-                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-soft-cream/60 mt-1">
                             Keeps a tally of total plays and games chosen to help optimize client load speeds.
                           </p>
                         </div>
@@ -295,10 +295,10 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       {/* Aesthetic Cookie row */}
                       <div className="flex items-start justify-between gap-4 p-3 bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-2xl hover:border-primary-gold/30 transition-colors">
                         <div className="flex-1">
-                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-cream-soft flex items-center gap-1.5">
+                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-soft-cream flex items-center gap-1.5">
                             Aesthetic Customization
                           </h5>
-                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-soft-cream/60 mt-1">
                             Unlocks advanced interactive particle layouts and extra confetti sparkles when hitting jackpot states, creating premium visual feedbacks.
                           </p>
                         </div>
@@ -315,10 +315,10 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       {/* Advertising & Monetization Cookie row */}
                       <div className="flex items-start justify-between gap-4 p-3 bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-2xl hover:border-primary-gold/30 transition-colors">
                         <div className="flex-1">
-                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-cream-soft flex items-center gap-1.5">
+                          <h5 className="font-extrabold font-fredoka text-sm text-deep-violet dark:text-soft-cream flex items-center gap-1.5">
                             Advertising & Personalization
                           </h5>
-                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+                          <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-soft-cream/60 mt-1">
                             Enables our advertising partners to serve relevant, personalized advertisements based on your interests and analyze ad campaign performance.
                           </p>
                         </div>

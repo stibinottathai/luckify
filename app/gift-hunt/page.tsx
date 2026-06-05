@@ -27,7 +27,7 @@ export default function GiftHuntPage() {
       <div className="w-full max-w-5xl flex justify-start">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-deep-violet/50 dark:text-cream-soft/50 hover:text-primary-gold dark:hover:text-primary-gold transition-colors font-fredoka py-2 px-4 rounded-full bg-deep-violet/5 dark:bg-white/5 hover:bg-deep-violet/10 dark:hover:bg-white/10"
+          className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-deep-violet/50 dark:text-soft-cream/50 hover:text-primary-gold dark:hover:text-primary-gold transition-colors font-fredoka py-2 px-4 rounded-full bg-deep-violet/5 dark:bg-white/5 hover:bg-deep-violet/10 dark:hover:bg-white/10"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Garden

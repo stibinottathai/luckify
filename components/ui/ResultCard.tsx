@@ -93,12 +93,12 @@ export default function ResultCard({
             } rounded-3xl p-6 shadow-2xl pointer-events-auto text-center flex flex-col items-center select-none overflow-visible`}
           >
             {/* Gesture handle for swiping down */}
-            <div className="w-12 h-1.5 bg-deep-violet/10 dark:bg-cream-soft/10 rounded-full mb-3 cursor-grab active:cursor-grabbing" />
+            <div className="w-12 h-1.5 bg-deep-violet/10 dark:bg-soft-cream/10 rounded-full mb-3 cursor-grab active:cursor-grabbing" />
 
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-cream-soft/5 text-deep-violet/40 dark:text-cream-soft/40 hover:text-deep-violet dark:hover:text-cream-soft transition-colors cursor-pointer z-20"
+              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-deep-violet/5 dark:hover:bg-soft-cream/5 text-deep-violet/40 dark:text-soft-cream/40 hover:text-deep-violet dark:hover:text-soft-cream transition-colors cursor-pointer z-20"
             >
               <X className="w-5 h-5" />
             </button>
@@ -127,7 +127,7 @@ export default function ResultCard({
                   </motion.svg>
                 </div>
 
-                <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.25em] text-deep-violet/40 dark:text-cream-soft/40 mb-1">
+                <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.25em] text-deep-violet/40 dark:text-soft-cream/40 mb-1">
                   YOU ROLLED
                 </span>
                 
@@ -152,7 +152,7 @@ export default function ResultCard({
             ) : (
               <>
                 {/* Game Badge */}
-                <span className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-cream-soft/40 mb-2">
+                <span className="text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 dark:text-soft-cream/40 mb-2">
                   {gameName}
                 </span>
 
@@ -171,12 +171,12 @@ export default function ResultCard({
                 </motion.div>
 
                 {/* Title */}
-                <h3 className="text-2xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft mb-2 leading-tight">
+                <h3 className="text-2xl font-extrabold font-fredoka text-deep-violet dark:text-soft-cream mb-2 leading-tight">
                   {title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm font-semibold text-deep-violet/70 dark:text-cream-soft/70 mb-5 leading-relaxed max-w-sm">
+                <p className="text-sm font-semibold text-deep-violet/70 dark:text-soft-cream/70 mb-5 leading-relaxed max-w-sm">
                   {description}
                 </p>
 
@@ -193,7 +193,7 @@ export default function ResultCard({
               {onRestart && (
                 <button
                   onClick={onRestart}
-                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-deep-violet/5 hover:bg-deep-violet/10 dark:bg-white/5 dark:hover:bg-white/10 text-deep-violet dark:text-cream-soft border border-deep-violet/10 dark:border-white/10 transition-all active:scale-95 cursor-pointer"
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-deep-violet/5 hover:bg-deep-violet/10 dark:bg-white/5 dark:hover:bg-white/10 text-deep-violet dark:text-soft-cream border border-deep-violet/10 dark:border-white/10 transition-all active:scale-95 cursor-pointer"
                 >
                   <RotateCcw className="w-4 h-4" />
                   Try Again

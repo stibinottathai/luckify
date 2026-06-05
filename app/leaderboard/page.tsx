@@ -37,10 +37,10 @@ export default function LeaderboardPage() {
     <div className="flex-1 flex flex-col items-center">
       {/* Page title */}
       <div className="w-full max-w-2xl mb-6 flex flex-col items-start gap-1 select-none">
-        <h1 className="text-2xl sm:text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+        <h1 className="text-2xl sm:text-3xl font-extrabold font-fredoka text-deep-violet dark:text-soft-cream leading-none">
           Leaderboard 🏆
         </h1>
-        <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
+        <p className="text-xs font-semibold text-deep-violet/50 dark:text-soft-cream/50 mt-1">
           Top 100 players ranked by Lucky Points — updated live.
         </p>
       </div>

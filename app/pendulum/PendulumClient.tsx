@@ -85,16 +85,16 @@ export default function PendulumClient() {
       <div className="w-full mb-6 flex flex-col items-start gap-2.5 select-none px-4">
         <Link
           href="/"
-          className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-cream-soft/40 dark:hover:text-cream-soft transition-colors cursor-pointer group"
+          className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-soft-cream/40 dark:hover:text-soft-cream transition-colors cursor-pointer group"
         >
           <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
           Back to Lobby
         </Link>
         <div>
-          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft leading-none">
+          <h1 className="text-3xl font-extrabold font-fredoka text-deep-violet dark:text-soft-cream leading-none">
             Pendulum Divination 🔮
           </h1>
-          <p className="text-xs font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1.5">
+          <p className="text-xs font-semibold text-deep-violet/50 dark:text-soft-cream/50 mt-1.5">
             Type your yes/no query, focus your intention, release the pendulum, and let gravity unlock the cosmos!
           </p>
         </div>
@@ -117,7 +117,7 @@ export default function PendulumClient() {
                 <Compass className="w-3.5 h-3.5 animate-spin-slow" />
                 Astral Core Alignment
               </span>
-              <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-white/5 text-cream-soft/40 tracking-widest uppercase font-mono">
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-white/5 text-soft-cream/40 tracking-widest uppercase font-mono">
                 {phase.toUpperCase()}
               </span>
             </div>
@@ -165,7 +165,7 @@ export default function PendulumClient() {
                   onChange={(e) => setQuestion(e.target.value)}
                   disabled={phase !== "idle"}
                   placeholder="Will my next venture bring prosperity?..."
-                  className="w-full bg-slate-50 dark:bg-white/5 border-2 border-slate-200 dark:border-white/10 focus:border-primary-gold dark:focus:border-primary-gold focus:ring-4 focus:ring-primary-gold/10 rounded-2xl py-4 pl-4 pr-10 text-sm font-semibold placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all disabled:opacity-60 disabled:cursor-not-allowed text-slate-900 dark:text-cream-soft"
+                  className="w-full bg-slate-50 dark:bg-white/5 border-2 border-slate-200 dark:border-white/10 focus:border-primary-gold dark:focus:border-primary-gold focus:ring-4 focus:ring-primary-gold/10 rounded-2xl py-4 pl-4 pr-10 text-sm font-semibold placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all disabled:opacity-60 disabled:cursor-not-allowed text-slate-900 dark:text-soft-cream"
                   maxLength={100}
                 />
                 <HelpCircle className="w-5 h-5 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600" />
@@ -269,7 +269,7 @@ export default function PendulumClient() {
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="py-3.5 px-4 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-cream-soft border border-slate-200 dark:border-white/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 uppercase text-[11px] tracking-wider"
+                    className="py-3.5 px-4 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-soft-cream border border-slate-200 dark:border-white/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 uppercase text-[11px] tracking-wider"
                   >
                     Ask Another 🌀
                   </button>

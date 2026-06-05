@@ -30,7 +30,7 @@ export default function AeoFaqSection({
     <section className="w-full max-w-4xl mt-16 mb-8 select-none z-10">
       <div className="flex items-center gap-2 mb-6 justify-center md:justify-start">
         <HelpCircle className="w-5.5 h-5.5 text-primary-gold" />
-        <h2 className="text-xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft uppercase tracking-wider">
+        <h2 className="text-xl font-extrabold font-fredoka text-deep-violet dark:text-soft-cream uppercase tracking-wider">
           {title}
         </h2>
       </div>
@@ -47,7 +47,7 @@ export default function AeoFaqSection({
               <button
                 type="button"
                 onClick={() => toggleIndex(index)}
-                className="w-full py-4.5 px-6 flex items-center justify-between gap-4 text-left font-fredoka font-black text-sm sm:text-base text-deep-violet dark:text-cream-soft cursor-pointer hover:bg-deep-violet/[0.02] dark:hover:bg-white/[0.01] transition-colors"
+                className="w-full py-4.5 px-6 flex items-center justify-between gap-4 text-left font-fredoka font-black text-sm sm:text-base text-deep-violet dark:text-soft-cream cursor-pointer hover:bg-deep-violet/[0.02] dark:hover:bg-white/[0.01] transition-colors"
               >
                 <span>{item.question}</span>
                 <motion.span
@@ -66,7 +66,7 @@ export default function AeoFaqSection({
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="border-t border-deep-violet/5 dark:border-white/5 py-4 px-6 text-xs sm:text-sm font-semibold text-deep-violet/70 dark:text-cream-soft/75 leading-relaxed bg-deep-violet/[0.01] dark:bg-black/10">
+                <div className="border-t border-deep-violet/5 dark:border-white/5 py-4 px-6 text-xs sm:text-sm font-semibold text-deep-violet/70 dark:text-soft-cream/75 leading-relaxed bg-deep-violet/[0.01] dark:bg-black/10">
                   {item.answer}
                 </div>
               </motion.div>

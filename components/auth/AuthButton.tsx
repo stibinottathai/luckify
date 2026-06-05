@@ -59,7 +59,7 @@ export default function AuthButton() {
         {/* User Profile Avatar Trigger */}
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-2 p-1 rounded-full border-2 border-primary-gold/50 hover:border-primary-gold bg-cream-soft dark:bg-deep-violet/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none"
+          className="flex items-center gap-2 p-1 rounded-full border-2 border-primary-gold/50 hover:border-primary-gold bg-soft-cream dark:bg-deep-violet/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none"
         >
           {user.photoURL ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -103,10 +103,10 @@ export default function AuthButton() {
                     </div>
                   )}
                   <div className="overflow-hidden">
-                    <h4 className="font-fredoka text-sm font-bold text-deep-violet dark:text-cream-soft truncate">
+                    <h4 className="font-fredoka text-sm font-bold text-deep-violet dark:text-soft-cream truncate">
                       {user.displayName}
                     </h4>
-                    <p className="text-xs text-deep-violet/60 dark:text-cream-soft/60 truncate">
+                    <p className="text-xs text-deep-violet/60 dark:text-soft-cream/60 truncate">
                       {user.email}
                     </p>
                   </div>
@@ -116,7 +116,7 @@ export default function AuthButton() {
               {/* Personalized Luck Stats */}
               <div className="px-4 py-3 bg-deep-violet/5 dark:bg-white/10 border-b border-deep-violet/5 dark:border-white/10 grid grid-cols-3 gap-2 text-center select-none">
                 <div className="p-2 rounded-xl bg-white dark:bg-[#21164a] border border-deep-violet/8 dark:border-white/10">
-                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
+                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-soft-cream/40 block">
                     Points
                   </span>
                   <span className="font-fredoka text-lg font-extrabold text-primary-gold">
@@ -124,18 +124,18 @@ export default function AuthButton() {
                   </span>
                 </div>
                 <div className="p-2 rounded-xl bg-white dark:bg-[#21164a] border border-deep-violet/8 dark:border-white/10">
-                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
+                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-soft-cream/40 block">
                     Vibe Score
                   </span>
-                  <span className="font-fredoka text-lg font-extrabold text-deep-violet dark:text-cream-soft">
+                  <span className="font-fredoka text-lg font-extrabold text-deep-violet dark:text-soft-cream">
                     {luckyScore}%
                   </span>
                 </div>
                 <div className="p-2 rounded-xl bg-white dark:bg-[#21164a] border border-deep-violet/8 dark:border-white/10">
-                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-cream-soft/40 block">
+                  <span className="text-[10px] uppercase tracking-wider font-extrabold text-deep-violet/40 dark:text-soft-cream/40 block">
                     Total Plays
                   </span>
-                  <span className="font-fredoka text-lg font-extrabold text-deep-violet dark:text-cream-soft">
+                  <span className="font-fredoka text-lg font-extrabold text-deep-violet dark:text-soft-cream">
                     {totalPlays}
                   </span>
                 </div>
@@ -148,7 +148,7 @@ export default function AuthButton() {
                     setDropdownOpen(false);
                     handleSignOut();
                   }}
-                  className="w-full flex items-center gap-2 p-2.5 rounded-xl hover:bg-rose-500/10 hover:text-rose-500 text-deep-violet/70 dark:text-cream-soft/70 text-xs font-bold transition-all duration-200 cursor-pointer text-left"
+                  className="w-full flex items-center gap-2 p-2.5 rounded-xl hover:bg-rose-500/10 hover:text-rose-500 text-deep-violet/70 dark:text-soft-cream/70 text-xs font-bold transition-all duration-200 cursor-pointer text-left"
                 >
                   <LogOut className="w-4 h-4" />
                   Sign Out

@@ -27,10 +27,10 @@ function PointsHeaderDisplay() {
         <Coins className="w-4 h-4" />
       </span>
       <span className="min-w-0 text-left leading-none">
-        <span className="block font-fredoka text-sm sm:text-base font-black text-deep-violet dark:text-cream-soft tabular-nums">
+        <span className="block font-fredoka text-sm sm:text-base font-black text-deep-violet dark:text-soft-cream tabular-nums">
           {coinBalance.toLocaleString()}
         </span>
-        <span className="hidden sm:block text-[9px] uppercase tracking-wider font-extrabold text-deep-violet/45 dark:text-cream-soft/45">
+        <span className="hidden sm:block text-[9px] uppercase tracking-wider font-extrabold text-deep-violet/45 dark:text-soft-cream/45">
           Points
         </span>
       </span>
@@ -88,8 +88,8 @@ export default function Shell({ children }: ShellProps) {
   if (!mounted) {
     // Elegant clean skeleton before hydration
     return (
-      <div className="min-h-screen flex flex-col bg-cream-soft text-deep-violet">
-        <header className="sticky top-0 z-40 bg-cream-soft/80 backdrop-blur-md border-b border-deep-violet/10 h-16 flex items-center justify-between px-6" />
+      <div className="min-h-screen flex flex-col bg-soft-cream text-deep-violet">
+        <header className="sticky top-0 z-40 bg-soft-cream/80 backdrop-blur-md border-b border-deep-violet/10 h-16 flex items-center justify-between px-6" />
         <main className="flex-1 flex items-center justify-center">
           <div className="w-10 h-10 border-4 border-primary-gold border-t-transparent rounded-full animate-spin" />
         </main>
@@ -112,7 +112,7 @@ export default function Shell({ children }: ShellProps) {
             >
               ✨
             </motion.span>
-            <span className="font-fredoka text-xl sm:text-2xl font-extrabold tracking-tight text-deep-violet dark:text-cream-soft group-hover:text-primary-gold transition-colors duration-200 truncate">
+            <span className="font-fredoka text-xl sm:text-2xl font-extrabold tracking-tight text-deep-violet dark:text-soft-cream group-hover:text-primary-gold transition-colors duration-200 truncate">
               Lucky Vibes
             </span>
           </Link>
@@ -124,7 +124,7 @@ export default function Shell({ children }: ShellProps) {
             className={`ml-3 sm:ml-5 h-9 px-2 sm:px-3 rounded-full border flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider shadow-sm transition-all group flex-shrink-0 ${
               pathname === "/leaderboard"
                 ? "bg-primary-gold border-primary-gold text-deep-violet"
-                : "border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-cream-soft/75"
+                : "border-deep-violet/10 dark:border-white/10 bg-white/70 dark:bg-white/10 hover:bg-primary-gold hover:text-deep-violet text-deep-violet/70 dark:text-soft-cream/75"
             }`}
           >
             <Trophy className="w-3.5 h-3.5" />
@@ -162,27 +162,27 @@ export default function Shell({ children }: ShellProps) {
       {/* Footer */}
       <footer className="w-full bg-deep-violet/5 dark:bg-black/20 border-t border-deep-violet/10 dark:border-white/10 py-6 mt-12 select-none">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs font-bold text-deep-violet/50 dark:text-cream-soft/50 text-center md:text-left">
+          <p className="text-xs font-bold text-deep-violet/50 dark:text-soft-cream/50 text-center md:text-left">
             © {new Date().getFullYear()} Lucky Vibes. Live beautifully, roll wisely. 🍀
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <button
               onClick={() => openLegal("terms")}
-              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-cream-soft/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
+              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-soft-cream/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
             >
               Terms
             </button>
             <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
             <button
               onClick={() => openLegal("privacy")}
-              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-cream-soft/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
+              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-soft-cream/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
             >
               Privacy Policy
             </button>
             <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
             <button
               onClick={() => openLegal("cookies")}
-              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-cream-soft/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
+              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-soft-cream/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
             >
               Cookie Settings
             </button>

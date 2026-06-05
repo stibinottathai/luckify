@@ -116,7 +116,7 @@ function PodiumCard({
 
       {/* Name */}
       <p
-        className="font-fredoka font-black text-deep-violet dark:text-cream-soft text-center max-w-[90px] sm:max-w-[110px] truncate"
+        className="font-fredoka font-black text-deep-violet dark:text-soft-cream text-center max-w-[90px] sm:max-w-[110px] truncate"
         style={{ fontSize: rank === 1 ? 15 : 13 }}
       >
         {entry.displayName}
@@ -146,7 +146,7 @@ function PodiumCard({
       <div
         className={`w-full mt-2 rounded-t-xl bg-gradient-to-b ${cfg.bg} border border-white/10 dark:border-white/5 ${cfg.height} flex items-end justify-center pb-2`}
       >
-        <span className="font-fredoka text-xs font-black text-deep-violet/40 dark:text-cream-soft/30">
+        <span className="font-fredoka text-xs font-black text-deep-violet/40 dark:text-soft-cream/30">
           #{rank}
         </span>
       </div>
@@ -207,7 +207,7 @@ function LeaderRow({
       {/* Name + badge */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
-          <p className="font-fredoka font-black text-deep-violet dark:text-cream-soft text-sm truncate">
+          <p className="font-fredoka font-black text-deep-violet dark:text-soft-cream text-sm truncate">
             {entry.displayName}
             {isCurrentUser && (
               <span className="ml-1 text-[10px] font-extrabold text-accent-teal">
@@ -227,7 +227,7 @@ function LeaderRow({
             {badge.emoji} {badge.label}
           </span>
           {entry.winStreak > 0 && (
-            <span className="text-[10px] font-bold text-deep-violet/50 dark:text-cream-soft/40">
+            <span className="text-[10px] font-bold text-deep-violet/50 dark:text-soft-cream/40">
               🔥 {entry.winStreak}
             </span>
           )}
@@ -237,15 +237,15 @@ function LeaderRow({
       {/* Stats */}
       <div className="flex items-center gap-3 sm:gap-5 flex-shrink-0">
         <div className="hidden sm:flex flex-col items-center">
-          <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/35 dark:text-cream-soft/30">
+          <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/35 dark:text-soft-cream/30">
             Plays
           </span>
-          <span className="font-fredoka font-extrabold text-sm text-deep-violet dark:text-cream-soft tabular-nums">
+          <span className="font-fredoka font-extrabold text-sm text-deep-violet dark:text-soft-cream tabular-nums">
             {entry.totalPlays}
           </span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/35 dark:text-cream-soft/30">
+          <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/35 dark:text-soft-cream/30">
             Points
           </span>
           <span className="font-fredoka font-extrabold text-sm text-primary-gold tabular-nums">
@@ -352,10 +352,10 @@ export default function LeaderboardClient() {
           className="py-20 text-center flex flex-col items-center gap-4"
         >
           <span className="text-6xl">🔒</span>
-          <h2 className="font-fredoka text-2xl font-black text-deep-violet dark:text-cream-soft">
+          <h2 className="font-fredoka text-2xl font-black text-deep-violet dark:text-soft-cream">
             Sign in to view the Leaderboard
           </h2>
-          <p className="text-sm text-deep-violet/50 dark:text-cream-soft/50 max-w-xs">
+          <p className="text-sm text-deep-violet/50 dark:text-soft-cream/50 max-w-xs">
             The leaderboard is available to signed-in players only. Sign in with Google to see where you rank!
           </p>
         </motion.div>
@@ -369,10 +369,10 @@ export default function LeaderboardClient() {
           className="py-16 text-center flex flex-col items-center gap-3"
         >
           <span className="text-5xl">⚠️</span>
-          <p className="font-fredoka text-lg font-black text-deep-violet/60 dark:text-cream-soft/50">
+          <p className="font-fredoka text-lg font-black text-deep-violet/60 dark:text-soft-cream/50">
             Leaderboard unavailable
           </p>
-          <p className="text-xs text-deep-violet/40 dark:text-cream-soft/35 max-w-xs">
+          <p className="text-xs text-deep-violet/40 dark:text-soft-cream/35 max-w-xs">
             Firestore rules need updating. Make sure you&apos;ve published the latest security rules in your Firebase console.
           </p>
         </motion.div>
@@ -395,10 +395,10 @@ export default function LeaderboardClient() {
             Live Leaderboard
           </span>
         </div>
-        <h2 className="font-fredoka text-3xl sm:text-4xl font-black text-deep-violet dark:text-cream-soft">
+        <h2 className="font-fredoka text-3xl sm:text-4xl font-black text-deep-violet dark:text-soft-cream">
           Top Lucky Players
         </h2>
-        <p className="text-sm font-semibold text-deep-violet/50 dark:text-cream-soft/50 mt-1">
+        <p className="text-sm font-semibold text-deep-violet/50 dark:text-soft-cream/50 mt-1">
           Ranked by total Lucky Points • Updates in real-time
         </p>
 
@@ -486,19 +486,19 @@ export default function LeaderboardClient() {
         className="mb-4 relative"
       >
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-          <span className="text-deep-violet/35 dark:text-cream-soft/35 text-sm">🔍</span>
+          <span className="text-deep-violet/35 dark:text-soft-cream/35 text-sm">🔍</span>
         </div>
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search players..."
-          className="w-full pl-10 pr-4 py-3 rounded-2xl border border-deep-violet/15 dark:border-white/10 bg-white/75 dark:bg-white/[0.04] text-deep-violet dark:text-cream-soft placeholder-deep-violet/35 dark:placeholder-cream-soft/30 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-primary-gold/40 focus:border-primary-gold/50 transition-all"
+          className="w-full pl-10 pr-4 py-3 rounded-2xl border border-deep-violet/15 dark:border-white/10 bg-white/75 dark:bg-white/[0.04] text-deep-violet dark:text-soft-cream placeholder-deep-violet/35 dark:placeholder-soft-cream/30 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-primary-gold/40 focus:border-primary-gold/50 transition-all"
         />
         {search && (
           <button
             onClick={() => setSearch("")}
-            className="absolute inset-y-0 right-4 flex items-center text-deep-violet/40 hover:text-deep-violet dark:text-cream-soft/40 dark:hover:text-cream-soft transition-colors cursor-pointer"
+            className="absolute inset-y-0 right-4 flex items-center text-deep-violet/40 hover:text-deep-violet dark:text-soft-cream/40 dark:hover:text-soft-cream transition-colors cursor-pointer"
           >
             ✕
           </button>
@@ -508,7 +508,7 @@ export default function LeaderboardClient() {
       {/* ── Results count ── */}
       {!loading && (
         <div className="mb-3 px-1">
-          <span className="text-xs font-bold text-deep-violet/40 dark:text-cream-soft/35">
+          <span className="text-xs font-bold text-deep-violet/40 dark:text-soft-cream/35">
             {search
               ? `${filtered.length} result${filtered.length !== 1 ? "s" : ""} for "${search}"`
               : `${entries.length} players ranked`}
@@ -520,23 +520,23 @@ export default function LeaderboardClient() {
       {!loading && filtered.length > 0 && (
         <div className="flex items-center gap-3 sm:gap-4 px-4 py-2 mb-1">
           <div className="w-8 text-center">
-            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-cream-soft/25">
+            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-soft-cream/25">
               #
             </span>
           </div>
           <div className="w-9" />
           <div className="flex-1">
-            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-cream-soft/25">
+            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-soft-cream/25">
               Player
             </span>
           </div>
           <div className="hidden sm:block">
-            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-cream-soft/25">
+            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-soft-cream/25">
               Plays
             </span>
           </div>
           <div>
-            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-cream-soft/25">
+            <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-soft-cream/25">
               Points
             </span>
           </div>
@@ -554,10 +554,10 @@ export default function LeaderboardClient() {
             className="py-16 text-center"
           >
             <p className="text-4xl mb-3">🌀</p>
-            <p className="font-fredoka text-lg font-black text-deep-violet/50 dark:text-cream-soft/40">
+            <p className="font-fredoka text-lg font-black text-deep-violet/50 dark:text-soft-cream/40">
               {search ? "No players found" : "No players yet"}
             </p>
-            <p className="text-sm text-deep-violet/35 dark:text-cream-soft/30 mt-1">
+            <p className="text-sm text-deep-violet/35 dark:text-soft-cream/30 mt-1">
               {search ? "Try a different name" : "Be the first to play!"}
             </p>
           </motion.div>
@@ -604,7 +604,7 @@ export default function LeaderboardClient() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="text-center text-xs font-bold text-deep-violet/30 dark:text-cream-soft/25 mt-6 pb-2"
+          className="text-center text-xs font-bold text-deep-violet/30 dark:text-soft-cream/25 mt-6 pb-2"
         >
           Showing top {entries.length} players
         </motion.p>

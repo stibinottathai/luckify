@@ -81,6 +81,15 @@ const GAMES: GameCard[] = [
     color: "from-indigo-600 to-violet-800",
   },
   {
+    id: "time-capsule",
+    emoji: "🕰️",
+    title: "Time Capsule of Hope",
+    description: "Bury messages to your future self and lock Vibe Coins to earn high-yield cosmic interest!",
+    href: "/time-capsule",
+    badge: "Lock & Yield",
+    color: "from-amber-500 to-yellow-600",
+  },
+  {
     id: "wishing-tree",
     emoji: "🎋",
     title: "Celestial Wishing Tree",
@@ -199,7 +208,7 @@ export default function HomeClient() {
           <h1 className="text-2xl sm:text-3xl font-black font-fredoka leading-none tracking-tight text-primary-gold drop-shadow-md">
             Lucky Vibes ✨ Virtual Garden of Luck & Fortunes
           </h1>
-          <p className="text-xs sm:text-sm font-semibold text-cream-soft/80 max-w-xl">
+          <p className="text-xs sm:text-sm font-semibold text-soft-cream/80 max-w-xl">
             Step into the ultimate digital playground of classic fortune-telling and random decision-makers! Spin custom prize wheels, flip cosmic golden coins, and test your vibes score today.
           </p>
 
@@ -210,7 +219,7 @@ export default function HomeClient() {
               <span className="shimmer-text font-fredoka text-sm">Future Giveaways & Gifts!</span>
               <span className="bg-primary-gold/25 border border-primary-gold/30 text-primary-gold text-[9px] px-1.5 py-0.5 rounded font-fredoka animate-pulse">Coming Soon</span>
             </div>
-            <p className="text-[11px] sm:text-xs font-bold text-cream-soft/90 leading-relaxed text-center md:text-left">
+            <p className="text-[11px] sm:text-xs font-bold text-soft-cream/90 leading-relaxed text-center md:text-left">
               Stay tuned! We are planning daily, weekly, and monthly gifts for the top coin collectors. Accumulate as many Vibe Coins as you can to climb the ranks and win real rewards!
             </p>
           </div>
@@ -264,10 +273,10 @@ export default function HomeClient() {
               🔥
             </div>
             <div>
-              <h3 className="text-lg font-black text-deep-violet dark:text-cream-soft leading-none">
+              <h3 className="text-lg font-black text-deep-violet dark:text-soft-cream leading-none">
                 Daily Visit Streak
               </h3>
-              <p className="text-xs font-bold text-deep-violet/60 dark:text-cream-soft/60 mt-1">
+              <p className="text-xs font-bold text-deep-violet/60 dark:text-soft-cream/60 mt-1">
                 Visit every day to keep your lucky streak alive! Max record: <span className="text-primary-gold font-bold">{currentProfile?.visitStreakRecord || 0} days</span>
               </p>
             </div>
@@ -289,7 +298,7 @@ export default function HomeClient() {
                         ? "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white border-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.3)]"
                         : isCurrent
                         ? "bg-primary-gold/15 border-primary-gold text-primary-gold animate-pulse"
-                        : "bg-deep-violet/5 dark:bg-white/[0.02] border-deep-violet/10 dark:border-white/10 text-deep-violet/30 dark:text-cream-soft/20"
+                        : "bg-deep-violet/5 dark:bg-white/[0.02] border-deep-violet/10 dark:border-white/10 text-deep-violet/30 dark:text-soft-cream/20"
                     }`}
                   >
                     <span className="text-[7px] opacity-40 uppercase">D{dayNum}</span>
@@ -307,7 +316,7 @@ export default function HomeClient() {
 
       {/* Interactive Lobby Games Grid */}
       <section className="w-full max-w-4xl z-10 select-none">
-        <h2 className="text-xl font-extrabold font-fredoka text-deep-violet dark:text-cream-soft mb-6 uppercase tracking-wider text-center md:text-left">
+        <h2 className="text-xl font-extrabold font-fredoka text-deep-violet dark:text-soft-cream mb-6 uppercase tracking-wider text-center md:text-left">
           Select Your Game 🔮
         </h2>
 
@@ -334,18 +343,18 @@ export default function HomeClient() {
                       {game.emoji}
                     </span>
                   </div>
-                  <span className="text-[10px] font-extrabold font-fredoka px-2.5 py-1 rounded-lg uppercase tracking-wider bg-deep-violet/5 dark:bg-white/5 text-deep-violet/70 dark:text-cream-soft/70 border border-deep-violet/5 dark:border-white/5">
+                  <span className="text-[10px] font-extrabold font-fredoka px-2.5 py-1 rounded-lg uppercase tracking-wider bg-deep-violet/5 dark:bg-white/5 text-deep-violet/70 dark:text-soft-cream/70 border border-deep-violet/5 dark:border-white/5">
                     {game.badge}
                   </span>
                 </div>
 
                 {/* Game Title */}
-                <h3 className="text-xl font-black font-fredoka text-deep-violet dark:text-cream-soft group-hover:text-primary-gold transition-colors mb-2.5 relative z-10">
+                <h3 className="text-xl font-black font-fredoka text-deep-violet dark:text-soft-cream group-hover:text-primary-gold transition-colors mb-2.5 relative z-10">
                   {game.title}
                 </h3>
 
                 {/* Game Description */}
-                <p className="text-xs font-bold text-deep-violet/60 dark:text-cream-soft/60 leading-relaxed flex-1 mb-6 relative z-10">
+                <p className="text-xs font-bold text-deep-violet/60 dark:text-soft-cream/60 leading-relaxed flex-1 mb-6 relative z-10">
                   {game.description}
                 </p>
 
@@ -369,14 +378,14 @@ export default function HomeClient() {
       <AeoFaqSection items={LOBBY_FAQS} />
 
       {/* Structured Authority & Sourcing Block (AEO / E-E-A-T) */}
-      <div className="w-full max-w-4xl border-t border-deep-violet/10 dark:border-white/10 pt-6 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-xs font-semibold text-deep-violet/40 dark:text-cream-soft/40 select-none">
+      <div className="w-full max-w-4xl border-t border-deep-violet/10 dark:border-white/10 pt-6 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] sm:text-xs font-semibold text-deep-violet/40 dark:text-soft-cream/40 select-none">
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
           <span>
-            Last Updated: <span className="font-bold text-deep-violet/60 dark:text-cream-soft/60">June 1, 2026</span>
+            Last Updated: <span className="font-bold text-deep-violet/60 dark:text-soft-cream/60">June 1, 2026</span>
           </span>
           <span className="hidden sm:inline">•</span>
           <span>
-            Verified by: <span className="font-bold text-deep-violet/60 dark:text-cream-soft/60">Lucky Vibes Editorial Board</span>
+            Verified by: <span className="font-bold text-deep-violet/60 dark:text-soft-cream/60">Lucky Vibes Editorial Board</span>
           </span>
         </div>
         <div className="flex items-center justify-center gap-4">
@@ -431,11 +440,11 @@ export default function HomeClient() {
               <h3 className="text-5xl font-black text-white filter drop-shadow-[0_4px_15px_rgba(255,255,255,0.25)]">
                 +{streakClaimPopup.amount.toLocaleString()}
               </h3>
-              <span className="text-xs font-bold text-cream-soft/60 uppercase tracking-widest mt-1">
+              <span className="text-xs font-bold text-soft-cream/60 uppercase tracking-widest mt-1">
                 Vibe Coins Claimed
               </span>
 
-              <p className="text-sm font-bold text-cream-soft/85 mt-4 leading-relaxed px-2">
+              <p className="text-sm font-bold text-soft-cream/85 mt-4 leading-relaxed px-2">
                 {streakClaimPopup.day % 7 === 0
                   ? `Outstanding! You successfully completed a ${streakClaimPopup.day} day daily visit streak! Claim your mega reward!`
                   : `Day ${streakClaimPopup.day} visit claimed! Keep visiting everyday to secure the 5,000 coin jackpot on Day 7.`}

@@ -1,0 +1,130 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{uid} {
+
+      function isValidProfile(data) {
+        return data.coinBalance is int
+            && data.coinBalance >= 0
+            && data.luckyScore is int
+            && data.luckyScore >= 0
+            && data.luckyScore <= 100
+            && data.totalPlays is int
+            && data.totalPlays >= 0
+            && data.winStreak is int
+            && data.winStreak >= 0
+            && data.wheelDailySpinsUsed is int
+            && data.wheelDailySpinsUsed >= 0
+            && data.wheelDailySpinsUsed <= 20
+            && data.wheelPaidSpinsUsed is int
+            && data.wheelPaidSpinsUsed >= 0
+            && data.wheelPaidSpinsUsed <= 10
+            && data.wheelSpinDate is string
+            && data.wheelSpinDate.size() == 10
+            && data.history is list
+            && data.history.size() <= 20
+            
+            // ✅ Golden Dice profile statistics
+            && (!('totalDiceRolls' in data) || (data.totalDiceRolls is int && data.totalDiceRolls >= 0))
+            && (!('totalGoldenDiceEvents' in data) || (data.totalGoldenDiceEvents is int && data.totalGoldenDiceEvents >= 0))
+            && (!('goldenDiceRate' in data) || (data.goldenDiceRate is int || data.goldenDiceRate is float) && data.goldenDiceRate >= 0 && data.goldenDiceRate <= 1)
+            && (!('highestRewardWon' in data) || (data.highestRewardWon is string && data.highestRewardWon.size() <= 100))
+            && (!('highestRewardPoints' in data) || (data.highestRewardPoints is int && data.highestRewardPoints >= 0))
+            && (!('legendaryRewardsCount' in data) || (data.legendaryRewardsCount is int && data.legendaryRewardsCount >= 0))
+
+            // ✅ Dice Collection profile statistics
+            && (!('equippedDice' in data) || (data.equippedDice is string && data.equippedDice.size() <= 64))
+            && (!('diceFragments' in data) || (data.diceFragments is int && data.diceFragments >= 0))
+            && (!('collectionProgress' in data) || (data.collectionProgress is int && data.collectionProgress >= 1))
+            && (!('mythicDiceCount' in data) || (data.mythicDiceCount is int && data.mythicDiceCount >= 0));
+      }
+
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == uid && isValidProfile(request.resource.data);
+      
+      // Owners can update their whole profile.
+      // Non-owners (upvoters) can only update the luckyScore field, keeping all other fields unchanged.
+      allow update: if request.auth != null && (
+        (request.auth.uid == uid && isValidProfile(request.resource.data))
+        || (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['luckyScore'])
+          && request.resource.data.luckyScore is int
+          && request.resource.data.luckyScore >= 0
+          && request.resource.data.luckyScore <= 100
+        )
+      );
+      allow delete: if false;
+
+      match /goldenDiceEvents/{eventId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null && request.auth.uid == uid;
+        allow update, delete: if false;
+      }
+
+      // ─── Collectible Dice Collection subcollection ────────────────────────
+      match /diceCollection/{diceId} {
+        allow read: if request.auth != null;
+        allow create, update: if request.auth != null 
+                              && request.auth.uid == uid
+                              && request.resource.data.id is string
+                              && request.resource.data.name is string
+                              && request.resource.data.rarity is string
+                              && request.resource.data.unlockedAt is string;
+        allow delete: if false;
+      }
+    }
+
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.resource.data.userUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // ─── Wishing Tree Collection ──────────────────────────────────────────
+    match /wishes/{wishId} {
+      allow read: if true; // anyone can browse wishes (including guest users)
+      allow create: if request.auth != null 
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.wishText is string
+                    && request.resource.data.wishText.size() <= 120
+                    && request.resource.data.vibesCount == 0
+                    && request.resource.data.vibesUsers is list
+                    && request.resource.data.vibesUsers.size() == 0
+                    && request.resource.data.isAnonymous is bool;
+      
+      allow update: if request.auth != null 
+                    && (
+                      // Allow anyone to toggle their upvote (send positive vibes) without changing static content
+                      (
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['vibesUsers', 'vibesCount'])
+                        && (
+                          // 1. Upvoting: increment count, append voter's uid
+                          (request.resource.data.vibesCount == resource.data.vibesCount + 1 
+                           && request.resource.data.vibesUsers.size() == resource.data.vibesUsers.size() + 1
+                           && request.resource.data.vibesUsers.hasAll([request.auth.uid])
+                           && !resource.data.vibesUsers.hasAny([request.auth.uid]))
+                          ||
+                          // 2. Downvoting/Undoing: decrement count, remove voter's uid
+                          (request.resource.data.vibesCount == resource.data.vibesCount - 1 
+                           && request.resource.data.vibesUsers.size() == resource.data.vibesUsers.size() - 1
+                           && !request.resource.data.vibesUsers.hasAny([request.auth.uid])
+                           && resource.data.vibesUsers.hasAny([request.auth.uid]))
+                        )
+                      )
+                      || (resource.data.userId == request.auth.uid)
+                    );
+      
+      allow delete: if request.auth != null && (
+        resource.data.userId == request.auth.uid
+        || !('timestamp' in resource.data)
+        || !(resource.data.timestamp is timestamp)
+        || request.time > resource.data.timestamp + duration.value(24, 'h')
+      );
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

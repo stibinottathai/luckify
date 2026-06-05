@@ -57,6 +57,7 @@ export interface FirestoreUserProfile {
   visitStreakRecord?: number;
   zodiacSign?: string;
   lastAstroClaimDate?: string;
+  lastWishDate?: string;
 
   // Golden Dice System Fields
   totalDiceRolls?: number;
@@ -109,6 +110,7 @@ export interface LeaderboardEntry {
   visitStreakRecord?: number;
   zodiacSign?: string;
   lastAstroClaimDate?: string;
+  lastWishDate?: string;
 
   // Golden Dice System Fields
   totalDiceRolls?: number;

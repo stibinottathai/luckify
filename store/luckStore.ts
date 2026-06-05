@@ -38,6 +38,7 @@ interface LuckStore {
   claimDailyVisit: (todayStr: string, streak: number, record: number, reward: number) => void;
   setZodiacSign: (sign: string) => void;
   claimAstroBonus: (todayStr: string, reward: number) => void;
+  registerWishToday: () => void;
 }
 
 export interface UserLuckProfile {
@@ -124,6 +125,9 @@ export interface UserLuckProfile {
   // Astro Vibes Fields
   zodiacSign?: string;
   lastAstroClaimDate?: string;
+
+  // Social/Wishing tree limits
+  lastWishDate?: string;
 }
 
 const GUEST_USER_KEY = "guest";
@@ -214,6 +218,9 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   // Astro Vibes Defaults
   zodiacSign: "",
   lastAstroClaimDate: "",
+
+  // Social/Wishing tree limits defaults
+  lastWishDate: "",
 });
 
 export const createGuestProfile = (): UserLuckProfile => ({
@@ -550,10 +557,21 @@ export const useLuckStore = create<LuckStore>()(
           return syncActiveProfile(state, updated);
         });
       },
+
+      registerWishToday: () => {
+        set((state) => {
+          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
+          const updated = {
+            ...profile,
+            lastWishDate: new Date().toISOString().slice(0, 10),
+          };
+          return syncActiveProfile(state, updated);
+        });
+      },
     }),
     {
       name: "lucky-vibes-store",
-      version: 6,
+      version: 7,
       migrate: (persistedState) => {
         const state = persistedState as Partial<LuckStore> | undefined;
         if (!state) {

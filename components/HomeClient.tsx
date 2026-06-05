@@ -53,8 +53,6 @@ const GAMES: GameCard[] = [
     badge: "Canvas Spin",
     color: "from-amber-400 to-orange-500",
   },
-
-
   {
     id: "pendulum",
     emoji: "🔮",
@@ -81,6 +79,15 @@ const GAMES: GameCard[] = [
     href: "/astro-vibes",
     badge: "Daily Horoscope",
     color: "from-indigo-600 to-violet-800",
+  },
+  {
+    id: "wishing-tree",
+    emoji: "🎋",
+    title: "Celestial Wishing Tree",
+    description: "Hang your wishes on the glowing branches of our community garden. Send positive vibes to unlock blessings!",
+    href: "/wishing-tree",
+    badge: "Social Well",
+    color: "from-emerald-500 to-teal-700",
   },
 ];
 

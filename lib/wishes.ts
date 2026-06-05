@@ -166,7 +166,9 @@ export async function toggleVibeWish(
         const creatorData = creatorSnap.data();
         const currentScore = creatorData.luckyScore ?? 50;
         const newScore = Math.max(0, Math.min(100, currentScore + scoreChange));
-        transaction.update(creatorRef, { luckyScore: newScore });
+        if (newScore !== currentScore) {
+          transaction.update(creatorRef, { luckyScore: newScore });
+        }
       }
 
       return {

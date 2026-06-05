@@ -21,7 +21,9 @@ service cloud.firestore {
           'coinTotalPredictions', 'coinWinStreak', 'coinBestStreak', 'coinLargestWin',
           'coinTotalProfit', 'scratchAttemptsUsed', 'scratchDate', 'scratchPrizeWon',
           'giftHuntBoard', 'giftHuntTotalOpened', 'giftHuntHighestGift', 'giftHuntTimes1000',
-          'giftHuntTimes5000'
+          'giftHuntTimes5000', 'dailyShakesToday', 'extraShakesBalance', 'shakeSpinDate',
+          'collectibles', 'diceRollDate', 'diceRollsUsed', 'pendulumDailyQuestionsDate',
+          'pendulumDailyQuestionsUsed', 'giftHuntDate', 'giftHuntOpensUsed', 'localVersion'
         ];
         
         return data.keys().hasOnly(allowedKeys)
@@ -77,7 +79,12 @@ service cloud.firestore {
           && request.resource.data.luckyScore is int
           && request.resource.data.luckyScore >= 0
           && request.resource.data.luckyScore <= 100
-          && (request.resource.data.luckyScore - resource.data.luckyScore == 3 || request.resource.data.luckyScore - resource.data.luckyScore == -3)
+          && (
+            request.resource.data.luckyScore - resource.data.luckyScore == 3 
+            || request.resource.data.luckyScore - resource.data.luckyScore == -3
+            || (request.resource.data.luckyScore == 100 && request.resource.data.luckyScore - resource.data.luckyScore > 0 && request.resource.data.luckyScore - resource.data.luckyScore <= 3)
+            || (request.resource.data.luckyScore == 0 && request.resource.data.luckyScore - resource.data.luckyScore < 0 && request.resource.data.luckyScore - resource.data.luckyScore >= -3)
+          )
         )
       );
       allow delete: if false;

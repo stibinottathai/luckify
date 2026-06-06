@@ -11,7 +11,7 @@ service cloud.firestore {
           'displayName', 'photoURL', 'updatedAt',
           'xp', 'level', 'shakeStreak', 'shakeStreakLastClaimed', 'shakeStreakRecord',
           'weeklyCoins', 'weeklyCoinsLastUpdated', 'collectedItems', 'mysteryBoxesCount',
-          'badges', 'doubleRewardsUntil', 'streakShieldsCount', 'vipUntil',
+          'badges', 'doubleRewardsUntil', 'streakShieldsCount', 'vipUntil', 'coffeesDonated',
           'lastVisitDate', 'visitStreak', 'visitStreakRecord', 'zodiacSign',
           'lastAstroClaimDate', 'lastWishDate', 'lastTimeCapsuleDate',
           'totalDiceRolls', 'totalGoldenDiceEvents', 'goldenDiceRate',
@@ -64,7 +64,8 @@ service cloud.firestore {
             && (!('equippedDice' in data) || (data.equippedDice is string && data.equippedDice.size() <= 64))
             && (!('diceFragments' in data) || (data.diceFragments is int && data.diceFragments >= 0))
             && (!('collectionProgress' in data) || (data.collectionProgress is int && data.collectionProgress >= 1))
-            && (!('mythicDiceCount' in data) || (data.mythicDiceCount is int && data.mythicDiceCount >= 0));
+            && (!('mythicDiceCount' in data) || (data.mythicDiceCount is int && data.mythicDiceCount >= 0))
+            && (!('coffeesDonated' in data) || (data.coffeesDonated is int && data.coffeesDonated >= 0));
       }
 
       allow read: if request.auth != null;

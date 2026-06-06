@@ -13,7 +13,10 @@ export default function BuyMeCoffeeWidget() {
   const [showBlessing, setShowBlessing] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const addCoins = useLuckStore((s) => s.addCoins);
+  const donateCoffees = useLuckStore((s) => s.donateCoffees);
+  const activeUserKey = useLuckStore((s) => s.activeUserKey);
+  const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
+  const coffeesDonated = currentProfile?.coffeesDonated || 0;
 
   const username = process.env.NEXT_PUBLIC_BUY_ME_A_COFFEE_USERNAME || "luckify";
   const costPerCoffee = 5;
@@ -58,8 +61,8 @@ export default function BuyMeCoffeeWidget() {
   };
 
   const handleClaimReward = () => {
-    // Award coins
-    addCoins(5000);
+    // Record coffee donation (awards count * 5000 coins & sets/extends VIP by count * 30 days)
+    donateCoffees(coffees);
     
     // Play celebratory sound
     playLegendaryReward();
@@ -181,6 +184,12 @@ export default function BuyMeCoffeeWidget() {
                   <p className="text-xs sm:text-sm text-deep-violet/70 dark:text-soft-cream/70 mb-6 leading-relaxed max-w-sm">
                     Luckify is completely free and ad-free! Your support keeps our servers running and supports new gamified features. Get a <span className="text-primary-gold font-bold">cosmic reward</span> for your kindness!
                   </p>
+
+                  {coffeesDonated > 0 && (
+                    <div className="text-[10px] font-black text-primary-gold uppercase tracking-wider mb-4 border border-primary-gold/25 bg-primary-gold/5 px-3 py-1 rounded-xl animate-pulse">
+                      🌟 You have donated {coffeesDonated} {coffeesDonated === 1 ? "coffee" : "coffees"} so far!
+                    </div>
+                  )}
 
                   {/* Interactive Coffee Cup Visualizer Container */}
                   <div className="relative w-36 h-36 flex items-center justify-center mb-6">
@@ -330,7 +339,7 @@ export default function BuyMeCoffeeWidget() {
                         Includes Cosmic Blessing!
                       </h4>
                       <p className="text-[10px] font-bold text-deep-violet/60 dark:text-soft-cream/60 leading-normal mt-0.5">
-                        Get 5,000 Vibe Coins & a legendary confetti shower upon checking out.
+                        Get {(coffees * 5000).toLocaleString()} Vibe Coins & a legendary confetti shower upon checking out.
                       </p>
                     </div>
                   </div>
@@ -372,7 +381,7 @@ export default function BuyMeCoffeeWidget() {
                     </motion.div>
 
                     <h4 className="text-4xl font-black text-white filter drop-shadow-md">
-                      +5,000
+                      +{(coffees * 5000).toLocaleString()}
                     </h4>
                     <span className="text-[10px] font-bold text-soft-cream/60 uppercase tracking-widest mt-1">
                       Vibe Coins

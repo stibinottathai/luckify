@@ -390,6 +390,11 @@ export default function HomeClient() {
           <p className="text-xs sm:text-sm font-semibold text-soft-cream/80 max-w-xl leading-relaxed">
             Luckify is built with love by a small team and is 100% ad-free! If you love spinning the wheel, doing divinations, or checking your astro-vibes, consider buying us a coffee. Every support rewards you with a <span className="text-primary-gold font-bold">Cosmic Blessing (+5,000 Vibe Coins)</span> instantly!
           </p>
+          {currentProfile?.coffeesDonated && currentProfile.coffeesDonated > 0 ? (
+            <p className="text-xs font-black text-[#FFDD00] pt-1">
+              ✨ Thank you! You have contributed {currentProfile.coffeesDonated} {currentProfile.coffeesDonated === 1 ? "coffee" : "coffees"} to our garden so far.
+            </p>
+          ) : null}
         </div>
 
         <div className="z-10 flex-shrink-0">

@@ -109,12 +109,22 @@ export default function AstroVibesClient() {
   const claimAstroBonus = useLuckStore((s) => s.claimAstroBonus);
 
   const [hoveredSign, setHoveredSign] = useState<string | null>(null);
+  const [horoscopeData, setHoroscopeData] = useState<{
+    forecast: string;
+    luckyScore: number;
+    loveScore: number;
+    careerScore: number;
+    recommendedGame: string;
+    cosmicAdvice: string;
+    isFallback: boolean;
+  } | null>(null);
+  const [isFetchingHoroscope, setIsFetchingHoroscope] = useState(false);
 
   const todayStr = new Date().toISOString().slice(0, 10);
   const selectedSignId = currentProfile?.zodiacSign || "";
   const currentZodiac = ZODIAC_SIGNS.find((z) => z.id === selectedSignId);
 
-  // Deterministic ratings generation
+  // Deterministic ratings generation (local fallbacks)
   const getRating = (zodiacId: string, metric: string) => {
     const str = `${zodiacId}-${metric}-${todayStr}`;
     let hash = 0;
@@ -150,6 +160,62 @@ export default function AstroVibesClient() {
     const idx = Math.abs(hash % GAME_RECOMMENDATIONS.length);
     return GAME_RECOMMENDATIONS[idx];
   };
+
+  useEffect(() => {
+    if (!selectedSignId) {
+      setHoroscopeData(null);
+      return;
+    }
+
+    const cacheKey = `astro-vibe-${selectedSignId}-${todayStr}`;
+    const cached = localStorage.getItem(cacheKey);
+
+    if (cached) {
+      try {
+        setHoroscopeData(JSON.parse(cached));
+        return;
+      } catch (e) {
+        localStorage.removeItem(cacheKey);
+      }
+    }
+
+    const fetchHoroscope = async () => {
+      setIsFetchingHoroscope(true);
+      try {
+        const res = await fetch("/api/horoscope", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sign: selectedSignId, date: todayStr }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch horoscope");
+        }
+
+        const data = await res.json();
+        setHoroscopeData(data);
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+      } catch (err) {
+        console.error("Failed to load Gemini horoscope, using local formula:", err);
+        const localFallback = {
+          forecast: getOracleReading(selectedSignId),
+          luckyScore: getRating(selectedSignId, "luck"),
+          loveScore: getRating(selectedSignId, "love"),
+          careerScore: getRating(selectedSignId, "career"),
+          recommendedGame: getRecommendedGame(selectedSignId).name,
+          cosmicAdvice: ZODIAC_COSMIC_ADVICE[selectedSignId] || "Trust the cosmic vibes today.",
+          isFallback: true,
+        };
+        setHoroscopeData(localFallback);
+      } finally {
+        setIsFetchingHoroscope(false);
+      }
+    };
+
+    fetchHoroscope();
+  }, [selectedSignId, todayStr]);
 
   const handleClaim = () => {
     if (!user || user.uid === "guest") return;
@@ -286,15 +352,37 @@ export default function AstroVibesClient() {
               {/* Daily Horoscope Metrics Card */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Forecast Readings & Recommended Game */}
-                <div className="bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-lg space-y-4 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <h3 className="text-base font-black text-deep-violet dark:text-soft-cream uppercase tracking-wider flex items-center gap-1.5">
-                      <Sparkles className="w-4.5 h-4.5 text-primary-gold animate-pulse" />
-                      Daily Cosmic Forecast
+                <div className="bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-lg space-y-4 flex flex-col justify-between min-h-[300px]">
+                  <div className="space-y-2 w-full">
+                    <h3 className="text-base font-black text-deep-violet dark:text-soft-cream uppercase tracking-wider flex items-center justify-between gap-1.5 w-full">
+                      <span className="flex items-center gap-1.5">
+                        <Sparkles className="w-4.5 h-4.5 text-primary-gold animate-pulse" />
+                        Daily Cosmic Forecast
+                      </span>
+                      {horoscopeData && !horoscopeData.isFallback && !isFetchingHoroscope && (
+                        <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-violet-500/10 border border-violet-500/20 text-violet-400 dark:text-violet-300 animate-pulse flex items-center gap-1 font-fredoka select-none tracking-widest shrink-0">
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-violet-400 animate-ping" />
+                          Gemini Aligned
+                        </span>
+                      )}
                     </h3>
-                    <p className="text-xs sm:text-[13px] text-deep-violet/70 dark:text-soft-cream/75 leading-relaxed font-semibold">
-                      {getOracleReading(currentZodiac.id)}
-                    </p>
+                    
+                    {isFetchingHoroscope || !horoscopeData ? (
+                      <div className="animate-pulse space-y-2.5 pt-2">
+                        <div className="h-4 bg-deep-violet/10 dark:bg-white/10 rounded-full w-3/4" />
+                        <div className="h-4 bg-deep-violet/10 dark:bg-white/10 rounded-full w-5/6" />
+                        <div className="h-4 bg-deep-violet/10 dark:bg-white/10 rounded-full w-2/3" />
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-xs sm:text-[13px] text-deep-violet/70 dark:text-soft-cream/75 leading-relaxed font-semibold">
+                          {horoscopeData.forecast}
+                        </p>
+                        <p className="text-[11px] italic text-deep-violet/50 dark:text-soft-cream/50 leading-relaxed font-bold">
+                          {horoscopeData.cosmicAdvice}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="border-t border-deep-violet/10 dark:border-white/10 pt-4 space-y-3">
@@ -302,66 +390,99 @@ export default function AstroVibesClient() {
                       <span className="text-[10px] font-black uppercase tracking-widest text-deep-violet/40 dark:text-soft-cream/45">
                         Zodiac Game Recommendation
                       </span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{getRecommendedGame(currentZodiac.id).emoji}</span>
-                        <div className="flex-1">
-                          <span className="text-xs font-black text-deep-violet dark:text-soft-cream">
-                            {getRecommendedGame(currentZodiac.id).name}
-                          </span>
-                          <p className="text-[10px] text-deep-violet/50 dark:text-soft-cream/50">
-                            Aligned with your celestial energy today!
-                          </p>
+                      {isFetchingHoroscope || !horoscopeData ? (
+                        <div className="animate-pulse flex items-center gap-2.5 pt-1">
+                          <div className="w-9 h-9 rounded-full bg-deep-violet/10 dark:bg-white/10" />
+                          <div className="space-y-1.5 flex-1">
+                            <div className="h-3 bg-deep-violet/10 dark:bg-white/10 rounded-full w-1/3" />
+                            <div className="h-2.5 bg-deep-violet/10 dark:bg-white/10 rounded-full w-1/2" />
+                          </div>
                         </div>
-                        <Link
-                          href={getRecommendedGame(currentZodiac.id).href}
-                          className="py-1.5 px-3.5 rounded-full bg-primary-gold hover:bg-amber-300 text-[#1E1145] font-black text-[10px] tracking-wider uppercase flex items-center gap-1 shadow-sm active:scale-95 transition-all"
-                        >
-                          <span>Play</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </Link>
-                      </div>
+                      ) : (
+                        (() => {
+                          const resolvedGame = GAME_RECOMMENDATIONS.find(
+                            (g) => g.name.toLowerCase() === horoscopeData.recommendedGame.toLowerCase()
+                          ) || GAME_RECOMMENDATIONS[0];
+                          return (
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl">{resolvedGame.emoji}</span>
+                              <div className="flex-1">
+                                <span className="text-xs font-black text-deep-violet dark:text-soft-cream">
+                                  {resolvedGame.name}
+                                </span>
+                                <p className="text-[10px] text-deep-violet/50 dark:text-soft-cream/50">
+                                  Aligned with your celestial energy today!
+                                </p>
+                              </div>
+                              <Link
+                                href={resolvedGame.href}
+                                className="py-1.5 px-3.5 rounded-full bg-primary-gold hover:bg-amber-300 text-[#1E1145] font-black text-[10px] tracking-wider uppercase flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+                              >
+                                <span>Play</span>
+                                <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            </div>
+                          );
+                        })()
+                      )}
                     </div>
                   </div>
                 </div>
 
                 {/* Ratings & Alignment Bonus */}
-                <div className="bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-lg flex flex-col justify-between gap-6">
-                  <div className="space-y-4">
+                <div className="bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border-2 border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-lg flex flex-col justify-between gap-6 min-h-[300px]">
+                  <div className="space-y-4 w-full">
                     <h3 className="text-base font-black text-deep-violet dark:text-soft-cream uppercase tracking-wider flex items-center gap-1.5">
                       <TrendingUp className="w-4.5 h-4.5 text-primary-gold" />
                       Celestial Vibe Ratings
                     </h3>
                     
-                    {/* Metrics Loop */}
-                    {[
-                      { name: "Luck Vibes", key: "luck", icon: Sparkles, color: "from-amber-400 to-orange-500", shadow: "shadow-amber-500/20" },
-                      { name: "Love Vibes", key: "love", icon: Heart, color: "from-pink-500 to-rose-600", shadow: "shadow-pink-500/20" },
-                      { name: "Career Vibes", key: "career", icon: Briefcase, color: "from-sky-400 to-blue-600", shadow: "shadow-sky-500/20" }
-                    ].map((metric) => {
-                      const value = getRating(currentZodiac.id, metric.key);
-                      const IconComponent = metric.icon;
+                    {isFetchingHoroscope || !horoscopeData ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="space-y-2">
+                            <div className="flex justify-between w-full">
+                              <div className="h-3 bg-deep-violet/10 dark:bg-white/10 rounded-full w-1/4 animate-pulse" />
+                              <div className="h-3 bg-deep-violet/10 dark:bg-white/10 rounded-full w-1/12 animate-pulse" />
+                            </div>
+                            <div className="h-2.5 bg-deep-violet/5 dark:bg-white/5 rounded-full w-full overflow-hidden relative">
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-deep-violet/5 dark:via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {[
+                          { name: "Luck Vibes", value: horoscopeData.luckyScore, icon: Sparkles, color: "from-amber-400 to-orange-500" },
+                          { name: "Love Vibes", value: horoscopeData.loveScore, icon: Heart, color: "from-pink-500 to-rose-600" },
+                          { name: "Career Vibes", value: horoscopeData.careerScore, icon: Briefcase, color: "from-sky-400 to-blue-600" }
+                        ].map((metric) => {
+                          const IconComponent = metric.icon;
 
-                      return (
-                        <div key={metric.key} className="space-y-1">
-                          <div className="flex items-center justify-between text-xs font-black text-deep-violet dark:text-soft-cream">
-                            <span className="flex items-center gap-1">
-                              <IconComponent className="w-3.5 h-3.5 opacity-60" />
-                              {metric.name}
-                            </span>
-                            <span className="tabular-nums font-black text-primary-gold">{value}%</span>
-                          </div>
-                          {/* Shimmering bar container */}
-                          <div className="w-full h-2.5 bg-deep-violet/5 dark:bg-white/5 rounded-full border border-deep-violet/10 dark:border-white/5 overflow-hidden">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: `${value}%` }}
-                              transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-                              className={`h-full bg-gradient-to-r ${metric.color} rounded-full`}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
+                          return (
+                            <div key={metric.name} className="space-y-1">
+                              <div className="flex items-center justify-between text-xs font-black text-deep-violet dark:text-soft-cream">
+                                <span className="flex items-center gap-1">
+                                  <IconComponent className="w-3.5 h-3.5 opacity-60" />
+                                  {metric.name}
+                                </span>
+                                <span className="tabular-nums font-black text-primary-gold">{metric.value}%</span>
+                              </div>
+                              {/* Shimmering bar container */}
+                              <div className="w-full h-2.5 bg-deep-violet/5 dark:bg-white/5 rounded-full border border-deep-violet/10 dark:border-white/5 overflow-hidden">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${metric.value}%` }}
+                                  transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
+                                  className={`h-full bg-gradient-to-r ${metric.color} rounded-full`}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   {/* Alignment Bonus Block */}

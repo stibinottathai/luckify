@@ -2,22 +2,22 @@ import type { Metadata } from "next";
 import HomeClient from "@/components/HomeClient";
 
 export const metadata: Metadata = {
-  title: "Luckify | Try Your Luck. Find Your Fortune.",
+  title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
   description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, and check your vibes score today.",
   alternates: {
     canonical: "https://luckify.vercel.app/",
   },
   openGraph: {
-    title: "Luckify | Try Your Luck. Find Your Fortune.",
+    title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
     description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, and test your vibes score today.",
     url: "https://luckify.vercel.app",
-    siteName: "Luckify",
+    siteName: "Luck ഉണ്ടോ ?",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Luckify - Virtual Lucky Garden and Fortune Oracle",
+        alt: "Luck ഉണ്ടോ ? - Virtual Lucky Garden and Fortune Oracle",
       },
     ],
     locale: "en_US",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luckify | Try Your Luck. Find Your Fortune.",
+    title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
     description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, and check your vibes score today.",
     images: ["/og-image.png"],
   },

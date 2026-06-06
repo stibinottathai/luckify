@@ -3,13 +3,13 @@ import WheelGame from "@/components/games/WheelGame";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Luckify",
+  title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Luck ഉണ്ടോ ?",
   description: "Spin the Fortune Wheel with three daily spins, unlock more with points, and win rewards from 100 to the rare 1000-point section.",
   alternates: {
     canonical: "https://luckify.vercel.app/wheel",
   },
   openGraph: {
-    title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Luckify",
+    title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Luck ഉണ്ടോ ?",
     description: "An interactive HTML5 Canvas points reward wheel with daily spins, optional extra spin packs, and eight prize sections.",
     type: "website",
   },

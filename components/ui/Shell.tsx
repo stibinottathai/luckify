@@ -102,7 +102,7 @@ export default function Shell({ children }: ShellProps) {
               ✨
             </motion.span>
             <span className="font-fredoka text-xl sm:text-2xl font-extrabold tracking-tight text-deep-violet dark:text-soft-cream group-hover:text-primary-gold transition-colors duration-200 truncate">
-              Luckify
+              Luck ഉണ്ടോ ?
             </span>
           </Link>
 
@@ -152,7 +152,7 @@ export default function Shell({ children }: ShellProps) {
       <footer className="w-full bg-deep-violet/5 dark:bg-black/20 border-t border-deep-violet/10 dark:border-white/10 py-6 mt-12 select-none">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs font-bold text-deep-violet/50 dark:text-soft-cream/50 text-center md:text-left">
-            © {new Date().getFullYear()} Luckify. Live beautifully, roll wisely. 🍀
+            © {new Date().getFullYear()} Luck ഉണ്ടോ ?. Live beautifully, roll wisely. 🍀
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <button

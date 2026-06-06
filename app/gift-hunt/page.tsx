@@ -4,13 +4,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Lucky Gift Hunt - Open Daily Mystery Gift Boxes | Luckify",
-  description: "Pick 3 mystery gift boxes every day and discover rare coin rewards up to 5000. Can you find the legendary jackpot gift on Luckify?",
+  title: "Lucky Gift Hunt - Open Daily Mystery Gift Boxes | Luck ഉണ്ടോ ?",
+  description: "Pick 3 mystery gift boxes every day and discover rare coin rewards up to 5000. Can you find the legendary jackpot gift on Luck ഉണ്ടോ ?",
   alternates: {
     canonical: "https://luckify.vercel.app/gift-hunt",
   },
   openGraph: {
-    title: "Lucky Gift Hunt - Open Daily Mystery Gift Boxes | Luckify",
+    title: "Lucky Gift Hunt - Open Daily Mystery Gift Boxes | Luck ഉണ്ടോ ?",
     description: "Pick 3 mystery gift boxes every day. Discover rare rewards up to 5000 coins!",
     url: "https://luckify.vercel.app/gift-hunt",
     type: "website",

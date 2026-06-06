@@ -3,13 +3,13 @@ import AeoFaqSection from "@/components/ui/AeoFaqSection";
 import WishingTreeClient from "./WishingTreeClient";
 
 export const metadata: Metadata = {
-  title: "Celestial Wishing Tree - Community Blessings | Luckify",
+  title: "Celestial Wishing Tree - Community Blessings | Luck ഉണ്ടോ ?",
   description: "Hang your deepest wishes as glowing parchment paper tags on our celestial wishing tree. Send positive vibes to other wishes to boost their luck score!",
   alternates: {
     canonical: "https://luckify.vercel.app/wishing-tree",
   },
   openGraph: {
-    title: "Celestial Wishing Tree - Community Blessings | Luckify",
+    title: "Celestial Wishing Tree - Community Blessings | Luck ഉണ്ടോ ?",
     description: "An interactive digital wishing tree where users can hang glowing wishes and send positive vibes to support the community's fortunes.",
     type: "website",
   },

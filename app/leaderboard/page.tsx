@@ -4,16 +4,16 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Leaderboard – Top Lucky Players | Luckify",
+  title: "Leaderboard – Top Lucky Players | Luck ഉണ്ടോ ?",
   description:
-    "See the top 100 Luckify players ranked by total Lucky Points. Can you make it to the top?",
+    "See the top 100 Luck ഉണ്ടോ ? players ranked by total Lucky Points. Can you make it to the top?",
   alternates: {
     canonical: "https://luckify.vercel.app/leaderboard",
   },
   openGraph: {
-    title: "Leaderboard – Top Lucky Players | Luckify",
+    title: "Leaderboard – Top Lucky Players | Luck ഉണ്ടോ ?",
     description:
-      "Live rankings of the luckiest players on Luckify. Compete for the top spot!",
+      "Live rankings of the luckiest players on Luck ഉണ്ടോ ?. Compete for the top spot!",
     type: "website",
   },
 };

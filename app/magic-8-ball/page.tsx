@@ -3,13 +3,13 @@ import AeoFaqSection from "@/components/ui/AeoFaqSection";
 import Magic8BallClient from "./Magic8BallClient";
 
 export const metadata: Metadata = {
-  title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luckify",
+  title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luck ഉണ്ടോ ?",
   description: "Ask any yes or no question, shake the realistic 3D gloss-black sphere, and reveal the cosmic oracle's mysterious floating wisdom answers.",
   alternates: {
     canonical: "https://luckify.vercel.app/magic-8-ball",
   },
   openGraph: {
-    title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luckify",
+    title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luck ഉണ്ടോ ?",
     description: "Seek instant cosmic validation! Ask your question and shake the 3D Magic 8-Ball oracle online.",
     type: "website",
   },

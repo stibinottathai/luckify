@@ -3,13 +3,13 @@ import AeoFaqSection from "@/components/ui/AeoFaqSection";
 import MessageInBottleClient from "./MessageInBottleClient";
 
 export const metadata: Metadata = {
-  title: "Message in a Bottle Online - Cast Fortunes to Sea | Luckify",
+  title: "Message in a Bottle Online - Cast Fortunes to Sea | Luck ഉണ്ടോ ?",
   description: "Cast a glass bottle into the dynamic virtual ocean waves, tap to pop the animated cork, and watch your handwritten paper fortune scroll rise and unfurl.",
   alternates: {
     canonical: "https://luckify.vercel.app/message-in-bottle",
   },
   openGraph: {
-    title: "Message in a Bottle Online - Cast Fortunes to Sea | Luckify",
+    title: "Message in a Bottle Online - Cast Fortunes to Sea | Luck ഉണ്ടോ ?",
     description: "An animated ocean fortune-telling experience. Retrieve a bottle from the ocean and watch your paper scroll unfurl mystical blessings.",
     type: "website",
   },

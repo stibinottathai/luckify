@@ -258,9 +258,9 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
     history: profile?.history ?? defaults.history,
   } as UserLuckProfile;
 
-  // Self-healing rule: If they are a new user (total plays is 0),
-  // they must have the starting coin balance of 500!
-  if (nextProfile.totalPlays === 0) {
+  // Self-healing rule: If they are a new user (total plays is 0 and no visit has occurred),
+  // they must have the starting coin balance!
+  if (nextProfile.totalPlays === 0 && !nextProfile.lastVisitDate) {
     nextProfile.coinBalance = STARTING_COIN_BALANCE;
   }
 

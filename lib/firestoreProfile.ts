@@ -91,6 +91,7 @@ export interface FirestoreUserProfile {
   scratchAttemptsUsed?: number;
   scratchDate?: string;
   scratchPrizeWon?: number;
+  localVersion?: number;
 }
 
 // ─── Leaderboard entry ────────────────────────────────────────────────────────

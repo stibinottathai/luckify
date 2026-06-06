@@ -16,7 +16,7 @@ export const WHEEL_MAX_DAILY_SPINS = WHEEL_FREE_DAILY_SPINS + WHEEL_MAX_PAID_SPI
 // Legacy exports kept for any other consumers
 export const WHEEL_EXTRA_SPIN_PACK_COST = 200;
 export const WHEEL_EXTRA_SPIN_PACK_SIZE = 3;
-export const STARTING_COIN_BALANCE = 500;
+export const STARTING_COIN_BALANCE = 0;
 
 export const WHEEL_PRIZES: Prize[] = [
   { id: "1000", emoji: "🪙", name: "1000 Points", color: "#B7791F", isWin: true, scoreImpact: 0, coinReward: 1000, weight: 1 },

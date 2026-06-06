@@ -143,9 +143,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       useLuckStore.setState((state) => {
+        const localVersion = state.profiles[uid]?.localVersion ?? 0;
+        const remoteVersion = remoteProfile.localVersion ?? 0;
+
+        // If the local state is newer (has unsynced local mutations), do not overwrite it with stale remote data
+        if (localVersion > remoteVersion) {
+          return state;
+        }
+
         const merged = normalizeProfile(remoteProfile);
         // Preserve client-side localVersion so it does not trigger a redundant write
-        merged.localVersion = state.profiles[uid]?.localVersion ?? 0;
+        merged.localVersion = localVersion;
 
         return {
           ...merged,

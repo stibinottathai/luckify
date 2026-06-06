@@ -168,7 +168,7 @@ export default function AstroVibesClient() {
       return;
     }
 
-    const cacheKey = `astro-vibe-${selectedSignId}-${todayStr}`;
+    const cacheKey = `astro-vibe-v2-${selectedSignId}-${todayStr}`;
     const cached = localStorage.getItem(cacheKey);
 
     if (cached) {

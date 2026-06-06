@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const WISHING_TREE_FAQS = [
   {
     question: "What is the Celestial Wishing Tree?",
-    answer: "The Celestial Wishing Tree is a community-oriented space where players can spend 200 Vibe Coins to write down a personal wish (either anonymously or signed) and hang it as a glowing tag on a digital willow tree. Other players can read the branches and send positive vibes.",
+    answer: "The Celestial Wishing Tree is a community-oriented space where players can spend 500 Vibe Coins to write down a personal wish (either anonymously or signed) and hang it as a glowing tag on a digital willow tree. Other players can read the branches and send positive vibes.",
   },
   {
     question: "How do positive vibes affect my Lucky Score?",
@@ -26,7 +26,7 @@ const WISHING_TREE_FAQS = [
   },
   {
     question: "Does it cost coins to read or send vibes?",
-    answer: "No. Browsing the wishing branches, reading wishes, and sending positive vibes is completely free. It only costs 200 Vibe Coins to create and hang a new wish on the tree.",
+    answer: "No. Browsing the wishing branches, reading wishes, and sending positive vibes is completely free. It only costs 500 Vibe Coins to create and hang a new wish on the tree.",
   },
 ];
 

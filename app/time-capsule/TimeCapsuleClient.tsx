@@ -177,7 +177,7 @@ export default function TimeCapsuleClient() {
   // Form States
   const [messageText, setMessageText] = useState("");
   const [coinsToLock, setCoinsToLock] = useState<number>(100);
-  const [durationType, setDurationType] = useState<"1min" | "1hr" | "1day" | "1week" | "1month" | "1year">("1day");
+  const [durationType, setDurationType] = useState<"1week" | "1month" | "1year">("1week");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -207,28 +207,16 @@ export default function TimeCapsuleClient() {
     let multiplier = 1.0;
     let label = "";
     switch (durationType) {
-      case "1min":
-        multiplier = 1.05;
-        label = "1 Minute (Test Mode)";
-        break;
-      case "1hr":
-        multiplier = 1.10;
-        label = "1 Hour";
-        break;
-      case "1day":
-        multiplier = 1.15;
-        label = "1 Day";
-        break;
       case "1week":
-        multiplier = 1.30;
+        multiplier = 1.05;
         label = "1 Week";
         break;
       case "1month":
-        multiplier = 1.75;
+        multiplier = 1.10;
         label = "1 Month";
         break;
       case "1year":
-        multiplier = 2.50;
+        multiplier = 1.20;
         label = "1 Year";
         break;
     }
@@ -298,7 +286,7 @@ export default function TimeCapsuleClient() {
       registerTimeCapsuleToday(); // Register the time capsule today
       setMessageText("");
       setCoinsToLock(100);
-      setDurationType("1day");
+      setDurationType("1week");
       setActiveTab("vault"); // switch to Vault to view countdown
     } else {
       setErrorMsg("Failed to seal capsule. Reverting coin balance.");
@@ -497,12 +485,9 @@ export default function TimeCapsuleClient() {
                     </label>
                     <div className="grid grid-cols-3 gap-2.5">
                       {[
-                        { key: "1min", time: "1 min", rate: "+5%" },
-                        { key: "1hr", time: "1 hour", rate: "+10%" },
-                        { key: "1day", time: "1 day", rate: "+15%" },
-                        { key: "1week", time: "1 week", rate: "+30%" },
-                        { key: "1month", time: "1 month", rate: "+75%" },
-                        { key: "1year", time: "1 year", rate: "+150%" }
+                        { key: "1week", time: "1 week", rate: "+5%" },
+                        { key: "1month", time: "1 month", rate: "+10%" },
+                        { key: "1year", time: "1 year", rate: "+20%" }
                       ].map((d) => (
                         <button
                           key={d.key}

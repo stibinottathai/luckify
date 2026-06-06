@@ -19,7 +19,7 @@ import {
   RotateCw,
   Trash2
 } from "lucide-react";
-import { playWinChime, playTick } from "@/lib/audio";
+import { playWinChime, playTick, playCoinDeducted } from "@/lib/audio";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestore";
 import { createWish, toggleVibeWish, deleteWish, Wish } from "@/lib/wishes";
@@ -49,11 +49,13 @@ export default function WishingTreeClient() {
   const registerWishToday = useLuckStore((s) => s.registerWishToday);
 
   const todayStr = new Date().toISOString().slice(0, 10);
-  const hasWishedToday = currentProfile?.lastWishDate === todayStr;
+  const dailyWishesUsed = currentProfile?.wishDailyCountUsed ?? 0;
+  const isLimitReached = dailyWishesUsed >= 5;
 
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<"recent" | "trending">("recent");
+  const [visibleCount, setVisibleCount] = useState(9);
 
   // Selection & Write states
   const [activeWish, setActiveWish] = useState<Wish | null>(null);
@@ -214,13 +216,13 @@ export default function WishingTreeClient() {
       return;
     }
 
-    if (hasWishedToday) {
-      setErrorMsg("You have already hanged a wish today! Come back tomorrow.");
+    if (isLimitReached) {
+      setErrorMsg("You have reached your limit of 5 daily wishes! Come back tomorrow.");
       return;
     }
 
-    if (coinBalance < 200) {
-      setErrorMsg("Not enough coins! Hang a wish costs 200 Vibe Coins.");
+    if (coinBalance < 500) {
+      setErrorMsg("Not enough coins! Hanging a wish costs 500 Vibe Coins.");
       return;
     }
 
@@ -228,12 +230,13 @@ export default function WishingTreeClient() {
     setErrorMsg("");
 
     // Deduct coins locally
-    const spendSuccess = spendCoins(200);
+    const spendSuccess = spendCoins(500);
     if (!spendSuccess) {
       setErrorMsg("Deduction failed. Please verify coin balance.");
       setSubmitting(false);
       return;
     }
+    playCoinDeducted();
 
     // Write to Firestore DB
     const wishId = await createWish(
@@ -358,16 +361,16 @@ export default function WishingTreeClient() {
               Celestial Wishing Tree
             </h3>
             <p className="text-[10px] font-bold text-deep-violet/60 dark:text-soft-cream/60 mt-1">
-              Spend 200 coins to write a wish. Upvote others to grant them +3 luckyScore!
+              Spend 500 coins to write a wish. Upvote others to grant them +3 luckyScore!
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto justify-end">
           {user && user.uid !== "guest" ? (
-            hasWishedToday ? (
+            isLimitReached ? (
               <div className="py-2.5 px-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 flex items-center gap-2 text-xs font-bold select-none">
-                <span>🎋 Hanged Today ✓</span>
+                <span>🎋 5 Daily Wishes Hanged ✓</span>
               </div>
             ) : (
               <button
@@ -375,7 +378,7 @@ export default function WishingTreeClient() {
                 className="py-2.5 px-5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-xs tracking-wider uppercase shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <PlusCircle className="w-4 h-4" />
-                <span>Hang a New Wish</span>
+                <span>Hang a Wish ({5 - dailyWishesUsed} left)</span>
               </button>
             )
           ) : (
@@ -522,7 +525,7 @@ export default function WishingTreeClient() {
 
           <div className="flex items-center rounded-xl bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 p-1 select-none">
             <button
-              onClick={() => { playTick(); setSortBy("recent"); }}
+              onClick={() => { playTick(); setSortBy("recent"); setVisibleCount(9); }}
               className={`py-1.5 px-3 rounded-lg font-black text-xs uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
                 sortBy === "recent"
                   ? "bg-white dark:bg-[#1B103E] text-deep-violet dark:text-soft-cream shadow-sm"
@@ -533,7 +536,7 @@ export default function WishingTreeClient() {
               <span>Recent</span>
             </button>
             <button
-              onClick={() => { playTick(); setSortBy("trending"); }}
+              onClick={() => { playTick(); setSortBy("trending"); setVisibleCount(9); }}
               className={`py-1.5 px-3 rounded-lg font-black text-xs uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
                 sortBy === "trending"
                   ? "bg-white dark:bg-[#1B103E] text-deep-violet dark:text-soft-cream shadow-sm"
@@ -560,53 +563,67 @@ export default function WishingTreeClient() {
             <p>Hang your wish above to start the collection!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {wishes.map((wish) => {
-              const hasVibed = user ? wish.vibesUsers.includes(user.uid) : false;
-              return (
-                <motion.div
-                  layoutId={`wish-card-${wish.id}`}
-                  key={wish.id}
-                  className="bg-white/60 dark:bg-[#1B103E]/60 backdrop-blur-md border border-deep-violet/10 dark:border-white/10 hover:border-amber-500/40 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4 cursor-pointer"
-                  onClick={() => { playTick(); setActiveWish(wish); }}
-                >
-                  <p className="text-xs font-medium text-deep-violet/85 dark:text-soft-cream/90 leading-relaxed italic line-clamp-3">
-                    "{wish.wishText}"
-                  </p>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {wishes.slice(0, visibleCount).map((wish) => {
+                const hasVibed = user ? wish.vibesUsers.includes(user.uid) : false;
+                return (
+                  <motion.div
+                    layoutId={`wish-card-${wish.id}`}
+                    key={wish.id}
+                    className="bg-white/60 dark:bg-[#1B103E]/60 backdrop-blur-md border border-deep-violet/10 dark:border-white/10 hover:border-amber-500/40 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4 cursor-pointer"
+                    onClick={() => { playTick(); setActiveWish(wish); }}
+                  >
+                    <p className="text-xs font-medium text-deep-violet/85 dark:text-soft-cream/90 leading-relaxed italic line-clamp-3">
+                      "{wish.wishText}"
+                    </p>
 
-                  <div className="flex items-center justify-between gap-2 border-t border-deep-violet/5 dark:border-white/5 pt-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 text-white font-black text-[10px] flex items-center justify-center select-none shadow-sm overflow-hidden">
-                        {wish.isAnonymous || !wish.photoURL ? (
-                          "🎋"
-                        ) : (
-                          <img src={wish.photoURL} alt={wish.displayName} className="w-full h-full object-cover" />
-                        )}
+                    <div className="flex items-center justify-between gap-2 border-t border-deep-violet/5 dark:border-white/5 pt-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 text-white font-black text-[10px] flex items-center justify-center select-none shadow-sm overflow-hidden">
+                          {wish.isAnonymous || !wish.photoURL ? (
+                            "🎋"
+                          ) : (
+                            <img src={wish.photoURL} alt={wish.displayName} className="w-full h-full object-cover" />
+                          )}
+                        </div>
+                        <span className="text-[10px] font-black text-deep-violet/60 dark:text-soft-cream/60">
+                          {wish.isAnonymous ? "Anonymous" : wish.displayName.split(" ")[0]}
+                        </span>
                       </div>
-                      <span className="text-[10px] font-black text-deep-violet/60 dark:text-soft-cream/60">
-                        {wish.isAnonymous ? "Anonymous" : wish.displayName.split(" ")[0]}
-                      </span>
-                    </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // prevent opening details card
-                        handleVibeToggle(wish);
-                      }}
-                      className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-wider py-1 px-2.5 rounded-full border transition-all cursor-pointer ${
-                        hasVibed
-                          ? "bg-gradient-to-br from-amber-400 to-amber-500 text-deep-violet border-yellow-300 shadow-[0_0_8px_rgba(245,183,0,0.3)]"
-                          : "bg-deep-violet/5 dark:bg-white/5 border-deep-violet/10 dark:border-white/10 hover:border-amber-500/35 text-deep-violet/60 dark:text-soft-cream/60"
-                      }`}
-                    >
-                      <Heart className={`w-3 h-3 ${hasVibed ? "fill-deep-violet text-deep-violet" : "text-amber-500"}`} />
-                      <span>{wish.vibesCount}</span>
-                    </button>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // prevent opening details card
+                          handleVibeToggle(wish);
+                        }}
+                        className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-wider py-1 px-2.5 rounded-full border transition-all cursor-pointer ${
+                          hasVibed
+                            ? "bg-gradient-to-br from-amber-400 to-amber-500 text-deep-violet border-yellow-300 shadow-[0_0_8px_rgba(245,183,0,0.3)]"
+                            : "bg-deep-violet/5 dark:bg-white/5 border-deep-violet/10 dark:border-white/10 hover:border-amber-500/35 text-deep-violet/60 dark:text-soft-cream/60"
+                        }`}
+                      >
+                        <Heart className={`w-3 h-3 ${hasVibed ? "fill-deep-violet text-deep-violet" : "text-amber-500"}`} />
+                        <span>{wish.vibesCount}</span>
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {wishes.length > visibleCount && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={() => { playTick(); setVisibleCount((prev) => prev + 9); }}
+                  className="py-3 px-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-xs tracking-widest uppercase shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                >
+                  <span>Load More Wishes</span>
+                  <RotateCw className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -684,7 +701,7 @@ export default function WishingTreeClient() {
                     <Coins className="w-4 h-4" />
                     <span>Writing Cost:</span>
                   </div>
-                  <span className="font-black text-emerald-400">200 Vibe Coins</span>
+                  <span className="font-black text-emerald-400">500 Vibe Coins</span>
                 </div>
 
                 {/* Button */}

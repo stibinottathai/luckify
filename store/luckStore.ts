@@ -133,6 +133,8 @@ export interface UserLuckProfile {
   // Social/Wishing tree limits
   lastWishDate?: string;
   lastTimeCapsuleDate?: string;
+  wishDailyDate?: string;
+  wishDailyCountUsed?: number;
 }
 
 const GUEST_USER_KEY = "guest";
@@ -228,6 +230,8 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   // Social/Wishing tree limits defaults
   lastWishDate: "",
   lastTimeCapsuleDate: "",
+  wishDailyDate: getTodayKey(),
+  wishDailyCountUsed: 0,
 });
 
 export const createGuestProfile = (): UserLuckProfile => ({
@@ -297,6 +301,12 @@ export const normalizeProfile = (profile?: Partial<UserLuckProfile>): UserLuckPr
   if (nextProfile.pendulumDailyQuestionsDate !== getTodayKey()) {
     nextProfile.pendulumDailyQuestionsDate = getTodayKey();
     nextProfile.pendulumDailyQuestionsUsed = 0;
+  }
+
+  // Handle Daily Wish resets
+  if (nextProfile.wishDailyDate !== getTodayKey()) {
+    nextProfile.wishDailyDate = getTodayKey();
+    nextProfile.wishDailyCountUsed = 0;
   }
 
   // Handle Daily Gift Hunt resets
@@ -570,7 +580,9 @@ export const useLuckStore = create<LuckStore>()(
           const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
           const updated = {
             ...profile,
-            lastWishDate: new Date().toISOString().slice(0, 10),
+            wishDailyDate: getTodayKey(),
+            wishDailyCountUsed: (profile.wishDailyCountUsed ?? 0) + 1,
+            lastWishDate: getTodayKey(),
           };
           return syncActiveProfile(state, updated);
         });

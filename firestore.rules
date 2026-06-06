@@ -24,7 +24,8 @@ service cloud.firestore {
           'giftHuntTimes5000', 'dailyShakesToday', 'extraShakesBalance', 'shakeSpinDate',
           'collectibles', 'diceRollDate', 'diceRollsUsed', 'pendulumDailyQuestionsDate',
           'pendulumDailyQuestionsUsed', 'giftHuntDate', 'giftHuntOpensUsed', 'localVersion',
-          'scratchUsed' // ✅ Legacy field allowed to avoid validation failure on merge
+          'scratchUsed', // ✅ Legacy field allowed to avoid validation failure on merge
+          'wishDailyDate', 'wishDailyCountUsed'
         ];
         
         return data.keys().hasOnly(allowedKeys)
@@ -59,13 +60,15 @@ service cloud.firestore {
             && (!('highestRewardWon' in data) || (data.highestRewardWon is string && data.highestRewardWon.size() <= 100))
             && (!('highestRewardPoints' in data) || (data.highestRewardPoints is int && data.highestRewardPoints >= 0))
             && (!('legendaryRewardsCount' in data) || (data.legendaryRewardsCount is int && data.legendaryRewardsCount >= 0))
-
+ 
             // ✅ Dice Collection profile statistics
             && (!('equippedDice' in data) || (data.equippedDice is string && data.equippedDice.size() <= 64))
             && (!('diceFragments' in data) || (data.diceFragments is int && data.diceFragments >= 0))
             && (!('collectionProgress' in data) || (data.collectionProgress is int && data.collectionProgress >= 1))
             && (!('mythicDiceCount' in data) || (data.mythicDiceCount is int && data.mythicDiceCount >= 0))
-            && (!('coffeesDonated' in data) || (data.coffeesDonated is int && data.coffeesDonated >= 0));
+            && (!('coffeesDonated' in data) || (data.coffeesDonated is int && data.coffeesDonated >= 0))
+            && (!('wishDailyCountUsed' in data) || (data.wishDailyCountUsed is int && data.wishDailyCountUsed >= 0))
+            && (!('wishDailyDate' in data) || (data.wishDailyDate is string && data.wishDailyDate.size() == 10));
       }
 
       allow read: if request.auth != null;

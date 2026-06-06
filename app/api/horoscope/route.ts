@@ -130,7 +130,8 @@ export async function POST(req: Request) {
               parts: [
                 {
                   text: `Generate a daily astrology alignment and horoscope reading for the zodiac sign '${sign}' for the date: ${dateStr}.
-Use a modern, encouraging, mystical, and astrological tone. Feel free to incorporate specific details about planetary alignments, lunar nodes, elements, or houses relevant to ${sign} on this day.`
+Use a modern, encouraging, mystical, and astrological tone. Incorporate specific details about planetary alignments, elements, or houses relevant to ${sign} on this day.
+Ensure the generated 'forecast' is detailed and consists of exactly around 500 characters.`
                 }
               ]
             }
@@ -142,7 +143,7 @@ Use a modern, encouraging, mystical, and astrological tone. Feel free to incorpo
               properties: {
                 forecast: {
                   type: "STRING",
-                  description: "A cosmic daily alignment forecast for this zodiac sign. 2-3 sentences. Write it in an inspiring, mystical, and engaging manner."
+                  description: "A cosmic daily alignment forecast for this zodiac sign. Write it in an inspiring, mystical, and engaging manner. Must be detailed and exactly around 500 characters in length."
                 },
                 luckyScore: {
                   type: "INTEGER",

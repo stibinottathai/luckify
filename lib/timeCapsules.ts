@@ -24,7 +24,7 @@ export async function createTimeCapsuleInDb(
   uid: string,
   messageText: string,
   coinsLocked: number,
-  durationType: "1min" | "1hr" | "1day" | "1week" | "1month" | "1year"
+  durationType: "1week" | "1month" | "1year"
 ): Promise<string | null> {
   if (!db) {
     console.warn("[Firestore] DB is not initialized. Simulating offline capsule creation.");
@@ -35,29 +35,17 @@ export async function createTimeCapsuleInDb(
   let multiplier = 1.0;
 
   switch (durationType) {
-    case "1min":
-      durationMs = 60 * 1000;
-      multiplier = 1.05;
-      break;
-    case "1hr":
-      durationMs = 60 * 60 * 1000;
-      multiplier = 1.10;
-      break;
-    case "1day":
-      durationMs = 24 * 60 * 60 * 1000;
-      multiplier = 1.15;
-      break;
     case "1week":
       durationMs = 7 * 24 * 60 * 60 * 1000;
-      multiplier = 1.30;
+      multiplier = 1.05;
       break;
     case "1month":
       durationMs = 30 * 24 * 60 * 60 * 1000;
-      multiplier = 1.75;
+      multiplier = 1.10;
       break;
     case "1year":
       durationMs = 365 * 24 * 60 * 60 * 1000;
-      multiplier = 2.50;
+      multiplier = 1.20;
       break;
   }
 

@@ -23,7 +23,8 @@ service cloud.firestore {
           'giftHuntBoard', 'giftHuntTotalOpened', 'giftHuntHighestGift', 'giftHuntTimes1000',
           'giftHuntTimes5000', 'dailyShakesToday', 'extraShakesBalance', 'shakeSpinDate',
           'collectibles', 'diceRollDate', 'diceRollsUsed', 'pendulumDailyQuestionsDate',
-          'pendulumDailyQuestionsUsed', 'giftHuntDate', 'giftHuntOpensUsed', 'localVersion'
+          'pendulumDailyQuestionsUsed', 'giftHuntDate', 'giftHuntOpensUsed', 'localVersion',
+          'scratchUsed' // ✅ Legacy field allowed to avoid validation failure on merge
         ];
         
         return data.keys().hasOnly(allowedKeys)
@@ -48,13 +49,13 @@ service cloud.firestore {
             && data.history.size() <= 20
             
             // ✅ Optional Identity Fields
-            && (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 50))
+            && (!('displayName' in data) || (data.displayName is string && data.displayName.size() <= 100))
             && (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 2083))
             
             // ✅ Golden Dice profile statistics
             && (!('totalDiceRolls' in data) || (data.totalDiceRolls is int && data.totalDiceRolls >= 0))
             && (!('totalGoldenDiceEvents' in data) || (data.totalGoldenDiceEvents is int && data.totalGoldenDiceEvents >= 0))
-            && (!('goldenDiceRate' in data) || (data.goldenDiceRate is int || data.goldenDiceRate is float) && data.goldenDiceRate >= 0 && data.goldenDiceRate <= 1)
+            && (!('goldenDiceRate' in data) || (data.goldenDiceRate is number && data.goldenDiceRate >= 0 && data.goldenDiceRate <= 1))
             && (!('highestRewardWon' in data) || (data.highestRewardWon is string && data.highestRewardWon.size() <= 100))
             && (!('highestRewardPoints' in data) || (data.highestRewardPoints is int && data.highestRewardPoints >= 0))
             && (!('legendaryRewardsCount' in data) || (data.legendaryRewardsCount is int && data.legendaryRewardsCount >= 0))
@@ -117,7 +118,7 @@ service cloud.firestore {
                       && request.resource.data.userId == uid
                       && request.resource.data.coinsLocked is int
                       && request.resource.data.coinsLocked >= 10
-                      && request.resource.data.multiplier is float
+                      && request.resource.data.multiplier is number
                       && request.resource.data.multiplier >= 1.0
                       && request.resource.data.multiplier <= 2.5
                       && request.resource.data.messageText is string

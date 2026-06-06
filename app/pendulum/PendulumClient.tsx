@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Sparkles, HelpCircle, Compass } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
 import { usePendulum } from "./usePendulum";
+import { playCoinDeducted } from "@/lib/audio";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
 import { Cinzel } from "next/font/google";
@@ -65,11 +66,12 @@ export default function PendulumClient() {
       if (reason === 'limit') {
         alert("🔮 The cosmic oracle is resting. You've reached your 5 daily questions limit!");
       } else if (reason === 'coins') {
-        alert("💰 You need 100 coins to consult the pendulum!");
+        alert("💰 You need 500 coins to consult the pendulum!");
       }
       return;
     }
 
+    playCoinDeducted();
     startDivination();
   };
 
@@ -238,7 +240,7 @@ export default function PendulumClient() {
               {phase === "idle" && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 px-1">
-                    <span>Cost: 100 🪙</span>
+                    <span>Cost: 500 🪙</span>
                     <span>Daily limit: {5 - dailyQuestionsUsed} left</span>
                   </div>
                   <button

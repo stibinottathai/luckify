@@ -476,13 +476,13 @@ export const useLuckStore = create<LuckStore>()(
           return { success: false, reason: 'limit' };
         }
 
-        if (profile.coinBalance < 100) {
+        if (profile.coinBalance < 500) {
           return { success: false, reason: 'coins' };
         }
 
         const newProfile = {
           ...profile,
-          coinBalance: profile.coinBalance - 100,
+          coinBalance: profile.coinBalance - 500,
           pendulumDailyQuestionsUsed: profile.pendulumDailyQuestionsUsed! + 1,
         };
 

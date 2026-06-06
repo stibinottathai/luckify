@@ -316,3 +316,41 @@ export function playLegendaryReward() {
   }
 }
 
+export function playCoinDeducted() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+
+    // Metallic high frequency clink 1
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(987.77, now); // B5
+    osc1.frequency.exponentialRampToValueAtTime(440.00, now + 0.08); // A4
+    gain1.gain.setValueAtTime(0.08, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    osc1.start(now);
+    osc1.stop(now + 0.1);
+
+    // Metallic high frequency clink 2 (slightly delayed)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(1318.51, now + 0.04); // E6
+    osc2.frequency.exponentialRampToValueAtTime(587.33, now + 0.12); // D5
+    gain2.gain.setValueAtTime(0.06, now + 0.04);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    osc2.start(now + 0.04);
+    osc2.stop(now + 0.14);
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+

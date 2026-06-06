@@ -16,7 +16,7 @@ import {
   ArrowRight,
   Lock
 } from "lucide-react";
-import { playWinChime } from "@/lib/audio";
+import { playWinChime, playCoinDeducted } from "@/lib/audio";
 import confetti from "canvas-confetti";
 import Link from "next/link";
 
@@ -107,6 +107,7 @@ export default function AstroVibesClient() {
   
   const setZodiacSign = useLuckStore((s) => s.setZodiacSign);
   const claimAstroBonus = useLuckStore((s) => s.claimAstroBonus);
+  const spendCoins = useLuckStore((s) => s.spendCoins);
 
   const [hoveredSign, setHoveredSign] = useState<string | null>(null);
   const [horoscopeData, setHoroscopeData] = useState<{
@@ -228,6 +229,12 @@ export default function AstroVibesClient() {
   };
 
   const handleSelectSign = (signId: string) => {
+    const success = spendCoins(500);
+    if (!success) {
+      alert("💰 You need 500 coins to align your celestial vibes!");
+      return;
+    }
+    playCoinDeducted();
     setZodiacSign(signId);
   };
 
@@ -262,7 +269,7 @@ export default function AstroVibesClient() {
                 Select Your Zodiac Sign
               </h2>
               <p className="text-xs font-semibold text-deep-violet/60 dark:text-soft-cream/60">
-                To align your celestial energy, pick your horoscope sign. This locks in your daily forecast and unlocks a +200 coin alignment reward.
+                To align your celestial energy, pick your horoscope sign. Each alignment costs <span className="text-primary-gold font-bold">500 🪙</span>. This locks in your daily forecast and unlocks a +200 coin alignment reward.
               </p>
             </div>
 
@@ -294,6 +301,10 @@ export default function AstroVibesClient() {
                     <span className="text-[7px] font-bold text-deep-violet/50 dark:text-soft-cream/50 mt-1 select-none pointer-events-none whitespace-nowrap">
                       {sign.dateRange.split(" - ").map(d => d.slice(0, 3)).join("-")}
                     </span>
+                    <div className="mt-1 flex items-center gap-0.5 bg-primary-gold/10 px-1 py-0.5 rounded border border-primary-gold/25 text-primary-gold text-[8px] font-black select-none pointer-events-none">
+                      <span>500</span>
+                      <span>🪙</span>
+                    </div>
                   </button>
                 );
               })}

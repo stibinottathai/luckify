@@ -8,7 +8,7 @@ import {
   WHEEL_PRIZES,
   Prize,
 } from "@/lib/prizes";
-import { playTick } from "@/lib/audio";
+import { playTick, playCoinDeducted } from "@/lib/audio";
 import { useLuckStore } from "@/store/luckStore";
 import { useAuth } from "@/components/auth/AuthProvider";
 import ResultCard from "@/components/ui/ResultCard";
@@ -264,6 +264,10 @@ export default function WheelGame() {
     if (!consumeWheelSpin()) {
       setWalletMessage("Unable to spin. Check your points or daily limit.");
       return;
+    }
+
+    if (hasUsedFreeSpinToday) {
+      playCoinDeducted();
     }
 
     setWalletMessage(null);

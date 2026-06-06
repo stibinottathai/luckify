@@ -18,7 +18,7 @@ import {
   History,
   Info
 } from "lucide-react";
-import { playWinChime, playTick } from "@/lib/audio";
+import { playWinChime, playTick, playCoinDeducted } from "@/lib/audio";
 import { db } from "@/lib/firebase";
 import {
   createTimeCapsuleInDb,
@@ -282,6 +282,7 @@ export default function TimeCapsuleClient() {
       setSubmitting(false);
       return;
     }
+    playCoinDeducted();
 
     // Write to Firestore DB
     const id = await createTimeCapsuleInDb(

@@ -374,6 +374,34 @@ export default function HomeClient() {
         </div>
       </section>
 
+      {/* Buy Me a Coffee Promotion Card */}
+      <section className="relative w-full max-w-4xl mt-6 mb-6 select-none z-10 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-br from-[#2D1B69] to-[#1E1145] dark:from-[#1B0F40] dark:to-[#0D0725] border-4 border-primary-gold rounded-3xl p-6 sm:p-8 shadow-xl text-white overflow-hidden font-fredoka">
+        {/* Hue-rotating mesh gradient background */}
+        <div className="absolute inset-0 bg-radial from-violet-500/10 via-transparent to-transparent pointer-events-none animate-hue-sweep opacity-50" />
+        
+        <div className="flex-1 text-center md:text-left space-y-3 z-10">
+          <div className="flex items-center gap-2 justify-center md:justify-start text-xs font-black uppercase tracking-wider text-primary-gold">
+            <span>☕</span>
+            <span>Support Luckify Development</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-primary-gold drop-shadow-md">
+            Enjoying the Virtual Garden of Luck? 🌸
+          </h2>
+          <p className="text-xs sm:text-sm font-semibold text-soft-cream/80 max-w-xl leading-relaxed">
+            Luckify is built with love by a small team and is 100% ad-free! If you love spinning the wheel, doing divinations, or checking your astro-vibes, consider buying us a coffee. Every support rewards you with a <span className="text-primary-gold font-bold">Cosmic Blessing (+5,000 Vibe Coins)</span> instantly!
+          </p>
+        </div>
+
+        <div className="z-10 flex-shrink-0">
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-buy-me-coffee-modal"))}
+            className="py-3.5 px-6 rounded-2xl font-black text-sm select-none cursor-pointer tracking-wider shadow-md bg-[#FFDD00] hover:bg-[#FFE54D] text-black hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 uppercase"
+          >
+            <span>Buy Us A Coffee ☕</span>
+          </button>
+        </div>
+      </section>
+
       {/* AEO FAQ Section */}
       <AeoFaqSection items={LOBBY_FAQS} />
 

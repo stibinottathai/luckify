@@ -11,6 +11,7 @@ import LegalModal from "@/components/ui/LegalModal";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
 import AuthButton from "@/components/auth/AuthButton";
+import BuyMeCoffeeWidget from "@/components/ui/BuyMeCoffeeWidget";
 
 function PointsHeaderDisplay() {
   const { user } = useAuth();
@@ -176,6 +177,13 @@ export default function Shell({ children }: ShellProps) {
             </button>
             <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
             <button
+              onClick={() => window.dispatchEvent(new CustomEvent("open-buy-me-coffee-modal"))}
+              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-soft-cream/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
+            >
+              ☕ Buy Me a Coffee
+            </button>
+            <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
+            <button
               onClick={() => setShareOpen(true)}
               className="text-xs font-extrabold text-primary-gold hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-0"
             >
@@ -189,6 +197,7 @@ export default function Shell({ children }: ShellProps) {
       {/* Global Modals / Drawers */}
       <ShareModal isOpen={shareOpen} onClose={() => setShareOpen(false)} score={luckyScore} />
       <LegalModal isOpen={legalOpen} onClose={() => setLegalOpen(false)} initialTab={legalTab} />
+      <BuyMeCoffeeWidget />
       </div>
     </AuthProvider>
   );

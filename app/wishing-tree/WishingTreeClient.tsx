@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLuckStore } from "@/store/luckStore";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { 
   Sparkles, 
   Coins, 
@@ -17,7 +18,8 @@ import {
   MessageCircle,
   TrendingUp,
   RotateCw,
-  Trash2
+  Trash2,
+  ArrowLeft
 } from "lucide-react";
 import { playWinChime, playTick, playCoinDeducted } from "@/lib/audio";
 import { db } from "@/lib/firebase";
@@ -349,6 +351,17 @@ export default function WishingTreeClient() {
           box-shadow: 0 4px 20px rgba(245, 183, 0, 0.12), 0 0 10px rgba(255, 255, 255, 0.05);
         }
       ` }} />
+
+      {/* Back to Lobby link */}
+      <div className="w-full mb-6 flex flex-col items-start select-none px-1">
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-soft-cream/40 dark:hover:text-soft-cream transition-colors cursor-pointer group"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+          Back to Lobby
+        </Link>
+      </div>
 
       {/* Header Area */}
       <div className="bg-white/70 dark:bg-[#1B103E]/70 backdrop-blur-xl border border-deep-violet/10 dark:border-white/10 rounded-[2rem] p-5 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 mb-8">

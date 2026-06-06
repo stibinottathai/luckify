@@ -185,7 +185,8 @@ export async function saveFirestoreProfile(
   try {
     await setDoc(
       userRef(uid),
-      { ...profile, updatedAt: serverTimestamp() }
+      { ...profile, updatedAt: serverTimestamp() },
+      { merge: true }
     );
   } catch (err) {
     console.error("[Firestore] Failed to save profile:", err);

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLuckStore } from "@/store/luckStore";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   Sparkles,
   Coins,
@@ -16,7 +17,8 @@ import {
   TrendingUp,
   X,
   History,
-  Info
+  Info,
+  ArrowLeft
 } from "lucide-react";
 import { playWinChime, playTick, playCoinDeducted } from "@/lib/audio";
 import { db } from "@/lib/firebase";
@@ -345,6 +347,17 @@ export default function TimeCapsuleClient() {
           animation: hour-rotation 6s ease-in-out infinite;
         }
       ` }} />
+
+      {/* Back to Lobby link */}
+      <div className="w-full mb-6 flex flex-col items-start select-none px-1">
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-deep-violet/40 hover:text-deep-violet dark:text-soft-cream/40 dark:hover:text-soft-cream transition-colors cursor-pointer group"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+          Back to Lobby
+        </Link>
+      </div>
 
       {/* Header Area */}
       <div className="bg-white/70 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 mb-8">

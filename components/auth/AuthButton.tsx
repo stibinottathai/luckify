@@ -2,12 +2,11 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { auth, googleProvider, db } from "@/lib/firebase";
+import { auth, googleProvider } from "@/lib/firebase";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Trash2 } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useLuckStore } from "@/store/luckStore";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 export default function AuthButton() {
   const { user, loading } = useAuth();
@@ -16,7 +15,6 @@ export default function AuthButton() {
     return null;
   }
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { luckyScore, totalPlays, coinBalance } = useLuckStore();
 
@@ -49,80 +47,7 @@ export default function AuthButton() {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (!user || !db) return;
 
-    // 1. Preventive recent sign-in check (Firebase requires login within ~5 minutes for deletion)
-    const lastSignIn = user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime).getTime() : 0;
-    const timeSinceSignIn = Date.now() - lastSignIn;
-    if (timeSinceSignIn > 5 * 60 * 1000) {
-      alert("For security reasons, deleting your account requires a recent sign-in. Please sign out, sign back in, and try again.");
-      return;
-    }
-
-    // 2. Double Confirmation
-    const firstConfirm = window.confirm(
-      "Are you absolutely sure you want to permanently delete your account? This action is permanent and cannot be undone."
-    );
-    if (!firstConfirm) return;
-
-    const secondConfirm = window.confirm(
-      "This will permanently erase all your points, play history, collections, unlocked dice, and settings. Are you completely sure you want to proceed?"
-    );
-    if (!secondConfirm) return;
-
-    setIsDeleting(true);
-    try {
-      const uid = user.uid;
-
-      // 3. Delete Firestore data (subcollections first, then parent profile)
-      // A. Delete timeCapsules
-      const timeCapsulesSnap = await getDocs(collection(db, "users", uid, "timeCapsules"));
-      for (const docSnap of timeCapsulesSnap.docs) {
-        await deleteDoc(docSnap.ref);
-      }
-
-      // B. Delete diceCollection
-      const diceCollectionSnap = await getDocs(collection(db, "users", uid, "diceCollection"));
-      for (const docSnap of diceCollectionSnap.docs) {
-        await deleteDoc(docSnap.ref);
-      }
-
-      // C. Delete goldenDiceEvents
-      const goldenDiceEventsSnap = await getDocs(collection(db, "users", uid, "goldenDiceEvents"));
-      for (const docSnap of goldenDiceEventsSnap.docs) {
-        await deleteDoc(docSnap.ref);
-      }
-
-      // D. Delete main user profile document
-      await deleteDoc(doc(db, "users", uid));
-
-      // 4. Delete Firebase Auth User
-      await user.delete();
-
-      // 5. Clean up from local Zustand store
-      useLuckStore.setState((state) => {
-        const newProfiles = { ...state.profiles };
-        delete newProfiles[uid];
-        return {
-          profiles: newProfiles
-        };
-      });
-
-      alert("Your account and all associated data have been permanently deleted.");
-    } catch (error: any) {
-      console.error("Account deletion failed:", error);
-      if (error.code === "auth/requires-recent-login") {
-        alert(
-          "For security reasons, this operation requires recent authentication. Please sign out, sign in again, and retry."
-        );
-      } else {
-        alert(`Failed to delete account: ${error.message || error}`);
-      }
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -230,34 +155,12 @@ export default function AuthButton() {
                   <LogOut className="w-4 h-4" />
                   Sign Out
                 </button>
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    handleDeleteAccount();
-                  }}
-                  disabled={isDeleting}
-                  className="w-full flex items-center gap-2 p-2.5 rounded-xl hover:bg-rose-500/15 hover:text-rose-500 text-rose-500/80 dark:text-rose-400/80 text-xs font-bold transition-all duration-200 cursor-pointer text-left disabled:opacity-50"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Delete Account
-                </button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Deleting Account Overlay */}
-        {isDeleting && (
-          <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-[9999] flex flex-col items-center justify-center gap-4">
-            <div className="w-12 h-12 rounded-full border-4 border-rose-500/30 border-t-rose-500 animate-spin" />
-            <h3 className="font-fredoka text-xl font-bold text-white">
-              Deleting Account...
-            </h3>
-            <p className="text-sm text-white/70 max-w-xs text-center px-4">
-              Please wait while we permanently delete your profile and sign you out.
-            </p>
-          </div>
-        )}
+
       </div>
     );
   }

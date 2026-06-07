@@ -388,7 +388,7 @@ export default function HomeClient() {
             Enjoying the Virtual Garden of Luck? 🌸
           </h2>
           <p className="text-xs sm:text-sm font-semibold text-soft-cream/80 max-w-xl leading-relaxed">
-            Luck ഉണ്ടോ ? is built with love by a small team and is 100% ad-free! If you love spinning the wheel, doing divinations, or checking your astro-vibes, consider buying us a coffee. Every support rewards you with a <span className="text-primary-gold font-bold">Cosmic Blessing (+5,000 Vibe Coins)</span> instantly!
+            Luck ഉണ്ടോ ? is built with love by a small team and is 100% ad-free! If you love spinning the wheel, doing divinations, or checking your astro-vibes, consider buying me a coffee. Every support rewards you with a <span className="text-primary-gold font-bold">Cosmic Blessing (+5,000 Vibe Coins)</span> instantly!
           </p>
           {currentProfile?.coffeesDonated && currentProfile.coffeesDonated > 0 ? (
             <p className="text-xs font-black text-[#FFDD00] pt-1">
@@ -402,7 +402,7 @@ export default function HomeClient() {
             onClick={() => window.dispatchEvent(new CustomEvent("open-buy-me-coffee-modal"))}
             className="py-3.5 px-6 rounded-2xl font-black text-sm select-none cursor-pointer tracking-wider shadow-md bg-[#FFDD00] hover:bg-[#FFE54D] text-black hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 uppercase"
           >
-            <span>Buy Us A Coffee ☕</span>
+            <span>Buy Me A Coffee ☕</span>
           </button>
         </div>
       </section>

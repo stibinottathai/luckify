@@ -178,7 +178,7 @@ export default function BuyMeCoffeeWidget() {
                   </div>
 
                   <h3 className="text-2xl sm:text-3xl font-black mb-3">
-                    Buy Us a Coffee ☕
+                    Buy Me a Coffee ☕
                   </h3>
 
                   <p className="text-xs sm:text-sm text-deep-violet/70 dark:text-soft-cream/70 mb-6 leading-relaxed max-w-sm">

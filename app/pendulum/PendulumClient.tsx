@@ -9,6 +9,9 @@ import { playCoinDeducted } from "@/lib/audio";
 import ResultCard from "@/components/ui/ResultCard";
 import ShareModal from "@/components/ui/ShareModal";
 import { Cinzel } from "next/font/google";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -17,6 +20,17 @@ const cinzel = Cinzel({
 });
 
 export default function PendulumClient() {
+  const { user } = useAuth();
+
+  const handleSignIn = async () => {
+    if (!auth) return;
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Firebase Google Sign-in failed:", error);
+    }
+  };
+
   const [question, setQuestion] = useState("");
   const [phase, setPhase] = useState<"idle" | "swinging" | "settled">("idle");
   const [answer, setAnswer] = useState<"yes" | "no" | null>(null);
@@ -56,6 +70,10 @@ export default function PendulumClient() {
 
   const handleRelease = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      handleSignIn();
+      return;
+    }
     if (!question.trim()) {
       alert("🔮 Please write down your query for the cosmic pendulum first!");
       return;
@@ -102,7 +120,6 @@ export default function PendulumClient() {
         </div>
       </div>
 
-      {/* Main Grid View */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start px-4">
         
         {/* LEFT COLUMN: The Physical Divination Canvas Arena */}
@@ -165,8 +182,8 @@ export default function PendulumClient() {
                   type="text"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
-                  disabled={phase !== "idle"}
-                  placeholder="Will my next venture bring prosperity?..."
+                  disabled={!user || phase !== "idle"}
+                  placeholder={user ? "Will my next venture bring prosperity?..." : "Sign in to ask the cosmic pendulum..."}
                   className="w-full bg-slate-50 dark:bg-white/5 border-2 border-slate-200 dark:border-white/10 focus:border-primary-gold dark:focus:border-primary-gold focus:ring-4 focus:ring-primary-gold/10 rounded-2xl py-4 pl-4 pr-10 text-sm font-semibold placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all disabled:opacity-60 disabled:cursor-not-allowed text-slate-900 dark:text-soft-cream"
                   maxLength={100}
                 />
@@ -177,112 +194,160 @@ export default function PendulumClient() {
             {/* Middle Active Status Card */}
             <div className="flex-1 flex flex-col justify-center items-center p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-center relative overflow-hidden">
               
-              {phase === "idle" && (
+              {!user ? (
                 <div className="space-y-1.5 py-3">
                   <Compass className="w-8 h-8 text-primary-gold animate-spin-slow mx-auto" />
                   <p className="text-xs font-bold text-slate-600 dark:text-slate-400 max-w-xs leading-normal">
-                    Enter your question above and click <span className="font-extrabold text-primary-gold">RELEASE</span> to start the astral vibration!
+                    Align your energy with the cosmos. Sign in to release the pendulum wire and consult the oracle!
                   </p>
                 </div>
-              )}
+              ) : (
+                <>
+                  {phase === "idle" && (
+                    <div className="space-y-1.5 py-3">
+                      <Compass className="w-8 h-8 text-primary-gold animate-spin-slow mx-auto" />
+                      <p className="text-xs font-bold text-slate-600 dark:text-slate-400 max-w-xs leading-normal">
+                        Enter your question above and click <span className="font-extrabold text-primary-gold">RELEASE</span> to start the astral vibration!
+                      </p>
+                    </div>
+                  )}
 
-              {phase === "swinging" && (
-                <div className="space-y-2.5 py-3 flex flex-col items-center">
-                  {/* Glowing spiral animated loading effect */}
-                  <div className="relative flex items-center justify-center">
-                    <div className="w-10 h-10 border-4 border-primary-gold/20 border-t-primary-gold rounded-full animate-spin" />
-                    <Sparkles className="w-4 h-4 text-primary-gold absolute animate-pulse" />
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-primary-gold animate-pulse">
-                      Analyzing Spatial Vectors...
-                    </p>
-                    <p className="text-xs font-bold italic text-slate-500 dark:text-slate-400 max-w-xs leading-normal">
-                      &quot;{question}&quot;
-                    </p>
-                  </div>
-                </div>
-              )}
+                  {phase === "swinging" && (
+                    <div className="space-y-2.5 py-3 flex flex-col items-center">
+                      {/* Glowing spiral animated loading effect */}
+                      <div className="relative flex items-center justify-center">
+                        <div className="w-10 h-10 border-4 border-primary-gold/20 border-t-primary-gold rounded-full animate-spin" />
+                        <Sparkles className="w-4 h-4 text-primary-gold absolute animate-pulse" />
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-primary-gold animate-pulse">
+                          Analyzing Spatial Vectors...
+                        </p>
+                        <p className="text-xs font-bold italic text-slate-500 dark:text-slate-400 max-w-xs leading-normal">
+                          &quot;{question}&quot;
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
-              {phase === "settled" && answer && (
-                <div className="space-y-3 py-2 flex flex-col items-center w-full animate-fade-in">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 leading-none">
-                    The Oracle Decrees:
-                  </p>
-                  
-                  <h4
-                    className={`text-5xl font-black font-cinzel leading-none select-none ${
-                      answer === "yes" 
-                        ? "text-amber-400 drop-shadow-[0_0_12px_rgba(245,183,0,0.5)]" 
-                        : "text-blue-300 drop-shadow-[0_0_12px_rgba(147,197,253,0.5)]"
-                    }`}
-                    style={
-                      answer === "yes"
-                        ? { textShadow: "0 0 15px rgba(245, 183, 0, 0.4)" }
-                        : { textShadow: "0 0 15px rgba(147, 197, 253, 0.4)" }
-                    }
-                  >
-                    {answer === "yes" ? "YES" : "NO"}
-                  </h4>
+                  {phase === "settled" && answer && (
+                    <div className="space-y-3 py-2 flex flex-col items-center w-full animate-fade-in">
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 leading-none">
+                        The Oracle Decrees:
+                      </p>
+                      
+                      <h4
+                        className={`text-5xl font-black font-cinzel leading-none select-none ${
+                          answer === "yes" 
+                            ? "text-amber-400 drop-shadow-[0_0_12px_rgba(245,183,0,0.5)]" 
+                            : "text-blue-300 drop-shadow-[0_0_12px_rgba(147,197,253,0.5)]"
+                        }`}
+                        style={
+                          answer === "yes"
+                            ? { textShadow: "0 0 15px rgba(245, 183, 0, 0.4)" }
+                            : { textShadow: "0 0 15px rgba(147, 197, 253, 0.4)" }
+                        }
+                      >
+                        {answer === "yes" ? "YES" : "NO"}
+                      </h4>
 
-                  <p className="text-[11px] font-bold text-slate-600 dark:text-slate-300 max-w-[280px] leading-relaxed mx-auto italic">
-                    {answer === "yes"
-                      ? "✨ Stellar structures are aligned! Your path glows with cosmic approval and prosperity."
-                      : "🌀 Celestial winds advise caution! Re-evaluate details before committing to this route."}
-                  </p>
-                </div>
+                      <p className="text-[11px] font-bold text-slate-600 dark:text-slate-300 max-w-[280px] leading-relaxed mx-auto italic">
+                        {answer === "yes"
+                          ? "✨ Stellar structures are aligned! Your path glows with cosmic approval and prosperity."
+                          : "🌀 Celestial winds advise caution! Re-evaluate details before committing to this route."}
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
             {/* Action Buttons */}
             <div className="w-full pt-2">
-              {phase === "idle" && (
+              {!user ? (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 px-1">
                     <span>Cost: 500 🪙</span>
-                    <span>Daily limit: {5 - dailyQuestionsUsed} left</span>
+                    <span>Daily limit: 5 left</span>
                   </div>
                   <button
-                    type="submit"
-                    disabled={!question.trim() || dailyQuestionsUsed >= 5}
-                    className={`w-full py-4 rounded-2xl font-extrabold text-sm tracking-widest text-[#2D1B69] bg-primary-gold hover:bg-[#E0A700] hover:shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2 uppercase select-none ${
-                      (!question.trim() || dailyQuestionsUsed >= 5) ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
-                    }`}
+                    type="button"
+                    onClick={handleSignIn}
+                    className="w-full py-4 rounded-2xl font-extrabold text-sm tracking-widest text-[#2D1B69] bg-primary-gold hover:bg-[#E0A700] hover:shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2 uppercase select-none cursor-pointer"
                   >
-                    <Sparkles className="w-4.5 h-4.5" />
-                    {dailyQuestionsUsed >= 5 ? "Oracle is Resting" : "Release Pendulum 🔮"}
+                    {/* Google SVG Icon */}
+                    <svg className="w-4 h-4 flex-shrink-0 bg-white p-0.5 rounded-full" viewBox="0 0 24 24">
+                      <path
+                        fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                      />
+                    </svg>
+                    <span className="tracking-wide">Sign In with Google</span>
                   </button>
                 </div>
-              )}
+              ) : (
+                <>
+                  {phase === "idle" && (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 px-1">
+                        <span>Cost: 500 🪙</span>
+                        <span>Daily limit: {5 - dailyQuestionsUsed} left</span>
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={!question.trim() || dailyQuestionsUsed >= 5}
+                        className={`w-full py-4 rounded-2xl font-extrabold text-sm tracking-widest text-[#2D1B69] bg-primary-gold hover:bg-[#E0A700] hover:shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2 uppercase select-none ${
+                          (!question.trim() || dailyQuestionsUsed >= 5) ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
+                        }`}
+                      >
+                        <Sparkles className="w-4.5 h-4.5" />
+                        {dailyQuestionsUsed >= 5 ? "Oracle is Resting" : "Release Pendulum 🔮"}
+                      </button>
+                    </div>
+                  )}
 
-              {phase === "swinging" && (
-                <button
-                  type="button"
-                  disabled
-                  className="w-full py-4 rounded-2xl font-extrabold text-sm tracking-widest text-slate-400 dark:text-slate-500 bg-slate-300/35 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center gap-2 uppercase select-none cursor-default"
-                >
-                  Swinging Astral Wire...
-                </button>
-              )}
+                  {phase === "swinging" && (
+                    <button
+                      type="button"
+                      disabled
+                      className="w-full py-4 rounded-2xl font-extrabold text-sm tracking-widest text-slate-400 dark:text-slate-500 bg-slate-300/35 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center gap-2 uppercase select-none cursor-default"
+                    >
+                      Swinging Astral Wire...
+                    </button>
+                  )}
 
-              {phase === "settled" && (
-                <div className="w-full grid grid-cols-2 gap-3.5">
-                  <button
-                    type="button"
-                    onClick={handleReset}
-                    className="py-3.5 px-4 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-soft-cream border border-slate-200 dark:border-white/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 uppercase text-[11px] tracking-wider"
-                  >
-                    Ask Another 🌀
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowResult(true)}
-                    className="py-3.5 px-4 rounded-xl font-bold bg-primary-gold hover:bg-[#E0A700] text-deep-violet shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 uppercase text-[11px] tracking-wider"
-                  >
-                    View Verdict 📜
-                  </button>
-                </div>
+                  {phase === "settled" && (
+                    <div className="w-full grid grid-cols-2 gap-3.5">
+                      <button
+                        type="button"
+                        onClick={handleReset}
+                        className="py-3.5 px-4 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-soft-cream border border-slate-200 dark:border-white/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 uppercase text-[11px] tracking-wider"
+                      >
+                        Ask Another 🌀
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowResult(true)}
+                        className="py-3.5 px-4 rounded-xl font-bold bg-primary-gold hover:bg-[#E0A700] text-deep-violet shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 uppercase text-[11px] tracking-wider"
+                      >
+                        View Verdict 📜
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 

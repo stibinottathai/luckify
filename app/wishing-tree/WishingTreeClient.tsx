@@ -27,20 +27,19 @@ import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestor
 import { createWish, toggleVibeWish, deleteWish, Wish } from "@/lib/wishes";
 
 // Twinkle branch coordinate points relative to the tree container (percentage)
-const BRANCH_COORDINATES = [
-  { x: 30, y: 38 },
-  { x: 38, y: 22 },
-  { x: 48, y: 14 },
-  { x: 58, y: 20 },
-  { x: 68, y: 32 },
-  { x: 74, y: 46 },
-  { x: 62, y: 38 },
-  { x: 48, y: 34 },
-  { x: 34, y: 46 },
-  { x: 50, y: 24 },
-  { x: 22, y: 50 },
-  { x: 78, y: 56 },
-];
+const getBranchCoordinate = (index: number) => {
+  // Deterministic generator using golden ratio spiral
+  const goldenAngle = 137.5 * (Math.PI / 180);
+  const rMax = 32;
+  const rMin = 5;
+  const theta = index * goldenAngle;
+  const r = rMin + (rMax - rMin) * Math.sqrt(index / 50);
+  const dx = r * Math.cos(theta) * 1.15;
+  const dy = r * Math.sin(theta) * 0.75;
+  const x = Math.round(50 + dx);
+  const y = Math.round(32 + dy);
+  return { x, y };
+};
 
 export default function WishingTreeClient() {
   const { user, loading: authLoading } = useAuth();
@@ -139,8 +138,7 @@ export default function WishingTreeClient() {
     setLoading(true);
     const q = query(
       collection(db, "wishes"),
-      orderBy(sortBy === "trending" ? "vibesCount" : "timestamp", "desc"),
-      limit(40)
+      orderBy(sortBy === "trending" ? "vibesCount" : "timestamp", "desc")
     );
 
     const unsubscribe = onSnapshot(q, (snap) => {
@@ -327,8 +325,10 @@ export default function WishingTreeClient() {
     }
   };
 
-  // Maps first wishes to branches, the rest will list in the feed
-  const hangingWishes = wishes.slice(0, BRANCH_COORDINATES.length);
+  // Get the latest 50 wishes for the visual tree visualization, regardless of sorting
+  const hangingWishes = [...wishes]
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 50);
 
   return (
     <div className="w-full max-w-4xl mx-auto font-fredoka py-2 select-none relative">
@@ -483,7 +483,7 @@ export default function WishingTreeClient() {
           </div>
         ) : (
           hangingWishes.map((wish, index) => {
-            const coord = BRANCH_COORDINATES[index % BRANCH_COORDINATES.length];
+            const coord = getBranchCoordinate(index);
             const hasVibed = user ? wish.vibesUsers.includes(user.uid) : false;
 
             return (
@@ -491,7 +491,7 @@ export default function WishingTreeClient() {
                 key={wish.id}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", delay: index * 0.08 }}
+                transition={{ type: "spring", delay: Math.min(1.2, index * 0.02) }}
                 onClick={() => { playTick(); setActiveWish(wish); }}
                 style={{
                   left: `${coord.x}%`,

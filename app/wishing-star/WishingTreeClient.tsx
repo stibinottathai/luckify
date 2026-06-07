@@ -422,6 +422,12 @@ export default function WishingTreeClient() {
         <div className="absolute top-1/3 left-1/4 w-1.5 h-1.5 rounded-full bg-indigo-300 opacity-60 animate-ping duration-1500" />
         <div className="absolute top-1/2 right-1/3 w-2 h-2 rounded-full bg-purple-200/40 opacity-50 animate-pulse" />
 
+        {/* Tap Instruction */}
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full shadow-lg z-30 pointer-events-none flex items-center gap-2 animate-pulse">
+          <Sparkles className="w-4 h-4 text-primary-gold" />
+          <span className="text-xs font-black text-white tracking-widest uppercase shadow-black drop-shadow-md">Tap the stars to read wishes!</span>
+        </div>
+
         {/* Dynamic Star Constellations */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20" xmlns="http://www.w3.org/2000/svg">
           <line x1="20%" y1="15%" x2="28%" y2="25%" stroke="#fff" strokeWidth="1" strokeDasharray="3,3" />

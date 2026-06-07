@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Celestial Wishing Sky - Community Blessings | Luck ഉണ്ടോ ?",
   description: "Cast your deepest wishes as glowing stars in our celestial wishing sky. Send positive vibes to other wishes to boost their luck score!",
   alternates: {
-    canonical: "https://www.luckundo.xyz/wishing-tree",
+    canonical: "https://www.luckundo.xyz/wishing-star",
   },
   openGraph: {
     title: "Celestial Wishing Sky - Community Blessings | Luck ഉണ്ടോ ?",

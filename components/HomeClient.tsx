@@ -90,11 +90,11 @@ const GAMES: GameCard[] = [
     color: "from-slate-400 to-zinc-600",
   },
   {
-    id: "wishing-tree",
+    id: "wishing-star",
     emoji: "🌟",
     title: "Celestial Wishing Sky",
     description: "Cast your wishes as stars into the night sky. Send positive vibes to other stars to unlock blessings!",
-    href: "/wishing-tree",
+    href: "/wishing-star",
     badge: "Social Well",
     color: "from-emerald-500 to-teal-700",
   },

@@ -91,9 +91,9 @@ const GAMES: GameCard[] = [
   },
   {
     id: "wishing-tree",
-    emoji: "🎋",
-    title: "Celestial Wishing Tree",
-    description: "Hang your wishes on the glowing branches of our community garden. Send positive vibes to unlock blessings!",
+    emoji: "🌟",
+    title: "Celestial Wishing Sky",
+    description: "Cast your wishes as stars into the night sky. Send positive vibes to other stars to unlock blessings!",
     href: "/wishing-tree",
     badge: "Social Well",
     color: "from-emerald-500 to-teal-700",

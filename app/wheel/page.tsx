@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Luck ഉണ്ടോ ?",
   description: "Spin the Fortune Wheel with three daily spins, unlock more with points, and win rewards from 100 to the rare 1000-point section.",
   alternates: {
-    canonical: "https://luckify.vercel.app/wheel",
+    canonical: "https://www.luckundo.xyz/wheel",
   },
   openGraph: {
     title: "Fortune Wheel Online - Spin Virtual Prize Wheel | Luck ഉണ്ടോ ?",

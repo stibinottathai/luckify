@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Lottery Number Picker Online - Free Lotto Ball Generator | Luck ഉണ്ടോ ?",
   description: "Pick 6 lucky lottery numbers, run the dynamic staggered ball drop machine, and chart your session draws frequencies in a detailed custom inline SVG graph.",
   alternates: {
-    canonical: "https://luckify.vercel.app/picker",
+    canonical: "https://www.luckundo.xyz/picker",
   },
   openGraph: {
     title: "Lottery Number Picker Online - Free Lotto Ball Generator | Luck ഉണ്ടോ ?",

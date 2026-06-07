@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "See the top 100 Luck ഉണ്ടോ ? players ranked by total Lucky Points. Can you make it to the top?",
   alternates: {
-    canonical: "https://luckify.vercel.app/leaderboard",
+    canonical: "https://www.luckundo.xyz/leaderboard",
   },
   openGraph: {
     title: "Leaderboard – Top Lucky Players | Luck ഉണ്ടോ ?",

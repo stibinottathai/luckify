@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Luck ഉണ്ടോ ?",
   description: "Receive a traditional lucky red envelope, fold away its 3D golden seal, and reveal your daily blessing of prosperity, wealth, luck, and happiness.",
   alternates: {
-    canonical: "https://luckify.vercel.app/lucky-envelope",
+    canonical: "https://www.luckundo.xyz/lucky-envelope",
   },
   openGraph: {
     title: "Lucky Envelope - Open Virtual Red Packets (Hongbao) | Luck ഉണ്ടോ ?",

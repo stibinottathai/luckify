@@ -5,12 +5,12 @@ export const metadata: Metadata = {
   title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
   description: "Step into the ultimate interactive lucky garden! Roll 3D dice, spin the fortune wheel, and check your vibes score today.",
   alternates: {
-    canonical: "https://luckify.vercel.app/",
+    canonical: "https://www.luckundo.xyz/",
   },
   openGraph: {
     title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
     description: "An engaging, interactive lucky garden! Roll 3D dice, spin the wheel, and test your vibes score today.",
-    url: "https://luckify.vercel.app",
+    url: "https://www.luckundo.xyz",
     siteName: "Luck ഉണ്ടോ ?",
     images: [
       {
@@ -36,11 +36,11 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Luckify",
-    "url": "https://luckify.vercel.app", // Fallback canonical or domain reference
+    "url": "https://www.luckundo.xyz", // Fallback canonical or domain reference
     "description": "An interactive digital garden of luck simulations, fortune telling, and random decision makers.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://luckify.vercel.app/?q={search_term_string}",
+      "target": "https://www.luckundo.xyz/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
@@ -56,21 +56,21 @@ export default function Page() {
         "position": 1,
         "name": "Fortune Wheel",
         "description": "Use 3 daily spins, unlock extras with points, and chase rewards up to the rare 1000-point prize.",
-        "url": "https://luckify.vercel.app/wheel"
+        "url": "https://www.luckundo.xyz/wheel"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Pendulum Divination",
         "description": "Submit a question, release the cosmic silver pendulum, and let physical forces reveal the truth!",
-        "url": "https://luckify.vercel.app/pendulum"
+        "url": "https://www.luckundo.xyz/pendulum"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": "Lucky Gift Hunt",
         "description": "Pick 3 mystery gift boxes every day! Will you find the legendary 5000 coin jackpot?",
-        "url": "https://luckify.vercel.app/gift-hunt"
+        "url": "https://www.luckundo.xyz/gift-hunt"
       }
     ]
   };

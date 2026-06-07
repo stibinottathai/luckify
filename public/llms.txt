@@ -14,38 +14,38 @@ It is 100% free, open-source, requires no user registration, no advertisements, 
 
 ## Active Game Directory
 
-### 1. [Lobby Home (Lobby Page)](https://luckify.vercel.app/)
+### 1. [Lobby Home (Lobby Page)](https://www.luckundo.xyz/)
 - **Description**: The main dashboard listing all games with interactive cards and showing the user's aggregate play session history.
-- **URL**: `https://luckify.vercel.app/`
+- **URL**: `https://www.luckundo.xyz/`
 
-### 2. [Fortune Wheel](https://luckify.vercel.app/wheel)
+### 2. [Fortune Wheel](https://www.luckundo.xyz/wheel)
 - **Description**: Customizable prize wheel spinner using Canvas. Edit wedges, segment titles, and colors.
-- **URL**: `https://luckify.vercel.app/wheel`
+- **URL**: `https://www.luckundo.xyz/wheel`
 
-### 3. [Lucky Dice](https://luckify.vercel.app/dice)
+### 3. [Lucky Dice](https://www.luckundo.xyz/dice)
 - **Description**: Interactive 3D CSS dice rolling arena. Roll up to 3 dice with custom scoring targets and clattering audio.
-- **URL**: `https://luckify.vercel.app/dice`
+- **URL**: `https://www.luckundo.xyz/dice`
 
-### 4. [Number Picker](https://luckify.vercel.app/picker)
+### 4. [Number Picker](https://www.luckundo.xyz/picker)
 - **Description**: Staggered Powerball lottery ball drawer drawing 6 numbers out of 49. Builds a dynamic SVG draw frequency chart.
-- **URL**: `https://luckify.vercel.app/picker`
+- **URL**: `https://www.luckundo.xyz/picker`
 
-### 5. [Pendulum Divination](https://luckify.vercel.app/pendulum)
+### 5. [Pendulum Divination](https://www.luckundo.xyz/pendulum)
 - **Description**: HTML5 Canvas physics-based dowsing pendulum oracle. Input a yes/no query and release the silver bob wire.
-- **URL**: `https://luckify.vercel.app/pendulum`
+- **URL**: `https://www.luckundo.xyz/pendulum`
 
-### 6. [Lucky Envelope](https://luckify.vercel.app/lucky-envelope)
+### 6. [Lucky Envelope](https://www.luckundo.xyz/lucky-envelope)
 - **Description**: Chinese red packet (Hongbao) simulation featuring pure CSS 3D envelope unfolding. Reveals a positive cultural blessing and lucky number.
-- **URL**: `https://luckify.vercel.app/lucky-envelope`
+- **URL**: `https://www.luckundo.xyz/lucky-envelope`
 
-### 7. [Origami Fortune](https://luckify.vercel.app/fortune-teller)
+### 7. [Origami Fortune](https://www.luckundo.xyz/fortune-teller)
 - **Description**: Interactive 3D paper cootie catcher game. Choose colors and numbers, and watch the folding pinching transitions before lifting a flap.
-- **URL**: `https://luckify.vercel.app/fortune-teller`
+- **URL**: `https://www.luckundo.xyz/fortune-teller`
 
-### 8. [Magic 8-Ball](https://luckify.vercel.app/magic-8-ball)
+### 8. [Magic 8-Ball](https://www.luckundo.xyz/magic-8-ball)
 - **Description**: 3D shaking gloss-black Magic 8-Ball oracle. Ask any query and reveal floating triangular replies.
-- **URL**: `https://luckify.vercel.app/magic-8-ball`
+- **URL**: `https://www.luckundo.xyz/magic-8-ball`
 
-### 9. [Message in a Bottle](https://luckify.vercel.app/message-in-bottle)
+### 9. [Message in a Bottle](https://www.luckundo.xyz/message-in-bottle)
 - **Description**: Ocean bottle mail simulator. Retrieve a bobbing glass bottle from parallax sea waves, pop the cork, and unfurl scroll affirmations.
-- **URL**: `https://luckify.vercel.app/message-in-bottle`
+- **URL**: `https://www.luckundo.xyz/message-in-bottle`

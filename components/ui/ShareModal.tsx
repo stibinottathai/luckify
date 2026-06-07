@@ -26,7 +26,7 @@ export default function ShareModal({
   if (game && prize) {
     shareText = `I just played ${game} on Luckify and won "${prize}"! 🎰✨ Try your luck too:`;
   }
-  const shareUrl = typeof window !== "undefined" ? window.location.origin : "https://luckify.vercel.app";
+  const shareUrl = typeof window !== "undefined" ? window.location.origin : "https://www.luckundo.xyz";
   const fullMessage = `${shareText}\n${shareUrl}`;
 
   const handleWebShare = async () => {

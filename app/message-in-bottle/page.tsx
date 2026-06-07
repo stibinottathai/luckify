@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Message in a Bottle Online - Cast Fortunes to Sea | Luck ഉണ്ടോ ?",
   description: "Cast a glass bottle into the dynamic virtual ocean waves, tap to pop the animated cork, and watch your handwritten paper fortune scroll rise and unfurl.",
   alternates: {
-    canonical: "https://luckify.vercel.app/message-in-bottle",
+    canonical: "https://www.luckundo.xyz/message-in-bottle",
   },
   openGraph: {
     title: "Message in a Bottle Online - Cast Fortunes to Sea | Luck ഉണ്ടോ ?",

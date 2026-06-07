@@ -23,11 +23,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
   description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
-  metadataBase: new URL("https://luckify.vercel.app"),
+  metadataBase: new URL("https://www.luckundo.xyz"),
   openGraph: {
     title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
     description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
-    url: "https://luckify.vercel.app",
+    url: "https://www.luckundo.xyz",
     siteName: "Luck ഉണ്ടോ ?",
     images: [
       {

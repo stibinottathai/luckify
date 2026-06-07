@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Astro-Vibes Alignment - Daily Horoscopes & Zodiac Luck | Luck ഉണ്ടോ ?",
   description: "Align your zodiac sign, reveal daily cosmic forecasts for Luck, Love, and Career, and claim your daily cosmic coin alignment bonus!",
   alternates: {
-    canonical: "https://luckify.vercel.app/astro-vibes",
+    canonical: "https://www.luckundo.xyz/astro-vibes",
   },
   openGraph: {
     title: "Astro-Vibes Alignment - Daily Horoscopes & Zodiac Luck | Luck ഉണ്ടോ ?",

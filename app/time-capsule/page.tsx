@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Time Capsule of Hope - Lock & Yield Cosmic Interest | Luck ഉണ്ടോ ?",
   description: "Bury a message to your future self in our digital time capsule. Lock a custom amount of Vibe Coins along with your words and collect them back with high-yield cosmic interest once it unlocks!",
   alternates: {
-    canonical: "https://luckify.vercel.app/time-capsule",
+    canonical: "https://www.luckundo.xyz/time-capsule",
   },
   openGraph: {
     title: "Time Capsule of Hope - Lock & Yield Cosmic Interest | Luck ഉണ്ടോ ?",

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luck ഉണ്ടോ ?",
   description: "Ask any yes or no question, shake the realistic 3D gloss-black sphere, and reveal the cosmic oracle's mysterious floating wisdom answers.",
   alternates: {
-    canonical: "https://luckify.vercel.app/magic-8-ball",
+    canonical: "https://www.luckundo.xyz/magic-8-ball",
   },
   openGraph: {
     title: "Magic 8-Ball Online - Shake the Virtual Cosmic Ball | Luck ഉണ്ടോ ?",

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Pendulum Divination - Virtual Dowsing Pendulum | Luck ഉണ്ടോ ?",
   description: "Focus your energy and query on the digital canvas, release the cosmic silver pendulum bob on its string, and let physical gravity simulate the oracle's answer.",
   alternates: {
-    canonical: "https://luckify.vercel.app/pendulum",
+    canonical: "https://www.luckundo.xyz/pendulum",
   },
   openGraph: {
     title: "Pendulum Divination - Virtual Dowsing Pendulum | Luck ഉണ്ടോ ?",

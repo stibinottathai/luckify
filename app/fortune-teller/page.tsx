@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Origami Fortune Teller - Play Virtual Cootie Catcher | Luck ഉണ്ടോ ?",
   description: "Select colors and pick numbers to unfold the 3D digital paper cootie catcher and reveal your hidden daily fortune and cosmic fate.",
   alternates: {
-    canonical: "https://luckify.vercel.app/fortune-teller",
+    canonical: "https://www.luckundo.xyz/fortune-teller",
   },
   openGraph: {
     title: "Origami Fortune Teller - Play Virtual Cootie Catcher | Luck ഉണ്ടോ ?",

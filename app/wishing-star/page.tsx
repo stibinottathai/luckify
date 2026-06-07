@@ -22,7 +22,7 @@ const WISHING_TREE_FAQS = [
   },
   {
     question: "How do positive vibes affect my Lucky Score?",
-    answer: "When another player upvotes your star (sends positive vibes), you receive a real-time boost of +3 to your luckyScore (capped at a maximum of 100). Upvoting other stars helps spread positive energy across the Luckify community!",
+    answer: "When another player upvotes your star (sends positive vibes), you receive a real-time boost of +3 to your luckyScore (capped at a maximum of 100). Upvoting other stars helps spread positive energy across the Luck ഉണ്ടോ ? community!",
   },
   {
     question: "Does it cost coins to read or send vibes?",

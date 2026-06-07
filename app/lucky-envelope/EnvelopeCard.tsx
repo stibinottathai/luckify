@@ -168,7 +168,7 @@ export default function EnvelopeCard({ phase, fortune, onClick }: EnvelopeCardPr
                   className="text-[10px] font-bold text-amber-700/80 uppercase tracking-widest"
                   style={{ fontFamily: "var(--font-cinzel)" }}
                 >
-                  Luckify
+                  Luck ഉണ്ടോ ?
                 </span>
                 <div className="text-[7px] text-amber-600 mt-0.5">✨ 吉祥如意 ✨</div>
               </div>

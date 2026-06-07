@@ -22,9 +22,9 @@ export default function ShareModal({
   const [copied, setCopied] = useState(false);
 
   // Custom sharing content formulation
-  let shareText = `I just tested my luck on Luckify! 🍀✨ Try your luck too:`;
+  let shareText = `I just tested my luck on Luck ഉണ്ടോ ?! 🍀✨ Try your luck too:`;
   if (game && prize) {
-    shareText = `I just played ${game} on Luckify and won "${prize}"! 🎰✨ Try your luck too:`;
+    shareText = `I just played ${game} on Luck ഉണ്ടോ ? and won "${prize}"! 🎰✨ Try your luck too:`;
   }
   const shareUrl = typeof window !== "undefined" ? window.location.origin : "https://www.luckundo.xyz";
   const fullMessage = `${shareText}\n${shareUrl}`;
@@ -33,7 +33,7 @@ export default function ShareModal({
     if (typeof navigator !== "undefined" && (navigator as any).share) {
       try {
         await (navigator as any).share({
-          title: "Luckify ✨",
+          title: "Luck ഉണ്ടോ ? ✨",
           text: shareText,
           url: shareUrl,
         });

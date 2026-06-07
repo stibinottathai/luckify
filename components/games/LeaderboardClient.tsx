@@ -657,7 +657,7 @@ export default function LeaderboardClient() {
             <p className="text-sm text-deep-violet/35 dark:text-soft-cream/30 mt-1 max-w-xs mx-auto mb-6">
               {activeTab === "global"
                 ? (search ? "Try a different name" : "Be the first to play!")
-                : (search ? "Try a different name" : "Support Luckify by buying me a coffee and get your name listed as a VIP Patron!")
+                : (search ? "Try a different name" : "Support Luck ഉണ്ടോ ? by buying me a coffee and get your name listed as a VIP Patron!")
               }
             </p>
             {activeTab === "vip" && !search && (

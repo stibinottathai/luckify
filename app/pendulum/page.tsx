@@ -22,7 +22,7 @@ const PENDULUM_FAQS = [
   },
   {
     question: "How does the virtual pendulum physics simulation work?",
-    answer: "The Luckify simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
+    answer: "The Luck ഉണ്ടോ ? simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
   },
   {
     question: "How do you ask the virtual dowsing pendulum a question?",
@@ -62,7 +62,7 @@ export default function Page() {
         "name": "How does the virtual pendulum physics simulation work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The Luckify simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
+          "text": "The Luck ഉണ്ടോ ? simulator utilizes real mathematical physics formulas on a HTML5 Canvas. It calculates rope constraints, angular acceleration, gravity pulling, and kinetic damping over time. The pendulum's initial release coordinates are affected by your query and intention, producing an organic swing sequence that settles on YES (clockwise spiral) or NO (counterclockwise spiral)."
         }
       },
       {

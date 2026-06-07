@@ -1,6 +1,6 @@
-# Luckify ✨ Virtual Lucky Garden & Fortune Oracle
+# Luck ഉണ്ടോ ? ✨ Virtual Lucky Garden & Fortune Oracle
 
-Luckify is a beautiful, highly interactive virtual lucky garden, decision-making tool, and fortune-telling suite designed with custom animations, Canvas-based physics simulations, and a sleep dark aesthetic.
+Luck ഉണ്ടോ ? is a beautiful, highly interactive virtual lucky garden, decision-making tool, and fortune-telling suite designed with custom animations, Canvas-based physics simulations, and a sleep dark aesthetic.
 
 It is 100% free, open-source, requires no user registration, no advertisements, and runs entirely in the browser.
 

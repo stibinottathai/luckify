@@ -22,11 +22,11 @@ const ENVELOPE_FAQS = [
   },
   {
     question: "How does the virtual Lucky Envelope work?",
-    answer: "In the Luckify virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
+    answer: "In the Luck ഉണ്ടോ ? virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
   },
   {
     question: "Is the digital red packet simulator free to use?",
-    answer: "Yes, the Lucky Envelope simulation on Luckify is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
+    answer: "Yes, the Lucky Envelope simulation on Luck ഉണ്ടോ ? is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
   }
 ];
 
@@ -62,7 +62,7 @@ export default function Page() {
         "name": "How does the virtual Lucky Envelope work?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In the Luckify virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
+          "text": "In the Luck ഉണ്ടോ ? virtual envelope simulator, you simply tap the red packet to pop the gold seal and open it. It reveals a random Chinese cultural blessing and your lucky numbers, updating your daily vibes score."
         }
       },
       {
@@ -70,7 +70,7 @@ export default function Page() {
         "name": "Is the digital red packet simulator free to use?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, the Lucky Envelope simulation on Luckify is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
+          "text": "Yes, the Lucky Envelope simulation on Luck ഉണ്ടോ ? is 100% free with no registration, fees, advertisements, or limits. You can open red envelopes for daily fortune blessings as many times as you wish."
         }
       }
     ]

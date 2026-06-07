@@ -35,7 +35,7 @@ export default function Page() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Luckify",
+    "name": "Luck ഉണ്ടോ ?",
     "url": "https://www.luckundo.xyz", // Fallback canonical or domain reference
     "description": "An interactive digital garden of luck simulations, fortune telling, and random decision makers.",
     "potentialAction": {
@@ -48,7 +48,7 @@ export default function Page() {
   const gamesListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Luckify Interactive Fortune & Luck Games",
+    "name": "Luck ഉണ്ടോ ? Interactive Fortune & Luck Games",
     "numberOfItems": 3,
     "itemListElement": [
       {

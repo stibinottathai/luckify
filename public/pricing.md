@@ -1,6 +1,6 @@
-# Pricing & Subscription Plans — Luckify
+# Pricing & Subscription Plans — Luck ഉണ്ടോ ?
 
-Luckify is a completely free, open-source platform. There are no registration barriers, no premium plans, no token limitations, and no advertisements.
+Luck ഉണ്ടോ ? is a completely free, open-source platform. There are no registration barriers, no premium plans, no token limitations, and no advertisements.
 
 ## Standard Tiers
 

@@ -25,8 +25,6 @@ export const metadata: Metadata = {
   description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
   metadataBase: new URL("https://www.luckundo.xyz"),
   openGraph: {
-    title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
-    description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
     url: "https://www.luckundo.xyz",
     siteName: "Luck ഉണ്ടോ ?",
     images: [
@@ -42,8 +40,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luck ഉണ്ടോ ? | Try Your Luck. Find Your Fortune.",
-    description: "An engaging, interactive lucky garden! Spin the fortune wheel, release the divination pendulum, hunt for daily gifts, and test your vibes score today.",
     images: ["/og-image.png"],
   },
 };

@@ -133,7 +133,7 @@ export default function BuyMeCoffeeWidget() {
 
           {/* Tooltip on Hover */}
           <span className="absolute right-16 bg-[#1b103e]/90 text-soft-cream border border-primary-gold/35 px-3 py-1.5 rounded-xl text-xs font-bold font-fredoka whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-300 shadow-md">
-            Support Luckify ☕
+            Support Luck ഉണ്ടോ ? ☕
           </span>
         </motion.button>
       </div>
@@ -182,7 +182,7 @@ export default function BuyMeCoffeeWidget() {
                   </h3>
 
                   <p className="text-xs sm:text-sm text-deep-violet/70 dark:text-soft-cream/70 mb-6 leading-relaxed max-w-sm">
-                    Luckify is completely free and ad-free! Your support keeps our servers running and supports new gamified features. Get a <span className="text-primary-gold font-bold">cosmic reward</span> for your kindness!
+                    Luck ഉണ്ടോ ? is completely free and ad-free! Your support keeps our servers running and supports new gamified features. Get a <span className="text-primary-gold font-bold">cosmic reward</span> for your kindness!
                   </p>
 
                   {coffeesDonated > 0 && (

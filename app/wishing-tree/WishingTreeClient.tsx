@@ -22,8 +22,9 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { playWinChime, playTick, playCoinDeducted } from "@/lib/audio";
-import { db } from "@/lib/firebase";
+import { db, auth, googleProvider } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy, limit } from "firebase/firestore";
+import { signInWithPopup } from "firebase/auth";
 import { createWish, toggleVibeWish, deleteWish, Wish } from "@/lib/wishes";
 
 // Twinkle branch coordinate points relative to the tree container (percentage)
@@ -43,6 +44,16 @@ const getBranchCoordinate = (index: number) => {
 
 export default function WishingTreeClient() {
   const { user, loading: authLoading } = useAuth();
+
+  const handleSignIn = async () => {
+    if (!auth) return;
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Firebase Google Sign-in failed:", error);
+    }
+  };
+
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   const spendCoins = useLuckStore((s) => s.spendCoins);
@@ -395,10 +406,13 @@ export default function WishingTreeClient() {
               </button>
             )
           ) : (
-            <div className="py-2.5 px-4 rounded-xl bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 flex items-center gap-2 text-[10px] font-bold text-deep-violet/60 dark:text-soft-cream/60">
-              <Lock className="w-3.5 h-3.5 text-primary-gold" />
-              <span>Sign in above to write wishes</span>
-            </div>
+            <button
+              onClick={handleSignIn}
+              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white border border-emerald-500/30 flex items-center gap-2 text-[10px] font-bold transition-all duration-300 cursor-pointer shadow-md hover:scale-[1.02] active:scale-95"
+            >
+              <Lock className="w-3.5 h-3.5 text-primary-gold animate-pulse" />
+              <span>Sign In to Write Wishes</span>
+            </button>
           )}
         </div>
       </div>
@@ -801,10 +815,13 @@ export default function WishingTreeClient() {
                   <span>{activeWish.vibesUsers.includes(user.uid) ? "VIBES SENT ✓" : "SEND POSITIVE VIBES"}</span>
                 </button>
               ) : (
-                <div className="mt-6 py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold text-soft-cream/50 w-full flex items-center justify-center gap-2">
-                  <Lock className="w-3.5 h-3.5 text-primary-gold" />
-                  <span>Sign in above to send positive vibes</span>
-                </div>
+                <button
+                  onClick={handleSignIn}
+                  className="mt-6 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#2D1B69] to-[#1E1145] hover:from-primary-gold hover:to-[#dfa72b] hover:text-deep-violet text-white border border-primary-gold/30 w-full flex items-center justify-center gap-2 text-[10px] font-bold transition-all duration-300 cursor-pointer shadow-md hover:scale-[1.02] active:scale-95"
+                >
+                  <Lock className="w-3.5 h-3.5 text-primary-gold animate-pulse" />
+                  <span>Sign In to Send Positive Vibes</span>
+                </button>
               )}
 
               {/* Option to Delete Wish if user is the creator */}

@@ -7,6 +7,8 @@ import { useLuckStore } from "@/store/luckStore";
 import confetti from "canvas-confetti";
 import { Gift, Coins, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
 
 interface BoardState {
   openedIndexes: number[];
@@ -116,6 +118,16 @@ function playMediumChime() {
 
 export default function GiftHuntGame() {
   const { user } = useAuth();
+
+  const handleSignIn = async () => {
+    if (!auth) return;
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Firebase Google Sign-in failed:", error);
+    }
+  };
+
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
 
@@ -288,12 +300,12 @@ export default function GiftHuntGame() {
         <p className="text-deep-violet/70 dark:text-soft-cream/70 max-w-md mb-8">
           The Lucky Gift Hunt generates a unique cryptographic board just for you every day. Please log in to secure your daily rewards!
         </p>
-        <Link
-          href="/auth"
-          className="py-3 px-8 rounded-full bg-primary-gold text-[#1E1145] font-black text-sm tracking-wider uppercase hover:bg-amber-300 transition-colors shadow-lg"
+        <button
+          onClick={handleSignIn}
+          className="py-3 px-8 rounded-full bg-primary-gold text-[#1E1145] font-black text-sm tracking-wider uppercase hover:bg-amber-300 transition-colors shadow-lg cursor-pointer"
         >
           Sign In to Play
-        </Link>
+        </button>
       </div>
     );
   }

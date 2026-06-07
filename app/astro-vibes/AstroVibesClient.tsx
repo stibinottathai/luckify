@@ -19,6 +19,8 @@ import {
 import { playWinChime, playCoinDeducted } from "@/lib/audio";
 import confetti from "canvas-confetti";
 import Link from "next/link";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
 
 interface ZodiacInfo {
   id: string;
@@ -102,6 +104,16 @@ const GAME_RECOMMENDATIONS = [
 
 export default function AstroVibesClient() {
   const { user, loading } = useAuth();
+
+  const handleSignIn = async () => {
+    if (!auth) return;
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Firebase Google Sign-in failed:", error);
+    }
+  };
+
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   
@@ -517,10 +529,13 @@ export default function AstroVibesClient() {
                     </div>
 
                     {!user ? (
-                      <div className="py-2.5 px-4 rounded-xl bg-deep-violet/5 dark:bg-white/5 border border-deep-violet/10 dark:border-white/10 flex items-center justify-center gap-2 w-full text-xs font-bold text-deep-violet/60 dark:text-soft-cream/60">
-                        <Lock className="w-3.5 h-3.5 text-primary-gold" />
-                        <span>Sign in above to claim +200 Vibe Coins!</span>
-                      </div>
+                      <button
+                        onClick={handleSignIn}
+                        className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-deep-violet to-[#4f3583] hover:from-primary-gold hover:to-[#dfa72b] hover:text-deep-violet text-white border border-primary-gold/30 flex items-center justify-center gap-2 w-full text-xs font-bold transition-all duration-300 cursor-pointer shadow-md hover:scale-[1.02] active:scale-95"
+                      >
+                        <Lock className="w-3.5 h-3.5 text-primary-gold animate-pulse" />
+                        <span>Sign In to Claim +200 Vibe Coins!</span>
+                      </button>
                     ) : alreadyClaimed ? (
                       <div className="py-2.5 px-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 flex items-center justify-center gap-1.5 w-full text-xs font-black uppercase tracking-wider">
                         <span>✓ Alignment Bonus Claimed</span>

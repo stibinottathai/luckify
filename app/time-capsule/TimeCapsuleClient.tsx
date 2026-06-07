@@ -21,13 +21,14 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { playWinChime, playTick, playCoinDeducted } from "@/lib/audio";
-import { db } from "@/lib/firebase";
+import { db, auth, googleProvider } from "@/lib/firebase";
 import {
   createTimeCapsuleInDb,
   fetchTimeCapsulesFromDb,
   claimTimeCapsuleInDb,
   TimeCapsule
 } from "@/lib/timeCapsules";
+import { signInWithPopup } from "firebase/auth";
 import confetti from "canvas-confetti";
 
 // Sub-component for individual time capsule display
@@ -162,6 +163,16 @@ function TimeCapsuleCard({
 
 export default function TimeCapsuleClient() {
   const { user } = useAuth();
+
+  const handleSignIn = async () => {
+    if (!auth) return;
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Firebase Google Sign-in failed:", error);
+    }
+  };
+
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
   const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]) || useLuckStore((s) => s.profiles["guest"]);
   const spendCoins = useLuckStore((s) => s.spendCoins);
@@ -533,12 +544,19 @@ export default function TimeCapsuleClient() {
 
                   {/* Submit button */}
                   <button
-                    type="submit"
-                    disabled={submitting || coinBalance < coinsToLock}
+                    type={user && user.uid !== "guest" ? "submit" : "button"}
+                    onClick={user && user.uid !== "guest" ? undefined : handleSignIn}
+                    disabled={submitting || (!!user && user.uid !== "guest" && coinBalance < coinsToLock)}
                     className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-amber-950 font-black text-xs tracking-widest uppercase shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer disabled:opacity-40 flex items-center justify-center gap-2"
                   >
                     <Sparkles className="w-4.5 h-4.5" />
-                    <span>{submitting ? "SEALING CAPSULE..." : "SEAL MESSAGE & LOCK COINS"}</span>
+                    <span>
+                      {submitting
+                        ? "SEALING CAPSULE..."
+                        : user && user.uid !== "guest"
+                        ? "SEAL MESSAGE & LOCK COINS"
+                        : "SIGN IN TO SEAL CAPSULE"}
+                    </span>
                   </button>
                 </form>
               )}
@@ -619,12 +637,18 @@ export default function TimeCapsuleClient() {
                 <p className="text-xs text-deep-violet/60 dark:text-soft-cream/40 font-semibold">Tuning temporal frequencies...</p>
               </div>
             ) : !user || user.uid === "guest" ? (
-              <div className="py-16 text-center space-y-3">
+              <div className="py-16 text-center space-y-4 flex flex-col items-center">
                 <p className="text-4xl">🔒</p>
                 <h5 className="text-sm font-black text-deep-violet dark:text-white">Vault is Sealed</h5>
-                <p className="text-xs text-deep-violet/60 dark:text-soft-cream/40 max-w-xs mx-auto leading-relaxed">
-                  Please log in above to unlock your temporal vault and review your time-locked capsules.
+                <p className="text-xs text-deep-violet/60 dark:text-soft-cream/40 max-w-xs mx-auto leading-relaxed mb-2">
+                  Please log in to unlock your temporal vault and review your time-locked capsules.
                 </p>
+                <button
+                  onClick={handleSignIn}
+                  className="py-3 px-8 rounded-full bg-primary-gold text-[#1E1145] font-black text-sm tracking-wider uppercase hover:bg-amber-300 transition-colors shadow-lg cursor-pointer"
+                >
+                  Sign In with Google
+                </button>
               </div>
             ) : capsules.length === 0 ? (
               <div className="py-16 text-center border-2 border-dashed border-deep-violet/20 dark:border-white/10 rounded-[2rem] space-y-3 bg-white/50 dark:bg-white/5">

@@ -6,6 +6,8 @@ import { fetchLeaderboard, fetchVips, LeaderboardEntry } from "@/lib/firestorePr
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useLuckStore } from "@/store/luckStore";
 import Image from "next/image";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
 
 // ─── Badge config ─────────────────────────────────────────────────────────────
 
@@ -293,6 +295,16 @@ function SkeletonRow({ index }: { index: number }) {
 
 export default function LeaderboardClient() {
   const { user, loading: authLoading } = useAuth();
+
+  const handleSignIn = async () => {
+    if (!auth) return;
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Firebase Google Sign-in failed:", error);
+    }
+  };
+
   const [activeTab, setActiveTab] = useState<"global" | "vip">("global");
 
   const activeUserKey = useLuckStore((s) => s.activeUserKey);
@@ -380,9 +392,15 @@ export default function LeaderboardClient() {
           <h2 className="font-fredoka text-2xl font-black text-deep-violet dark:text-soft-cream">
             Sign in to view the Leaderboard
           </h2>
-          <p className="text-sm text-deep-violet/50 dark:text-soft-cream/50 max-w-xs">
+          <p className="text-sm text-deep-violet/50 dark:text-soft-cream/50 max-w-xs mb-2">
             The leaderboard is available to signed-in players only. Sign in with Google to see where you rank!
           </p>
+          <button
+            onClick={handleSignIn}
+            className="py-3 px-8 rounded-full bg-primary-gold text-[#1E1145] font-black text-sm tracking-wider uppercase hover:bg-amber-300 transition-colors shadow-lg cursor-pointer font-fredoka"
+          >
+            Sign In with Google
+          </button>
         </motion.div>
       )}
 

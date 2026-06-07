@@ -22,7 +22,7 @@ const CAPSULE_FAQS = [
   },
   {
     question: "What are the interest multipliers and lock durations?",
-    answer: "We offer multiple lock periods tailored for your journey: 1 Minute (Test: +5% yield), 1 Hour (+10% yield), 1 Day (+15% yield), 1 Week (+30% yield), 1 Month (+75% yield), and 1 Year (+150% yield). Choosing longer durations yields significantly higher returns!",
+    answer: "We offer multiple lock periods tailored for your journey: 1 Week (+5% yield), 1 Month (+10% yield), and 1 Year (+20% yield). Choosing longer durations yields higher returns!",
   },
   {
     question: "Is there any risk of losing my locked coins?",

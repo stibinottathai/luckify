@@ -176,6 +176,12 @@ export default function TimeCapsuleClient() {
   const [capsules, setCapsules] = useState<TimeCapsule[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Filter capsules: show all locked ones, and maximum 6 recently opened capsules
+  const filteredCapsules = [
+    ...capsules.filter((c) => !c.isOpened),
+    ...capsules.filter((c) => c.isOpened).slice(0, 6),
+  ];
+
   // Form States
   const [messageText, setMessageText] = useState("");
   const [coinsToLock, setCoinsToLock] = useState<number>(100);
@@ -301,34 +307,41 @@ export default function TimeCapsuleClient() {
   const handleClaimCapsule = async (capsuleId: string) => {
     if (!user || user.uid === "guest") return;
 
+    // Find capsule to open scroll view instantly (Optimistic UI)
+    const claimedCapsule = capsules.find((c) => c.id === capsuleId);
+    if (!claimedCapsule) return;
+
     playTick();
+
+    // Open scroll modal instantly
+    setOpenCapsule({
+      ...claimedCapsule,
+      isOpened: true
+    });
+
+    // Confetti burst instantly
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+
+    // Play win chime instantly
+    playWinChime();
+
+    // Call DB to unseal in background
     const result = await claimTimeCapsuleInDb(user.uid, capsuleId);
 
     if (result.success) {
-      // Confetti burst!
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
-
+      // Add coins to local store first so they sync to Firestore properly
+      addCoins(result.finalPayout);
       addResult("Time Capsule", `Unsealed capsule and collected ${result.finalPayout} coins! 🕰️`, true, 0);
-      
-      // Update local state instantly for UI chimes
-      playWinChime();
 
-      // Find capsule to open scroll view
-      const claimedCapsule = capsules.find((c) => c.id === capsuleId);
-      if (claimedCapsule) {
-        setOpenCapsule({
-          ...claimedCapsule,
-          isOpened: true
-        });
-      }
-
-      // Refresh list
+      // Refresh list to mark it as unsealed in Vault
       loadCapsules();
     } else {
+      // Revert if database failed
+      setOpenCapsule(null);
       alert("Failed to unseal. Make sure the lock timer has expired.");
     }
   };
@@ -411,8 +424,7 @@ export default function TimeCapsuleClient() {
             exit={{ opacity: 0, y: -15 }}
             className="grid grid-cols-1 md:grid-cols-12 gap-8"
           >
-            {/* Form Column */}
-            <div className="md:col-span-7 bg-white/70 dark:bg-[#1B103E]/50 backdrop-blur-xl border border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-2xl relative overflow-hidden">
+                   <div className="md:col-span-7 bg-white/70 dark:bg-[#1B103E]/50 backdrop-blur-xl border border-deep-violet/10 dark:border-white/10 rounded-[2.5rem] p-6 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/5 rounded-full filter blur-3xl pointer-events-none -z-15" />
               
               <h4 className="text-base font-black text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2 mb-4 border-b border-deep-violet/5 dark:border-white/5 pb-3">
@@ -597,7 +609,7 @@ export default function TimeCapsuleClient() {
             <h4 className="text-base font-black text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2 mb-6 border-b border-deep-violet/5 dark:border-white/5 pb-3">
               <span>Time Vault</span>
               <span className="text-[10px] bg-deep-violet/5 dark:bg-white/10 text-deep-violet/70 dark:text-soft-cream/70 px-2.5 py-0.5 rounded-full font-bold">
-                {capsules.length} sealed capsules
+                Showing all locked & max 6 recently opened capsules
               </span>
             </h4>
 
@@ -624,7 +636,7 @@ export default function TimeCapsuleClient() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {capsules.map((capsule) => (
+                {filteredCapsules.map((capsule) => (
                   <TimeCapsuleCard
                     key={capsule.id}
                     capsule={capsule}

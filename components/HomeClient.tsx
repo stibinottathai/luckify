@@ -178,8 +178,44 @@ export default function HomeClient() {
     setParticles(initialParticles);
   }, []);
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": LOBBY_FAQS.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
+  const webAppSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Luck ഉണ്ടോ ?",
+    "url": "https://www.luckundo.xyz",
+    "applicationCategory": "EntertainmentApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "An interactive digital playground compiling premium, high-fidelity simulations of classic fortune-telling games, random decision makers, and luck test widgets."
+  };
+
   return (
     <div className="flex-1 flex flex-col items-center">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+      />
       {/* Floating particles background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {particles.map((p) => (

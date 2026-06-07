@@ -110,6 +110,7 @@ export default function AstroVibesClient() {
   const spendCoins = useLuckStore((s) => s.spendCoins);
 
   const [hoveredSign, setHoveredSign] = useState<string | null>(null);
+  const [hasNavigatedToDashboard, setHasNavigatedToDashboard] = useState(false);
   const [horoscopeData, setHoroscopeData] = useState<{
     forecast: string;
     luckyScore: number;
@@ -229,6 +230,12 @@ export default function AstroVibesClient() {
   };
 
   const handleSelectSign = (signId: string) => {
+    // If they already have this sign active in their profile, skip charging coins
+    if (currentProfile?.zodiacSign === signId) {
+      setHasNavigatedToDashboard(true);
+      return;
+    }
+
     const success = spendCoins(500);
     if (!success) {
       alert("💰 You need 500 coins to align your celestial vibes!");
@@ -236,10 +243,12 @@ export default function AstroVibesClient() {
     }
     playCoinDeducted();
     setZodiacSign(signId);
+    setHasNavigatedToDashboard(true);
   };
 
   const handleResetSign = () => {
     setZodiacSign("");
+    setHasNavigatedToDashboard(false);
   };
 
   const alreadyClaimed = currentProfile?.lastAstroClaimDate === todayStr;
@@ -255,7 +264,7 @@ export default function AstroVibesClient() {
   return (
     <div className="w-full max-w-2xl mx-auto select-none font-fredoka">
       <AnimatePresence mode="wait">
-        {!selectedSignId ? (
+        {!hasNavigatedToDashboard || !selectedSignId ? (
           <motion.div
             key="picker"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -283,25 +292,25 @@ export default function AstroVibesClient() {
                     onClick={() => handleSelectSign(sign.id)}
                     onMouseEnter={() => setHoveredSign(sign.id)}
                     onMouseLeave={() => setHoveredSign(null)}
-                    className="aspect-[4/5] rounded-2xl bg-white/50 dark:bg-black/20 border border-deep-violet/10 dark:border-white/5 flex flex-col items-center justify-center p-3 text-center transition-all duration-300 hover:border-primary-gold/75 hover:bg-white dark:hover:bg-[#120A2C] shadow-sm hover:shadow-md hover:-translate-y-1 relative overflow-hidden cursor-pointer"
+                    className="aspect-auto min-h-[115px] sm:aspect-[4/5] rounded-2xl bg-white/50 dark:bg-black/20 border border-deep-violet/10 dark:border-white/5 flex flex-col items-center justify-center p-2 sm:p-3 text-center transition-all duration-300 hover:border-primary-gold/75 hover:bg-white dark:hover:bg-[#120A2C] shadow-sm hover:shadow-md hover:-translate-y-1 relative overflow-hidden cursor-pointer"
                   >
                     {/* Hover Glow */}
                     {isHovered && (
                       <div className="absolute inset-0 bg-gradient-to-tr from-primary-gold/5 via-transparent to-transparent pointer-events-none" />
                     )}
-                    <span className="text-3xl filter drop-shadow-sm select-none pointer-events-none mb-1">
+                    <span className="text-2xl sm:text-3xl filter drop-shadow-sm select-none pointer-events-none mb-1">
                       {sign.emoji}
                     </span>
-                    <span className="text-xs font-black text-deep-violet dark:text-soft-cream select-none pointer-events-none truncate max-w-full">
+                    <span className="text-[10px] sm:text-xs font-black text-deep-violet dark:text-soft-cream select-none pointer-events-none break-words leading-tight max-w-full">
                       {sign.name}
                     </span>
-                    <span className="text-[7px] text-deep-violet/40 dark:text-soft-cream/40 uppercase tracking-widest font-black mt-1 select-none pointer-events-none">
+                    <span className="text-[8px] sm:text-[9px] text-deep-violet/40 dark:text-soft-cream/40 uppercase tracking-widest font-black mt-0.5 select-none pointer-events-none">
                       {sign.symbol}
                     </span>
-                    <span className="text-[7px] font-bold text-deep-violet/50 dark:text-soft-cream/50 mt-1 select-none pointer-events-none whitespace-nowrap">
+                    <span className="text-[8px] sm:text-[9px] font-bold text-deep-violet/50 dark:text-soft-cream/50 mt-0.5 select-none pointer-events-none whitespace-nowrap">
                       {sign.dateRange.split(" - ").map(d => d.slice(0, 3)).join("-")}
                     </span>
-                    <div className="mt-1 flex items-center gap-0.5 bg-primary-gold/10 px-1 py-0.5 rounded border border-primary-gold/25 text-primary-gold text-[8px] font-black select-none pointer-events-none">
+                    <div className="mt-1 flex items-center gap-0.5 bg-primary-gold/10 px-1 py-0.5 rounded border border-primary-gold/25 text-primary-gold text-[8px] sm:text-[9px] font-black select-none pointer-events-none">
                       <span>500</span>
                       <span>🪙</span>
                     </div>

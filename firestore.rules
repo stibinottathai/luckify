@@ -11,7 +11,7 @@ service cloud.firestore {
           'displayName', 'photoURL', 'updatedAt',
           'xp', 'level', 'shakeStreak', 'shakeStreakLastClaimed', 'shakeStreakRecord',
           'weeklyCoins', 'weeklyCoinsLastUpdated', 'collectedItems', 'mysteryBoxesCount',
-          'badges', 'doubleRewardsUntil', 'streakShieldsCount', 'vipUntil', 'coffeesDonated',
+          'badges', 'doubleRewardsUntil', 'streakShieldsCount', 'vipUntil',
           'lastVisitDate', 'visitStreak', 'visitStreakRecord', 'zodiacSign',
           'lastAstroClaimDate', 'lastWishDate', 'lastTimeCapsuleDate',
           'totalDiceRolls', 'totalGoldenDiceEvents', 'goldenDiceRate',
@@ -66,7 +66,6 @@ service cloud.firestore {
             && (!('diceFragments' in data) || (data.diceFragments is int && data.diceFragments >= 0))
             && (!('collectionProgress' in data) || (data.collectionProgress is int && data.collectionProgress >= 1))
             && (!('mythicDiceCount' in data) || (data.mythicDiceCount is int && data.mythicDiceCount >= 0))
-            && (!('coffeesDonated' in data) || (data.coffeesDonated is int && data.coffeesDonated >= 0))
             && (!('wishDailyCountUsed' in data) || (data.wishDailyCountUsed is int && data.wishDailyCountUsed >= 0))
             && (!('wishDailyDate' in data) || (data.wishDailyDate is string && data.wishDailyDate.size() == 10));
       }

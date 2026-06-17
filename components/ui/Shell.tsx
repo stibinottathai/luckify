@@ -10,7 +10,6 @@ import LegalModal from "@/components/ui/LegalModal";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
 import AuthButton from "@/components/auth/AuthButton";
-import BuyMeCoffeeWidget from "@/components/ui/BuyMeCoffeeWidget";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 
@@ -341,13 +340,6 @@ function ShellInner({ children }: ShellProps) {
                   <Trophy className="w-4 h-4 text-primary-gold" />
                   <span>Leaderboard</span>
                 </Link>
-                <button
-                  onClick={() => { setMenuOpen(false); window.dispatchEvent(new CustomEvent("open-buy-me-coffee-modal")); }}
-                  className="flex items-center gap-2 py-2 px-3 rounded-xl hover:bg-deep-violet/5 dark:hover:bg-white/5 font-extrabold text-xs uppercase tracking-wider text-left w-full"
-                >
-                  <span>☕</span>
-                  <span>Buy Me a Coffee</span>
-                </button>
               </div>
             </motion.div>
           </>
@@ -395,13 +387,6 @@ function ShellInner({ children }: ShellProps) {
             </button>
             <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
             <button
-              onClick={() => window.dispatchEvent(new CustomEvent("open-buy-me-coffee-modal"))}
-              className="text-xs font-bold text-deep-violet/50 hover:text-primary-gold dark:text-soft-cream/50 dark:hover:text-primary-gold hover:underline cursor-pointer bg-transparent border-0 transition-colors"
-            >
-              ☕ Buy Me a Coffee
-            </button>
-            <span className="text-[10px] text-deep-violet/20 dark:text-white/10">•</span>
-            <button
               onClick={() => setShareOpen(true)}
               className="text-xs font-extrabold text-primary-gold hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-0"
             >
@@ -415,7 +400,6 @@ function ShellInner({ children }: ShellProps) {
       {/* Global Modals / Drawers */}
       <ShareModal isOpen={shareOpen} onClose={() => setShareOpen(false)} score={luckyScore} />
       <LegalModal isOpen={legalOpen} onClose={() => setLegalOpen(false)} initialTab={legalTab} />
-      <BuyMeCoffeeWidget />
     </div>
   );
 }

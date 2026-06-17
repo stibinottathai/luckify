@@ -2,9 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchLeaderboard, fetchVips, LeaderboardEntry } from "@/lib/firestoreProfile";
+import { fetchLeaderboard, LeaderboardEntry } from "@/lib/firestoreProfile";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { useLuckStore } from "@/store/luckStore";
 import Image from "next/image";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
@@ -164,13 +163,11 @@ function LeaderRow({
   rank,
   index,
   isCurrentUser,
-  isVipTab,
 }: {
   entry: LeaderboardEntry;
   rank: number;
   index: number;
   isCurrentUser: boolean;
-  isVipTab?: boolean;
 }) {
   const badge = getBadge(entry.coinBalance);
 
@@ -182,8 +179,6 @@ function LeaderRow({
       className={`group flex items-center gap-3 sm:gap-4 px-4 py-3 rounded-2xl border transition-all duration-200 ${
         isCurrentUser
           ? "bg-accent-teal/10 border-accent-teal/40 shadow-[0_0_16px_rgba(0,180,160,0.15)]"
-          : isVipTab
-          ? "bg-[#FFDD00]/5 hover:bg-[#FFDD00]/10 border-primary-gold/25 hover:border-primary-gold/45 shadow-[0_0_8px_rgba(245,183,0,0.05)]"
           : "bg-white/50 dark:bg-white/[0.03] border-white/60 dark:border-white/8 hover:bg-primary-gold/5 hover:border-primary-gold/25"
       }`}
     >
@@ -199,7 +194,7 @@ function LeaderRow({
                 : "rgba(45,27,105,0.4)",
           }}
         >
-          {rank === 1 ? "👑" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : isVipTab ? `☕${rank}` : rank}
+          {rank === 1 ? "👑" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : rank}
         </span>
       </div>
 
@@ -208,7 +203,7 @@ function LeaderRow({
         photoURL={entry.photoURL}
         displayName={entry.displayName}
         size={36}
-        ring={isCurrentUser ? "#00B4A0" : isVipTab ? "#FFDD00" : undefined}
+        ring={isCurrentUser ? "#00B4A0" : undefined}
       />
 
       {/* Name + badge */}
@@ -224,22 +219,16 @@ function LeaderRow({
           </p>
         </div>
         <div className="flex items-center gap-1.5 mt-0.5">
-          {isVipTab ? (
-            <span className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-primary-gold/15 text-primary-gold border border-primary-gold/30">
-              🌟 Cosmic Patron
-            </span>
-          ) : (
-            <span
-              className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full"
-              style={{
-                background: `${badge.color}18`,
-                color: badge.color,
-              }}
-            >
-              {badge.emoji} {badge.label}
-            </span>
-          )}
-          {entry.winStreak > 0 && !isVipTab && (
+          <span
+            className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full"
+            style={{
+              background: `${badge.color}18`,
+              color: badge.color,
+            }}
+          >
+            {badge.emoji} {badge.label}
+          </span>
+          {entry.winStreak > 0 && (
             <span className="text-[10px] font-bold text-deep-violet/50 dark:text-soft-cream/40">
               🔥 {entry.winStreak}
             </span>
@@ -251,10 +240,10 @@ function LeaderRow({
       <div className="flex items-center gap-3 sm:gap-5 flex-shrink-0">
         <div className="hidden sm:flex flex-col items-center">
           <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/35 dark:text-soft-cream/30">
-            {isVipTab ? "Donations" : "Plays"}
+            Plays
           </span>
           <span className="font-fredoka font-extrabold text-sm text-deep-violet dark:text-soft-cream tabular-nums">
-            {isVipTab ? `${entry.coffeesDonated || 0} ☕` : entry.totalPlays}
+            {entry.totalPlays}
           </span>
         </div>
         <div className="flex flex-col items-center">
@@ -305,13 +294,7 @@ export default function LeaderboardClient() {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<"global" | "vip">("global");
-
-  const activeUserKey = useLuckStore((s) => s.activeUserKey);
-  const currentProfile = useLuckStore((s) => s.profiles[activeUserKey]);
-  const coffeesDonated = currentProfile?.coffeesDonated || 0;
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
-  const [vipEntries, setVipEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [permError, setPermError] = useState(false);
   const [search, setSearch] = useState("");
@@ -325,7 +308,6 @@ export default function LeaderboardClient() {
     if (!user) {
       setLoading(false);
       setEntries([]);
-      setVipEntries([]);
       return;
     }
 
@@ -334,14 +316,10 @@ export default function LeaderboardClient() {
 
     let isMounted = true;
 
-    Promise.all([
-      fetchLeaderboard(),
-      fetchVips()
-    ])
-      .then(([leaderboardData, vipData]) => {
+    fetchLeaderboard()
+      .then((leaderboardData) => {
         if (!isMounted) return;
         setEntries(leaderboardData);
-        setVipEntries(vipData);
         setLoading(false);
         setPermError(false);
       })
@@ -357,20 +335,18 @@ export default function LeaderboardClient() {
     };
   }, [user, authLoading]);
 
-  const activeList = activeTab === "global" ? entries : vipEntries;
-
   const filtered = search.trim()
-    ? activeList.filter((e) =>
+    ? entries.filter((e) =>
         e.displayName.toLowerCase().includes(search.toLowerCase())
       )
-    : activeList;
+    : entries;
 
   const top3 = filtered.slice(0, 3);
   const rest = filtered.slice(3);
 
   // Find current user's rank
   const currentUserRank = user
-    ? activeList.findIndex((e) => e.uid === user.uid) + 1
+    ? entries.findIndex((e) => e.uid === user.uid) + 1
     : 0;
 
   const podiumOrder = top3.length === 3
@@ -432,25 +408,19 @@ export default function LeaderboardClient() {
         transition={{ duration: 0.5 }}
         className="mb-6 text-center"
       >
-        <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-4 ${
-          activeTab === "vip" 
-            ? "bg-[#FFDD00]/15 border-primary-gold/30 text-primary-gold" 
-            : "bg-[#2D1B69]/10 border-[#2D1B69]/20 dark:bg-white/5 dark:border-white/10 text-deep-violet dark:text-soft-cream"
-        }`}>
-          <span className="text-sm">{activeTab === "vip" ? "🌟" : "🏆"}</span>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-4 bg-[#2D1B69]/10 border-[#2D1B69]/20 dark:bg-white/5 dark:border-white/10 text-deep-violet dark:text-soft-cream">
+          <span className="text-sm">🏆</span>
           <span className="text-xs font-extrabold uppercase tracking-widest">
-            {activeTab === "vip" ? "VIP Supporters" : "Live Leaderboard"}
+            Live Leaderboard
           </span>
         </div>
         
         <h2 className="font-fredoka text-3xl sm:text-4xl font-black text-deep-violet dark:text-soft-cream">
-          {activeTab === "vip" ? "Cosmic Patrons ☕" : "Top Lucky Players"}
+          Top Lucky Players
         </h2>
         
         <p className="text-sm font-semibold text-deep-violet/50 dark:text-soft-cream/50 mt-1 max-w-md mx-auto leading-relaxed">
-          {activeTab === "vip" 
-            ? "Meet the amazing supporters keeping our lucky garden free & ad-free!" 
-            : "Ranked by total Lucky Points • Updates in real-time"}
+          Ranked by total Lucky Points • Updates in real-time
         </p>
 
         {/* Current user's rank pill */}
@@ -459,51 +429,14 @@ export default function LeaderboardClient() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className={`inline-flex items-center gap-2 mt-3 px-4 py-1.5 rounded-full border ${
-              activeTab === "vip"
-                ? "bg-primary-gold/10 border-primary-gold/30 text-primary-gold"
-                : "bg-accent-teal/15 border-accent-teal/35 text-accent-teal"
-            }`}
+            className="inline-flex items-center gap-2 mt-3 px-4 py-1.5 rounded-full border bg-accent-teal/15 border-accent-teal/35 text-accent-teal"
           >
             <span className="text-xs font-extrabold">
-              {activeTab === "vip" 
-                ? `Your VIP ranking: #${currentUserRank} of ${vipEntries.length}`
-                : `Your rank: #${currentUserRank} of ${entries.length}`
-              }
+              Your rank: #{currentUserRank} of {entries.length}
             </span>
           </motion.div>
         )}
-
-        {activeTab === "vip" && coffeesDonated > 0 && (
-          <div className="text-xs font-black text-[#FFDD00] mt-3">
-            ✨ You have contributed {coffeesDonated} {coffeesDonated === 1 ? "coffee" : "coffees"} to this garden!
-          </div>
-        )}
       </motion.div>
-
-      {/* Tab Switcher */}
-      <div className="flex justify-center gap-3 mb-6">
-        <button
-          onClick={() => setActiveTab("global")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider border transition-all cursor-pointer ${
-            activeTab === "global"
-              ? "bg-[#2D1B69] border-[#2D1B69] text-white dark:bg-white dark:border-white dark:text-deep-violet shadow-sm"
-              : "bg-deep-violet/5 dark:bg-white/5 border-deep-violet/10 dark:border-white/10 text-deep-violet/70 dark:text-soft-cream/70 hover:bg-deep-violet/10 dark:hover:bg-white/10"
-          }`}
-        >
-          🏆 Global Leaders
-        </button>
-        <button
-          onClick={() => setActiveTab("vip")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider border transition-all cursor-pointer ${
-            activeTab === "vip"
-              ? "bg-gradient-to-r from-yellow-400 to-amber-500 border-amber-500 text-deep-violet shadow-[0_0_15px_rgba(245,183,0,0.25)]"
-              : "bg-deep-violet/5 dark:bg-white/5 border-deep-violet/10 dark:border-white/10 text-deep-violet/70 dark:text-soft-cream/70 hover:bg-deep-violet/10 dark:hover:bg-white/10"
-          }`}
-        >
-          🌟 VIP Supporters
-        </button>
-      </div>
 
       {/* ── Podium (top 3) ── */}
       {!loading && top3.length > 0 && !search && (
@@ -516,20 +449,14 @@ export default function LeaderboardClient() {
           <div
             className="relative rounded-3xl overflow-hidden border border-primary-gold/20 dark:border-primary-gold/10 shadow-[0_16px_60px_rgba(245,183,0,0.12)]"
             style={{
-              background:
-                activeTab === "vip"
-                  ? "radial-gradient(ellipse at 50% 0%, rgba(245,183,0,0.18) 0%, transparent 65%), linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,248,231,0.7) 100%)"
-                  : "radial-gradient(ellipse at 50% 0%, rgba(245,183,0,0.12) 0%, transparent 65%), linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,248,231,0.7) 100%)",
+              background: "radial-gradient(ellipse at 50% 0%, rgba(245,183,0,0.12) 0%, transparent 65%), linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,248,231,0.7) 100%)",
             }}
           >
             <div className="dark:hidden absolute inset-0 pointer-events-none" />
             <div
               className="hidden dark:block absolute inset-0 pointer-events-none"
               style={{
-                background:
-                  activeTab === "vip"
-                    ? "radial-gradient(ellipse at 50% 0%, rgba(245,183,0,0.16) 0%, transparent 65%), linear-gradient(180deg, rgba(27,16,62,0.97) 0%, rgba(8,5,20,0.95) 100%)"
-                    : "radial-gradient(ellipse at 50% 0%, rgba(245,183,0,0.10) 0%, transparent 65%), linear-gradient(180deg, rgba(27,16,62,0.97) 0%, rgba(8,5,20,0.95) 100%)",
+                background: "radial-gradient(ellipse at 50% 0%, rgba(245,183,0,0.10) 0%, transparent 65%), linear-gradient(180deg, rgba(27,16,62,0.97) 0%, rgba(8,5,20,0.95) 100%)",
               }}
             />
             {/* Decorative sparkle dots */}
@@ -584,7 +511,7 @@ export default function LeaderboardClient() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={activeTab === "vip" ? "Search VIP supporters..." : "Search players..."}
+          placeholder="Search players..."
           className="w-full pl-10 pr-4 py-3 rounded-2xl border border-deep-violet/15 dark:border-white/10 bg-white/75 dark:bg-white/[0.04] text-deep-violet dark:text-soft-cream placeholder-deep-violet/35 dark:placeholder-soft-cream/30 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-primary-gold/40 focus:border-primary-gold/50 transition-all"
         />
         {search && (
@@ -603,9 +530,7 @@ export default function LeaderboardClient() {
           <span className="text-xs font-bold text-deep-violet/40 dark:text-soft-cream/35">
             {search
               ? `${filtered.length} result${filtered.length !== 1 ? "s" : ""} for "${search}"`
-              : activeTab === "global"
-              ? `${entries.length} players ranked`
-              : `${vipEntries.length} VIP supporters`}
+              : `${entries.length} players ranked`}
           </span>
         </div>
       )}
@@ -626,7 +551,7 @@ export default function LeaderboardClient() {
           </div>
           <div className="hidden sm:block">
             <span className="text-[9px] font-black uppercase tracking-widest text-deep-violet/30 dark:text-soft-cream/25">
-              {activeTab === "vip" ? "Donations" : "Plays"}
+              Plays
             </span>
           </div>
           <div>
@@ -647,27 +572,13 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1 }}
             className="py-16 text-center flex flex-col items-center"
           >
-            <p className="text-5xl mb-3">{activeTab === "vip" ? "☕" : "🌀"}</p>
+            <p className="text-5xl mb-3">🌀</p>
             <p className="font-fredoka text-lg font-black text-deep-violet/50 dark:text-soft-cream/40">
-              {activeTab === "global" 
-                ? (search ? "No players found" : "No players yet")
-                : (search ? "No VIPs found" : "No Cosmic Patrons yet")
-              }
+              {search ? "No players found" : "No players yet"}
             </p>
             <p className="text-sm text-deep-violet/35 dark:text-soft-cream/30 mt-1 max-w-xs mx-auto mb-6">
-              {activeTab === "global"
-                ? (search ? "Try a different name" : "Be the first to play!")
-                : (search ? "Try a different name" : "Support Luck ഉണ്ടോ ? by buying me a coffee and get your name listed as a VIP Patron!")
-              }
+              {search ? "Try a different name" : "Be the first to play!"}
             </p>
-            {activeTab === "vip" && !search && (
-              <button
-                onClick={() => window.dispatchEvent(new CustomEvent("open-buy-me-coffee-modal"))}
-                className="py-3 px-6 rounded-2xl font-black text-xs select-none cursor-pointer tracking-wider shadow-md bg-primary-gold hover:bg-amber-300 text-[#1E1145] hover:shadow-lg active:scale-95 transition-all font-fredoka uppercase"
-              >
-                Become a VIP Patron ☕
-              </button>
-            )}
           </motion.div>
         ) : (
           <AnimatePresence>
@@ -677,10 +588,9 @@ export default function LeaderboardClient() {
                 <LeaderRow
                   key={entry.uid}
                   entry={entry}
-                  rank={activeList.indexOf(entry) + 1}
+                  rank={entries.indexOf(entry) + 1}
                   index={i}
                   isCurrentUser={user?.uid === entry.uid}
-                  isVipTab={activeTab === "vip"}
                 />
               ))}
             {/* Rank 4+ rows (always shown); top 3 shown only when not searching */}
@@ -692,17 +602,15 @@ export default function LeaderboardClient() {
                     rank={i + 4}
                     index={i}
                     isCurrentUser={user?.uid === entry.uid}
-                    isVipTab={activeTab === "vip"}
                   />
                 ))
               : filtered.slice(3).map((entry, i) => (
                   <LeaderRow
                     key={entry.uid}
                     entry={entry}
-                    rank={activeList.indexOf(entry) + 1}
+                    rank={entries.indexOf(entry) + 1}
                     index={i + 3}
                     isCurrentUser={user?.uid === entry.uid}
-                    isVipTab={activeTab === "vip"}
                   />
                 ))}
           </AnimatePresence>
@@ -710,17 +618,14 @@ export default function LeaderboardClient() {
       </div>
 
       {/* ── Scroll hint ── */}
-      {!loading && activeList.length > 10 && !search && (
+      {!loading && entries.length > 10 && !search && (
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
           className="text-center text-xs font-bold text-deep-violet/30 dark:text-soft-cream/25 mt-6 pb-2"
         >
-          {activeTab === "global"
-            ? `Showing top ${entries.length} players`
-            : `Showing top ${vipEntries.length} supporters`
-          }
+          Showing top {entries.length} players
         </motion.p>
       )}
         </>

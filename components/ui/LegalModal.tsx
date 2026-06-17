@@ -175,14 +175,14 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                       All games on Luck ഉണ്ടോ ? (including Fortune Wheel, Pendulum Divination, and Lucky Gift Hunt) are designed strictly for entertainment, visualization, and cosmic amusement.
                     </p>
                     <p>
-                      Vibe Coins and points currently reside solely as digital tokens within your local browser storage or your synced account. In the future, we plan to convert these points into real-world gifts and physical rewards. No real currency, digital assets, or real-world stakes are wagered or generated here.
+                      Vibe Coins and points currently reside as digital tokens within your synced cloud database. In the future, we plan to convert these points into real-world gifts and physical rewards. No real currency, digital assets, or real-world stakes are wagered or generated here.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">✨</span> 2. Local Storage & Account Sync
+                      <span className="text-base sm:text-lg">✨</span> 2. Cloud Synchronization & Mandatory Authentication
                     </h4>
                     <p>
-                      Your stats, Vibe Coins balance, and high scores are saved locally using standard browser storage (`localStorage`). If you choose to sign in (optional), we synchronize these states with a secure cloud database to preserve your progress across devices. We do not maintain offsite backups of your personal milestones for guest users.
+                      To play games and save your progress, sign-in via Google Authentication is mandatory. All of your stats, Vibe Coins balance, and high scores are saved and synced securely in our cloud database to preserve your progress across devices. We do not support local offline guest play or local-only storage.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
@@ -218,17 +218,17 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                     </div>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">🛡️</span> 1. Optional Database Sync & Auth
+                      <span className="text-base sm:text-lg">🛡️</span> 1. Mandatory Account Authentication & Database Sync
                     </h4>
                     <p>
-                      Luck ഉണ്ടോ ? offers optional sign-in via Google Authentication to synchronize your progress, Vibe Coins, and leaderboard scores. If signed in, we store this information securely in a Cloud Firestore database. If you choose not to sign in, all data remains strictly local to your device's browser storage.
+                      Luck ഉണ്ടോ ? requires mandatory sign-in via Google Authentication to play and access its features. When signed in, we securely store and synchronize your progress, Vibe Coins balance, game play logs, and leaderboard rankings in our secure Cloud Firestore database. We do not support offline guest modes.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
-                      <span className="text-base sm:text-lg">💾</span> 2. Local Storage Sandbox
+                      <span className="text-base sm:text-lg">💾</span> 2. Session & Local Storage Sandbox
                     </h4>
                     <p>
-                      Your stats and lucky configurations are written locally to your browser's sandboxed storage. We do not sell or distribute your game history to target marketing lists.
+                      We write authentication session tokens and minor preferences locally to your browser's sandboxed storage (`localStorage` and cookies) to keep you securely signed in. We do not sell or distribute your details or game history to third-party marketing lists.
                     </p>
 
                     <h4 className="font-black font-fredoka text-sm sm:text-base text-deep-violet dark:text-soft-cream flex items-center gap-2 pt-2 border-t border-deep-violet/5 dark:border-white/5">
@@ -263,7 +263,7 @@ export default function LegalModal({ isOpen, onClose, initialTab = "terms" }: Le
                             <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary-gold/20 text-primary-gold border border-primary-gold/10 font-bold uppercase tracking-wider">Required</span>
                           </h5>
                           <p className="text-[11px] sm:text-xs text-deep-violet/60 dark:text-soft-cream/60 mt-1">
-                            Saves basic elements like your light/dark mode preference, core game state variables, and saves cookie toggle states locally.
+                            Saves basic elements like your secure authentication session, light/dark mode preference, and cookie consent settings locally.
                           </p>
                         </div>
                         <div className="relative flex items-center justify-center h-6 w-11 mt-1">

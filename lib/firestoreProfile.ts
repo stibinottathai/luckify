@@ -53,7 +53,6 @@ export interface FirestoreUserProfile {
   doubleRewardsUntil?: string;
   streakShieldsCount?: number;
   vipUntil?: string;
-  coffeesDonated?: number;
   lastVisitDate?: string;
   visitStreak?: number;
   visitStreakRecord?: number;
@@ -106,7 +105,6 @@ export interface LeaderboardEntry {
   luckyScore: number;
   level?: number;
   badges?: string[];
-  coffeesDonated?: number;
   weeklyCoins?: number;
   shakeStreakRecord?: number;
   collectedItems?: number;
@@ -244,7 +242,6 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
         luckyScore: data.luckyScore ?? 50,
         level: data.level ?? 1,
         badges: data.badges ?? [],
-        coffeesDonated: data.coffeesDonated ?? 0,
       };
     });
   } catch (err) {
@@ -253,48 +250,7 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   }
 }
 
-/**
- * Fetch all VIP players whose vipUntil is set and is in the future.
- */
-export async function fetchVips(): Promise<LeaderboardEntry[]> {
-  const todayStr = new Date().toISOString().slice(0, 10);
-  
-  const q = query(
-    collection(db, "users"),
-    where("vipUntil", ">=", todayStr),
-    limit(100)
-  );
 
-  try {
-    const snap = await getDocs(q);
-    const vips = snap.docs.map((d) => {
-      const data = d.data() as FirestoreUserProfile;
-      return {
-        uid: d.id,
-        displayName: data.displayName || "Lucky Player",
-        photoURL: data.photoURL ?? null,
-        coinBalance: data.coinBalance ?? 0,
-        winStreak: data.winStreak ?? 0,
-        totalPlays: data.totalPlays ?? 0,
-        luckyScore: data.luckyScore ?? 50,
-        level: data.level ?? 1,
-        badges: data.badges ?? [],
-        coffeesDonated: data.coffeesDonated ?? 0,
-      };
-    });
-
-    // In-memory sort by coffeesDonated desc (and secondary by coinBalance desc)
-    // to build a real ranking system without requiring composite indexes
-    return vips.sort((a, b) => {
-      const diff = (b.coffeesDonated || 0) - (a.coffeesDonated || 0);
-      if (diff !== 0) return diff;
-      return b.coinBalance - a.coinBalance;
-    });
-  } catch (err) {
-    console.error("[Firestore] VIP fetch error:", err);
-    throw err;
-  }
-}
 
 // ─── Tree Leaderboards query ─────────────────────────────────────────────────
 

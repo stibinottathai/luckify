@@ -41,7 +41,6 @@ interface LuckStore {
   registerWishToday: () => void;
   registerTimeCapsuleToday: () => void;
   setVipStatus: (days: number) => void;
-  donateCoffees: (count: number) => void;
 }
 
 export interface UserLuckProfile {
@@ -71,7 +70,6 @@ export interface UserLuckProfile {
   doubleRewardsUntil?: string;
   streakShieldsCount?: number;
   vipUntil?: string;
-  coffeesDonated?: number;
   dailyShakesToday?: number;
   extraShakesBalance?: number;
   shakeSpinDate?: string;
@@ -168,7 +166,6 @@ export const createDefaultProfile = (): UserLuckProfile => ({
   doubleRewardsUntil: "",
   streakShieldsCount: 0,
   vipUntil: "",
-  coffeesDonated: 0,
   dailyShakesToday: 0,
   extraShakesBalance: 0,
   shakeSpinDate: "",
@@ -618,30 +615,7 @@ export const useLuckStore = create<LuckStore>()(
           return syncActiveProfile(state, updated);
         });
       },
-      donateCoffees: (count) => {
-        set((state) => {
-          const profile = normalizeProfile(state.profiles[state.activeUserKey] || state);
-          const currentVipUntil = profile.vipUntil || "";
-          let baseDate = new Date();
-          
-          if (currentVipUntil && new Date(currentVipUntil) > new Date()) {
-            baseDate = new Date(currentVipUntil);
-          }
-          
-          baseDate.setDate(baseDate.getDate() + (count * 30));
-          const nextVipUntil = baseDate.toISOString().slice(0, 10);
-          const nextCoffeesDonated = (profile.coffeesDonated || 0) + count;
-          const coinsReward = count * 5000;
-          
-          const updated = {
-            ...profile,
-            vipUntil: nextVipUntil,
-            coffeesDonated: nextCoffeesDonated,
-            coinBalance: profile.coinBalance + coinsReward,
-          };
-          return syncActiveProfile(state, updated);
-        });
-      },
+
     }),
     {
       name: "lucky-vibes-store",
